@@ -4,9 +4,12 @@ url = "https://pypi.org/simple"
 verify_ssl = true
 
 [dev-packages]
+flake8 = "*"
 
 [packages]
-scapy = "*"
+requests = "*"
+beautifulsoup4 = "*"
+selenium = "*"
 
 [requires]
 python_version = "3.7"

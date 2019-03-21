@@ -1,0 +1,6 @@
+{
+    "python.pythonPath": "C:\\Users\\daniele.perera.CYBAZE\\.virtualenvs\\blueteam_tools-BvVA3UT0\\Scripts\\python.exe",
+    "python.linting.pylintEnabled": false,
+    "python.linting.flake8Enabled": true,
+    "python.linting.enabled": true
+}
