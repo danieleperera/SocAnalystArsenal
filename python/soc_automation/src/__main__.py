@@ -4,6 +4,7 @@ from __init__ import api
 import webscapper
 import requests
 import category_abuseipdb
+from tqdm import tqdm
 
 # ------- Get info about attacker, victim, context from the webscapper -----
 # info = webscapper.get_info()
@@ -54,7 +55,7 @@ def data_abuseipdb():
     # --- check and get attacker ip ---
     for i in ip:
         final_url = request_url.replace("IP", i)
-        print(final_url)
+        #print(final_url)
         info_json = requests.get(final_url)
         response = json.loads(info_json.text)
         bestresult = (max(response, key=lambda x: (len(x['ip']), len(x['category']))))
@@ -125,10 +126,6 @@ def data_virustotal():
     comments_url = (data['API info']['virustotal']['comments_url'])
 
     #https://developers.virustotal.com/v2.0/reference#comments-get
-
-
-
-
 
 
 data_abuseipdb()
