@@ -1,0 +1,32 @@
+abseipdb output ->
+
+'178.128.78.235', ['Port Scan', 'Hacking Generic', 'Exploited Host'], 'United States', 40) 
+
+abseipdb errors 
+{'attackers': '178.128.78.235\n167.99.81.228', 'victims': 'SOCUsers', 'context': 'dns bidr.trellian.com'}
+[!] Checking Abuseipdb
+  0%|                                                                                                                                                                           | 0/2 [00:00<?, ?it/s]Traceback (most recent call last):
+  File "c:\Users\Mr.P3rry\Desktop\progetto\test\Soc-L1-Automation\src\filestream.py", line 157, in <module>
+    print(data_abuseipdb())
+  File "c:\Users\Mr.P3rry\Desktop\progetto\test\Soc-L1-Automation\src\filestream.py", line 68, in data_abuseipdb
+    response = json.loads(info_json.text)
+  File "C:\Users\Mr.P3rry\AppData\Local\Programs\Python\Python37-32\Lib\json\__init__.py", line 348, in loads
+    return _default_decoder.decode(s)
+  File "C:\Users\Mr.P3rry\AppData\Local\Programs\Python\Python37-32\Lib\json\decoder.py", line 337, in decode
+    obj, end = self.raw_decode(s, idx=_w(s, 0).end())
+  File "C:\Users\Mr.P3rry\AppData\Local\Programs\Python\Python37-32\Lib\json\decoder.py", line 355, in raw_decode
+    raise JSONDecodeError("Expecting value", s, err.value) from None
+json.decoder.JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+
+The terminal process terminated with exit code: 1
+
+
+
+##################################################################################################
+urlhaus
+{'attackers': '178.128.78.235\n167.99.81.228', 'victims': 'SOCUsers', 'context': 'dns bidr.trellian.com'}
+[!] Checking URLhaus
+100%|███████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████| 2/2 [00:01<00:00,  1.30it/s]
+None
+
+Press any key to close the terminal.
