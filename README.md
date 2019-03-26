@@ -1,23 +1,19 @@
-# Breached Data Cleaner
+# Soc-L1-Automation
 
 [![N|Solid](https://camo.githubusercontent.com/5392ad6fb7875a2520001270f08309896b6cb25d/687474703a2f2f466f7254686542616467652e636f6d2f696d616765732f6261646765732f6d6164652d776974682d707974686f6e2e737667)](https://www.python.org/)
 
-[![Build Status](https://img.shields.io/badge/Version-v0.0.1-brightgreen.svg)](https://shields.io/) [![Build Status](https://img.shields.io/badge/Status-Building-red.svg)](https://shields.io/) [![Build Status](https://img.shields.io/badge/Platform-windows%2Flinux-blue.svg)](hhttps://shields.io/) [![Build Status](https://img.shields.io/badge/Database-SQLite3-lightgrey.svg)](hhttps://shields.io/)
+[![Build Status](https://img.shields.io/badge/Version-v0.0.1-brightgreen.svg)](https://shields.io/) [![Build Status](https://img.shields.io/badge/Status-Building-red.svg)](https://shields.io/) [![Build Status](https://img.shields.io/badge/Platform-windows%2Flinux-blue.svg)](hhttps://shields.io/) 
 
 
-
-BD cleaner is build as a internship project in order to create a clean database of breached data found in web. You must provide the breached data.
-
-  - Dashboard of analyzed data
-  - Possibility to make queries from web app
-  - Backend magic is done by using regex in Python
+This tool is used to give a quick structure to a SOC level 1 ticket. I used Selenium to gather infomation regarding an attack from our company's SIEM/IDS then I use that information with APIs from urlscan.io, abuseipdb, urlhaus, virustotal to collect more information by parsing json files and creating a basic structure that will be copied to the clipboard once done. While this tool is running the L1 Soc User can save time because he don't need to copy and paste information from the siem to other threat analysing websites and then coping that information to a ticket so he can do more advanced analysis of a threat and the quality of a ticket will increase rapidly.
   
 ![finale2](https://user-images.githubusercontent.com/45230107/54539022-ac3acc00-4995-11e9-8c31-090b48f1b250.gif)
 
 ## ToDo
-  - improve database creation by optimizing occupied space and timing
-  - improve the part of frontend that interfaces with the database
-  - test the code on other platforms
+  - create a ticket from all the information gathered and copy it to clipboard and give notification to user
+  - add some colors
+  - collect IOCs from virustotal json
+  - open to new enhancements
   
 ## Getting Started
 
@@ -75,9 +71,7 @@ This project can be deployed on Cloud too. More Additional details are coming so
 
 ## Built With
 
-* [Django](https://www.djangoproject.com/) - The web framework used
-* [Python](https://www.python.org/) - Backend Management
-* [SQLite3](https://www.sqlite.org/index.html) - Database Management
+* [Python](https://www.python.org/) - 100%
 
 ## Contributing
 
