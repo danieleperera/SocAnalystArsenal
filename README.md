@@ -9,7 +9,7 @@
 
 This tool is used to give a quick structure to a SOC level 1 ticket. I used Selenium to gather infomation regarding an attack from our company's SIEM/IDS then I use that information with APIs from urlscan.io, abuseipdb, urlhaus, virustotal to collect more information by parsing json files and creating a basic structure that will be copied to the clipboard once done. While this tool is running the L1 Soc User can save time because he don't need to copy and paste information from the siem to other threat analysing websites and then coping that information to a ticket so he can do more advanced analysis of a threat and the quality of a ticket will increase rapidly.
   
-![finale2](https://user-images.githubusercontent.com/45230107/54539022-ac3acc00-4995-11e9-8c31-090b48f1b250.gif)
+![finale2](https://user-images.githubusercontent.com/45230107/54990684-a0659000-4fbb-11e9-9abb-758f4ce3b3f1.gif)
 
 ## ToDo
   - create a ticket from all the information gathered and copy it to clipboard and give notification to user
