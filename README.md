@@ -16,6 +16,7 @@ This tool is used to give a quick structure to a SOC level 1 ticket. I used Sele
   - add some colors
   - collect IOCs from virustotal json
   - open to new enhancements
+  - timeout option for abuseipdb and other requests
   
 ## Getting Started
 
