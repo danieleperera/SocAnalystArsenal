@@ -1,0 +1,25 @@
+{"API info": {
+    "urlscan.io": {
+        "api": "YOUR API HERE",
+        "comment": "login to website to create your API",
+        "url": "https://urlscan.io/api/v1/search/?q=domain:"
+    },
+    "abuseipdb": { 
+        "api": "YOUR API HERE",
+        "comment": "login to website to create your API",
+        "url": "https://www.abuseipdb.com/check/IP/json?key=API&days=120"
+    },
+    "urlhaus": {
+        "api": "YOUR API HERE",
+        "comment": "login using twitter account on this site https://urlhaus.abuse.ch/api/#account",
+        "url": "https://urlhaus-api.abuse.ch/v1/url/"
+    },
+    "virustotal": {
+        "api" : "YOUR API HERE",
+        "comment" : "sign up to virustotal",
+        "file_url": "https://www.virustotal.com/vtapi/v2/file/report",
+        "ip_address_url" : "https://www.virustotal.com/vtapi/v2/ip-address/report",
+        "scan_url": "https://www.virustotal.com/vtapi/v2/url/scan",
+        "comments_url": "https://www.virustotal.com/vtapi/v2/comments/get"
+    }
+}} 

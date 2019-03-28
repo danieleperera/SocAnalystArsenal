@@ -1,0 +1,5 @@
+.vscode
+debug.log
+res/api/api.json
+src/webscapper.py
+__pycache__
