@@ -3,13 +3,13 @@ import os
 import tempfile
 import pyperclip
 from win10toast import ToastNotifier
-from __init__ import api
-import socket
+from __init__ import SRC
 import re
 
 
 def check_webscapper():
-    Webscapperpath = os.path.join(api, "webscapper.py")
+    Webscapperpath = os.path.join(SRC, "webscapper.py")
+    print(SRC)
     exists = os.path.isfile(Webscapperpath)
     if exists:
         print(Webscapperpath)
@@ -21,21 +21,23 @@ def check_webscapper():
         parser = argparse.ArgumentParser()
         parser.add_argument("--ip", dest="ip", help="somehelp bla bla", default="")
         addr = parser.parse_args()
-        # check ip 
-        ok = check_ip(str(addr))
-
-        #print(str(ok))
-        try:
-            socket.inet_aton(str(ok))
+        if addr.ip == '':
+            ip = input('Please input ip:')
+            print(ip)
+            ok = check_ip(ip)
             attackers = {}
-            attackers['attackers'] = addr.ip.replace(',', '\n')
+            attackers['attackers'] = "\n".join(ok)
             print(attackers)
             main(attackers)
-        except socket.error:
-            print('Wrong ip address')
+        else:
+            ok = check_ip(addr.ip)
+            attackers = {}
+            attackers['attackers'] = "\n".join(ok)
+            print(attackers)
+            main(attackers)        
 
 
-def main():
+def main(info):
     #info = {'attackers': '178.128.78.235\n', 'victims': 'SOCUsers', 'context': 'dns http://www.abcdefg.mn'}
     # ------- Get info about attacker, victim, context from the webscapper -----
     #info = webscapper.get_info()
@@ -50,7 +52,7 @@ def main():
     try:
         with os.fdopen(fd, 'r+') as tmp:
             ip_addresses = get_ip(info).split("\n")
-            tmp.write(text_header(info))
+            #tmp.write(text_header(info))
             for ip in ip_addresses:
                 # --- URLscan ---
                 urlscan = filestream.data_urlscan(ip)
@@ -131,11 +133,16 @@ def text_body(body):
 
 
 def check_ip(ipv4_address):
-    matches = ipv4_address.split("'")[1]
-    regex_ipv4_public = r"^([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])(?<!172\.(16|17|18|19|20|21|22|23|24|25|26|27|28|29|30|31))(?<!127)(?<!^10)(?<!^0)\.([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])(?<!192\.168)(?<!172\.(16|17|18|19|20|21|22|23|24|25|26|27|28|29|30|31))\.([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])(?<!\.255$)$" 
-    matches_public = re.finditer(regex_ipv4_public, matches, re.MULTILINE)
-    for i in matches_public:
-        return ("{match}".format(match=i.group()))
+    test = []
+    for i in ipv4_address.split(","):
+        #print(i)
+        regex_ipv4_public = r"^([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])(?<!172\.(16|17|18|19|20|21|22|23|24|25|26|27|28|29|30|31))(?<!127)(?<!^10)(?<!^0)\.([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])(?<!192\.168)(?<!172\.(16|17|18|19|20|21|22|23|24|25|26|27|28|29|30|31))\.([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])(?<!\.255$)$" 
+        matches_public = re.finditer(regex_ipv4_public, i, re.MULTILINE)
+
+        for x in matches_public:
+            test.append(("{match}".format(match=x.group())))
+    return test
+
 
 if __name__ == '__main__':
     check_webscapper()
