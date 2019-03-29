@@ -2,4 +2,5 @@
 debug.log
 res/api/api.json
 src/webscapper.py
+src/webscapper1.py
 __pycache__
