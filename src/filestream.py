@@ -14,6 +14,17 @@ init(autoreset=True)
 # info = {'attackers': '178.128.78.235\n167.99.81.228', 'victims': 'SOCUsers', 'context': 'dns bidr.trellian.com'}
 
 
+def print_banner():
+    banner = """
+          _______
+         /      /| 	;___________________;
+        /      //  	; Soc-L1-Automation ;
+       /______//	;-------------------;
+      (______(/	            danieleperera
+      """
+    return banner
+
+
 def get_api():
     # os platform indipendent
     APIpath = os.path.join(api, "api.json") 

@@ -5,11 +5,12 @@ import pyperclip
 from win10toast import ToastNotifier
 from __init__ import SRC
 import re
+from colorama import Fore
 
 
 def check_webscapper():
     Webscapperpath = os.path.join(SRC, "webscapper.py")
-    print(SRC)
+    print(Fore.CYAN + filestream.print_banner())
     exists = os.path.isfile(Webscapperpath)
     if exists:
         print(Webscapperpath)
