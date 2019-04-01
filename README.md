@@ -18,6 +18,10 @@ This tool is used to give a quick structure to a SOC level 1 ticket. I used Sele
   - ~~collect IOCs from virustotal json~~
   - open to new enhancements
   - ~~timeout option for abuseipdb and other requests~~
+  - do more testing with siem
+  - do more testing in manual mode
+  - try to integrate semi-manual mode
+  - if no results found don't notify
   
 ## Getting Started
 
