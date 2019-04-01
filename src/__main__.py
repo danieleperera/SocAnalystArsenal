@@ -16,6 +16,9 @@ def check_webscapper():
         print(Webscapperpath)
         import webscapper
         main(webscapper.get_info())
+        # Testing purposes
+        #info = {'attackers': {'124.164.251.179', '179.251.164.124.adsl-pool.sx.cn'}, 'victims': '10.10.2.140', 'context': 'http GET 46.20.95.185'}
+        #main(info)
     else:
         print("Il tool automatizzato per cercare gli ip malevoli non esiste, inserisci manualmente gli ip")
         import argparse
@@ -23,25 +26,39 @@ def check_webscapper():
         parser.add_argument("--ip", dest="ip", help="somehelp bla bla", default="")
         addr = parser.parse_args()
         if addr.ip == '':
-            ip = input('Please input ip:')
+            ip = ''
+            while True:
+                ip = input('Please input ip: ')
+                
+                if check_ip(ip) == []:
+                    continue
+                else:
+                    break
             print(ip)
-            ok = check_ip(ip)
+            # --- Creating a set ---
+            ips = ip.split(",")
+            ipss = set(ips)
+            # --- End set variable ---
             attackers = {}
-            attackers['attackers'] = "\n".join(ok)
+            attackers['attackers'] = ipss
             print(attackers)
             main(attackers)
         else:
-            ok = check_ip(addr.ip)
+            print(type(addr.ip))
             attackers = {}
-            attackers['attackers'] = "\n".join(ok)
+            # --- Creating a set ---
+            ips = addr.ip.split(",")
+            ipss = set(ips)
+            # --- End set variable ---
+            attackers['attackers'] = ipss
+            print(type(attackers))
             print(attackers)
             main(attackers)        
 
 
 def main(info):
-    #info = {'attackers': '178.128.78.235\n', 'victims': 'SOCUsers', 'context': 'dns http://www.abcdefg.mn'}
+    #info = {'attackers': {'124.164.251.179', '179.251.164.124.adsl-pool.sx.cn'}, 'victims': '10.10.2.140', 'context': 'http GET 46.20.95.185'}
     # ------- Get info about attacker, victim, context from the webscapper -----
-    #info = webscapper.get_info()
     
 
     # --- Notification ---
@@ -52,7 +69,7 @@ def main(info):
     fd, path = tempfile.mkstemp()
     try:
         with os.fdopen(fd, 'r+') as tmp:
-            ip_addresses = get_ip(info).split("\n")
+            ip_addresses = get_ip(info)
             #tmp.write(text_header(info))
             for ip in ip_addresses:
                 # --- URLscan ---
@@ -86,9 +103,6 @@ def main(info):
                 for i in text_body(virustotal):
                     tmp.write(i)
                 # --- virustotal end---
-                
-
-            
             """
             multiple_context = get_context(info).split(" ")[1:]
             for context in tqdm(multiple_context):
@@ -109,6 +123,7 @@ def get_ip(ip):
     if ip['attackers'] == "":
         print("No attacker ip found...")
     else:
+        print(ip['attackers'])
         return ip['attackers']
 
 
@@ -134,6 +149,7 @@ def text_body(body):
 
 
 def check_ip(ipv4_address):
+    #ipv4_address = '& C:/Users/daniele.perera.CYBAZE/.virtualenvs/Soc-L1-Automation-eKL1Fwla/Scripts/activate.ps1'
     test = []
     for i in ipv4_address.split(","):
         #print(i)
@@ -147,3 +163,5 @@ def check_ip(ipv4_address):
 
 if __name__ == '__main__':
     check_webscapper()
+    #main()
+    #print(check_ip())

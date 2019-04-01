@@ -58,7 +58,7 @@ def data_abuseipdb(ip):
     final_url = request_url.replace("IP", ip)
     # --- Add Timeout for request ---
     try:
-        info_json = requests.get(final_url, timeout=10)
+        info_json = requests.get(final_url, timeout=8)
         response = json.loads(info_json.text)
         return querry_status_abuseipdb(response)
     except requests.exceptions.Timeout:
@@ -128,14 +128,17 @@ def querry_status_urlhause_ip(positions):
     if positions['query_status'] != 'ok':
         print(iconNone + ' No result on URLhause')
     else:
-        response_querry_url_information = {
-        "urlhaus_reference" : positions['urls'][0]['urlhaus_reference'],
-        "threat" : positions['urls'][0]['threat'],
-        "url_status" : positions['urls'][0]['url_status'],
-        "tags" : positions['urls'][0]['tags']
-        }
-        print(response_querry_url_information)
-        return response_querry_url_information
+        try:
+            response_querry_url_information = {
+            "urlhaus_reference" : positions['urls'][0]['urlhaus_reference'],
+            "threat" : positions['urls'][0]['threat'],
+            "url_status" : positions['urls'][0]['url_status'],
+            "tags" : positions['urls'][0]['tags']
+            }
+            print(response_querry_url_information)
+            return response_querry_url_information
+        except KeyError:
+            print("KeyError")
 
 
 def querry_status_urlscan_ip(positions):
@@ -143,11 +146,12 @@ def querry_status_urlscan_ip(positions):
         print(iconNone + ' No result on URLscan')
         return False
     else:
-        results = {
-        "urlscan" : positions['results'][0]['task']['url']
-    }
-        print(results)
-        return results
+        try:
+            results = {"urlscan": positions['results'][0]['task']['url']}
+            print(results)
+            return results
+        except KeyError:
+            print("KeyError")
 
 
 # --- Abuseipdb Category ---
@@ -190,15 +194,18 @@ def querry_status_abuseipdb(positions):
         print(iconNone + ' No result on URLscan')
         return False
     else:
-        result_with_correct_category = (max(positions, key=lambda x: (len(x['ip']), len(x['category']))))
-        data_from_abuseipdb = {
-        "attacker" : result_with_correct_category['ip'],
-        "category" : retruncategory(result_with_correct_category['category']),
-        "country" : result_with_correct_category['country'],
-        "abuseConfidenceScore" : result_with_correct_category['abuseConfidenceScore']
-        }
-        print(data_from_abuseipdb)
-        return data_from_abuseipdb
+        try:
+            result_with_correct_category = (max(positions, key=lambda x: (len(x['ip']), len(x['category']))))
+            data_from_abuseipdb = {
+            "attacker" : result_with_correct_category['ip'],
+            "category" : retruncategory(result_with_correct_category['category']),
+            "country" : result_with_correct_category['country'],
+            "abuseConfidenceScore" : result_with_correct_category['abuseConfidenceScore']
+            }
+            print(data_from_abuseipdb)
+            return data_from_abuseipdb
+        except KeyError:
+            print("KeyError")
 
 
 def querry_status_virustotal_ip(positions):
@@ -206,15 +213,18 @@ def querry_status_virustotal_ip(positions):
         print('[!] No result on virustotal')
         return False
     else:
-        simple_dict = {}
-        for index, item in enumerate(positions['detected_downloaded_samples']):
-            simple_dict[f"detected_malicious_downloaded_samples_{index}_sha256"] = item['sha256']
-            simple_dict[f"file_score_{index}"] = str(item['positives'])+'/'+str(item['total'])
-        for index, item in enumerate(positions['detected_urls']):
-            simple_dict[f"detected_urls_{index}"] = item['url']
-            simple_dict[f"urls_score_{index}"] = str(item['positives'])+'/'+str(item['total'])
-        #print(simple_dict)
-        return simple_dict
+        try:
+            simple_dict = {}
+            for index, item in enumerate(positions['detected_downloaded_samples']):
+                simple_dict[f"detected_malicious_downloaded_samples_{index}_sha256"] = item['sha256']
+                simple_dict[f"file_score_{index}"] = str(item['positives'])+'/'+str(item['total'])
+            for index, item in enumerate(positions['detected_urls']):
+                simple_dict[f"detected_urls_{index}"] = item['url']
+                simple_dict[f"urls_score_{index}"] = str(item['positives'])+'/'+str(item['total'])
+            #print(simple_dict)
+            return simple_dict
+        except KeyError:
+            print("KeyError")
 
 
 
