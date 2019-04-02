@@ -112,11 +112,15 @@ def main(info):
 
             tmp.seek(0)
             content = tmp.read()
-            pyperclip.copy(content)
+            if content == '':
+                print('\n\nNo Ticket was copied to clipboard')
+            else:
+                pyperclip.copy(content)
+                toaster.show_toast("Notifica", "il ticket è stato copiato nella clipboard", duration=10)
     finally:
         # print(path)
         os.remove(path)
-        toaster.show_toast("Notifica", "il ticket è stato copiato nella clipboard", duration=10)
+        
 
 
 def get_ip(ip):
