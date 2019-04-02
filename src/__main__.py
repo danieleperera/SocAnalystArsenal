@@ -7,8 +7,17 @@ from __init__ import SRC
 import re
 from colorama import Fore
 
+# ===================== ************* =================================
+# ----------------- main func do these things -------------------------
+#  seek for webscapper -> 
+#  1. if exists use it to gather info
+#  2. if not exists use import argparse and asks user to insert ip addrs
+#  3. Complete manual mode [x]
+#
+# ===================== ************* =================================
 
-def check_webscapper():
+
+def main():
     Webscapperpath = os.path.join(SRC, "webscapper.py")
     print(Fore.CYAN + filestream.print_banner())
     exists = os.path.isfile(Webscapperpath)
@@ -42,7 +51,7 @@ def check_webscapper():
             attackers = {}
             attackers['attackers'] = ipss
             print(attackers)
-            main(attackers)
+            collector(attackers)
         else:
             print(type(addr.ip))
             attackers = {}
@@ -53,10 +62,10 @@ def check_webscapper():
             attackers['attackers'] = ipss
             print(type(attackers))
             print(attackers)
-            main(attackers)        
+            collector(attackers)        
 
 
-def main(info):
+def collector(info):
     #info = {'attackers': {'124.164.251.179', '179.251.164.124.adsl-pool.sx.cn'}, 'victims': '10.10.2.140', 'context': 'http GET 46.20.95.185'}
     # ------- Get info about attacker, victim, context from the webscapper -----
     
@@ -119,8 +128,7 @@ def main(info):
                 toaster.show_toast("Notifica", "il ticket è stato copiato nella clipboard", duration=10)
     finally:
         # print(path)
-        os.remove(path)
-        
+        os.remove(path)       
 
 
 def get_ip(ip):
@@ -166,6 +174,4 @@ def check_ip(ipv4_address):
 
 
 if __name__ == '__main__':
-    check_webscapper()
-    #main()
-    #print(check_ip())
+    main()

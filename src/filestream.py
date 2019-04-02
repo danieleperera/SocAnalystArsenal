@@ -10,7 +10,10 @@ iconOK = (Fore.GREEN + '[!]')
 iconNone = (Fore.YELLOW + '[!]')
 init(autoreset=True)
 
-# ------- using this for testing purposes -----
+
+# ===================== ************* ===============================
+# ----------- using this for testing purposes -----------------------
+# ===================== ************* ===============================
 # info = {'attackers': '178.128.78.235\n167.99.81.228', 'victims': 'SOCUsers', 'context': 'dns bidr.trellian.com'}
 
 
@@ -130,10 +133,10 @@ def querry_status_urlhause_ip(positions):
     else:
         try:
             response_querry_url_information = {
-            "urlhaus_reference" : positions['urls'][0]['urlhaus_reference'],
-            "threat" : positions['urls'][0]['threat'],
-            "url_status" : positions['urls'][0]['url_status'],
-            "tags" : positions['urls'][0]['tags']
+            "urlhaus_reference": positions['urls'][0]['urlhaus_reference'],
+            "threat": positions['urls'][0]['threat'],
+            "url_status": positions['urls'][0]['url_status'],
+            "tags": positions['urls'][0]['tags']
             }
             print(response_querry_url_information)
             return response_querry_url_information
@@ -197,10 +200,10 @@ def querry_status_abuseipdb(positions):
         try:
             result_with_correct_category = (max(positions, key=lambda x: (len(x['ip']), len(x['category']))))
             data_from_abuseipdb = {
-            "attacker" : result_with_correct_category['ip'],
-            "category" : retruncategory(result_with_correct_category['category']),
-            "country" : result_with_correct_category['country'],
-            "abuseConfidenceScore" : result_with_correct_category['abuseConfidenceScore']
+            "attacker": result_with_correct_category['ip'],
+            "category": retruncategory(result_with_correct_category['category']),
+            "country": result_with_correct_category['country'],
+            "abuseConfidenceScore": result_with_correct_category['abuseConfidenceScore']
             }
             print(data_from_abuseipdb)
             return data_from_abuseipdb
