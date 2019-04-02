@@ -9,7 +9,7 @@ from colorama import Fore
 
 # ===================== ************* =================================
 # ----------------- main func do these things -------------------------
-#  seek for webscapper -> 
+#  seek for webscapper python file 
 #  1. if exists use it to gather info
 #  2. if not exists use import argparse and asks user to insert ip addrs
 #  3. Complete manual mode [x]
@@ -24,7 +24,7 @@ def main():
     if exists:
         print(Webscapperpath)
         import webscapper
-        main(webscapper.get_info())
+        collector(webscapper.get_info())
         # Testing purposes
         #info = {'attackers': {'124.164.251.179', '179.251.164.124.adsl-pool.sx.cn'}, 'victims': '10.10.2.140', 'context': 'http GET 46.20.95.185'}
         #main(info)
@@ -63,6 +63,13 @@ def main():
             print(type(attackers))
             print(attackers)
             collector(attackers)        
+
+# ======================= ************* ===============================
+# ----------- collector func call the filestream ----------------------
+#   1. collect information form APIs 
+#   2. create tmp file
+#   3. create notification
+# ======================== ************* ==============================
 
 
 def collector(info):
@@ -129,6 +136,10 @@ def collector(info):
     finally:
         # print(path)
         os.remove(path)       
+
+# ======================= ************* ===============================
+# -------------- Validating information purposes ----------------------
+# ======================== ************* ==============================
 
 
 def get_ip(ip):
