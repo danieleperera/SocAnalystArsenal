@@ -22,7 +22,6 @@ def main():
     print(Fore.CYAN + filestream.print_banner())
     exists = os.path.isfile(Webscapperpath)
     if exists:
-        print(Webscapperpath)
         import webscapper
         collector(webscapper.get_info())
         # Testing purposes
@@ -85,11 +84,14 @@ def collector(info):
     fd, path = tempfile.mkstemp()
     try:
         with os.fdopen(fd, 'r+') as tmp:
+        # ===================== ************* ===============================
+        # ------ IP addresses are getting worked here -----------------------
+        # ===================== ************* ===============================
             ip_addresses = get_ip(info)
             #tmp.write(text_header(info))
             for ip in ip_addresses:
                 # --- URLscan ---
-                urlscan = filestream.data_urlscan(ip)
+                urlscan = filestream.ip_urlscan(ip)
                 filestream.progressbar_ip(ip_addresses)
                 #tmp.write(str(text_body(urlscan)))
                 for i in text_body(urlscan):
@@ -97,7 +99,7 @@ def collector(info):
                 # --- URLscan end ---
                 
                 # --- URLhaus ---
-                urlhaus = filestream.data_urlhaus(ip)
+                urlhaus = filestream.ip_urlhaus(ip)
                 filestream.progressbar_ip(ip_addresses)
                 #tmp.write(str(text_body(urlhaus)))
                 for i in text_body(urlhaus):
@@ -105,7 +107,7 @@ def collector(info):
                 # --- URLhaus end ---
                 
                 # --- AbuseIPdb ---
-                abuseipdb = filestream.data_abuseipdb(ip)
+                abuseipdb = filestream.ip_abuseipdb(ip)
                 filestream.progressbar_ip(ip_addresses)
                 #tmp.write(str(text_body(abuseipdb)))
                 for i in text_body(abuseipdb):
@@ -113,12 +115,16 @@ def collector(info):
                 # --- AbuseIPdb end ---
                 
                 # --- virustotal ---
-                virustotal = filestream.data_virustotal(ip)
+                virustotal = filestream.ip_virustotal(ip)
                 filestream.progressbar_ip(ip_addresses)
                 #tmp.write(str(virustotal))
                 for i in text_body(virustotal):
                     tmp.write(i)
                 # --- virustotal end---
+                
+        # ===================== ************* ===============================
+        # ---------------------- END IP addresses -----------------------
+        # ===================== ************* ===============================
             """
             multiple_context = get_context(info).split(" ")[1:]
             for context in tqdm(multiple_context):

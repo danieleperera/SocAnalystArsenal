@@ -43,12 +43,12 @@ def progressbar_ip(ip_addresses):
     for i in tqdm(ip_addresses):
         pass
 
-# ===================== ************* ===============================
-# ---------------- Get information form api -----------------------
-# ===================== ************* ===============================
+# ===================== ************* =================================
+# ------- Get IP addresses information form api -----------------------
+# ===================== ************* =================================
 
 
-def data_abuseipdb(ip):
+def ip_abuseipdb(ip):
     # --- abuseipdb data ----
     data = get_api()
     api = (data['API info']['abuseipdb']['api'])
@@ -69,7 +69,7 @@ def data_abuseipdb(ip):
         return
 
 
-def data_urlscan(ip):
+def ip_urlscan(ip):
     # --- urlscan.io ok----
     data = get_api()
     querry_ip = (data['API info']['urlscan.io']['querry_ip'])
@@ -83,7 +83,7 @@ def data_urlscan(ip):
     return querry_status_urlscan_ip(response)
 
 
-def data_urlhaus(ip):
+def ip_urlhaus(ip):
     # --- urlhaus data ok ----
     data = get_api()
     querry_host_url = (data['API info']['urlhaus']['querry_host_url'])
@@ -98,7 +98,7 @@ def data_urlhaus(ip):
     return querry_status_urlhause_ip(r.json())
 
 
-def data_virustotal(ip):
+def ip_virustotal(ip):
 
     # --- virustotal data ---
     data = get_api()
@@ -121,6 +121,27 @@ def data_virustotal(ip):
         response = requests.get(scan_url, params=params)
         print(response.json())
     """
+
+
+# ================== ************* ===============================
+# ------- Get Context information form api -----------------------
+# ================= ************* =================================
+
+
+def context_virustotal(context):
+    # --- virustotal data ---
+    data = get_api()
+    colorContext = (Fore.RED + context)
+    api = (data['API info']['virustotal']['api'])
+    print(iconOK + ' Checking virustotal for ' + colorContext)
+    context_url = (data['API info']['virustotal']['ip_address_url'])
+
+    params = {'apikey': api, 'ip': context}
+    response = requests.get(context_url, params=params)
+    response.raise_for_status()
+
+    return querry_status_virustotal_ip(response.json())
+
 
 # ===================== ************* ===============================
 # ------------------- CHECK JSON INFOMATION -----------------------
