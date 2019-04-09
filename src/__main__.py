@@ -44,7 +44,7 @@ def main():
     # Argparse default siem exist
     if results.boolean_switch:
         # check if file webscapper exsist to get data from it
-        Webscapperpath = os.path.join(SRC, "webscapper__s.py")
+        Webscapperpath = os.path.join(SRC, "webscapper.py")
         exists = os.path.isfile(Webscapperpath)
         if exists:
             import webscapper
@@ -76,7 +76,6 @@ def main():
 def collector(info):
     #info = {'attackers': {'124.164.251.179', '179.251.164.124.adsl-pool.sx.cn'}, 'victims': '10.10.2.140', 'context': 'http GET 46.20.95.185'}
     # ------- Get info about attacker, victim, context from the webscapper -----
-    
 
     # --- Notification ---
     toaster = ToastNotifier()
@@ -218,6 +217,9 @@ def manual_mode_ip(ip_addr):
         attackers['attackers'] = ipss
         print(attackers)
         collector(attackers)
+    else:
+        pass
+
 
 
 if __name__ == '__main__':
