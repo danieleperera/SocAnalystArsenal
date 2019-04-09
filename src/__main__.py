@@ -7,6 +7,7 @@ from __init__ import SRC
 import re
 from colorama import Fore
 import argparse
+from selenium.common import exceptions
 
 # ===================== ************* =================================
 # ----------------- main func do these things -------------------------
@@ -27,7 +28,9 @@ def main():
     parser.add_argument('-m', '--manual-mode', action='store_false',
                         default=True,
                         dest='boolean_switch',
-                        help='Set a switch to false')
+                        help='To enter manual mode use this option')
+
+    parser.add_argument('-v', '--version', action='version', version='%(prog)s 1.0')
 
     parser.add_argument('--ip', action='append', default=[],
                         dest='ip',
@@ -36,61 +39,31 @@ def main():
     parser.add_argument('--sha', action='append', dest='sha_collection',
                         default=[],
                         help='Add SHA values to a list')
-
-    parser.add_argument('--version', action='version', version='%(prog)s 1.0')
     results = parser.parse_args()
 
     # Argparse default siem exist
     if results.boolean_switch:
         # check if file webscapper exsist to get data from it
-        Webscapperpath = os.path.join(SRC, "webscapper.py")
+        Webscapperpath = os.path.join(SRC, "webscapper__s.py")
         exists = os.path.isfile(Webscapperpath)
         if exists:
             import webscapper
-            collector(webscapper.get_info())
+            try:
+                collector(webscapper.get_info())
+            except exceptions.StaleElementReferenceException:
+                print("Error Occured... Entering manual mode")
+                manual_mode_ip(results.ip)
             # Testing purposes
             # info = {'attackers': {'124.164.251.179', '179.251.164.124.adsl-pool.sx.cn'}, 'victims': '10.10.2.140', 'context': 'http GET 46.20.95.185'}
-            # main(info)
         else:
             print("It seems you don't have webscapper on path... Entering manual mode")
-            # check if argpase values are null
-            if results.ip == []:
-                ip = ''
-                while True:
-                    ip = input('Insert a list of potential malicious ip addresses:')         
-                    if check_ip(ip) == []:
-                        continue
-                    else:
-                        break
-                print(ip)
-                # --- Creating a set ---
-                ips = ip.split(",")
-                ipss = set(ips)
-                # --- End set variable ---
-                attackers = {}
-                attackers['attackers'] = ipss
-                print(attackers)
-                collector(attackers)
+            manual_mode_ip(results.ip)
+
     else:
         print("Entering manual mode")
         # check if argpase values are null
-        if results.ip == []:
-            ip = ''
-            while True:
-                ip = input('Insert a list of potential malicious ip addresses:')         
-                if check_ip(ip) == []:
-                    continue
-                else:
-                    break
-            print(ip)
-            # --- Creating a set ---
-            ips = ip.split(",")
-            ipss = set(ips)
-            # --- End set variable ---
-            attackers = {}
-            attackers['attackers'] = ipss
-            print(attackers)
-            collector(attackers)        
+        manual_mode_ip(results.ip)
+
 
 # ======================= ************* ===============================
 # ----------- collector func call the filestream ----------------------
@@ -122,7 +95,7 @@ def collector(info):
                 # --- URLscan ---
                 urlscan = filestream.ip_urlscan(ip)
                 filestream.progressbar_ip(ip_addresses)
-                #tmp.write(str(text_body(urlscan)))
+
                 for i in text_body(urlscan):
                     tmp.write(i)
                 # --- URLscan end ---
@@ -130,7 +103,7 @@ def collector(info):
                 # --- URLhaus ---
                 urlhaus = filestream.ip_urlhaus(ip)
                 filestream.progressbar_ip(ip_addresses)
-                #tmp.write(str(text_body(urlhaus)))
+
                 for i in text_body(urlhaus):
                     tmp.write(i)
                 # --- URLhaus end ---
@@ -138,7 +111,7 @@ def collector(info):
                 # --- AbuseIPdb ---
                 abuseipdb = filestream.ip_abuseipdb(ip)
                 filestream.progressbar_ip(ip_addresses)
-                #tmp.write(str(text_body(abuseipdb)))
+
                 for i in text_body(abuseipdb):
                     tmp.write(i)
                 # --- AbuseIPdb end ---
@@ -146,7 +119,7 @@ def collector(info):
                 # --- virustotal ---
                 virustotal = filestream.ip_virustotal(ip)
                 filestream.progressbar_ip(ip_addresses)
-                #tmp.write(str(virustotal))
+
                 for i in text_body(virustotal):
                     tmp.write(i)
                 # --- virustotal end---
@@ -164,10 +137,17 @@ def collector(info):
             tmp.seek(0)
             content = tmp.read()
             if content == '':
-                print('\n\nNo Ticket was copied to clipboard')
+                iconBAD = (Fore.RED + '[!]')
+                print('\n' + iconBAD + ' No ticket was copied to clipboard')
+                print("\n\nRemoving tmp files... Please wait")
             else:
+                iconOK = (Fore.GREEN + '[+]')
+                print('\n' + iconOK ,end='')
+                print(' Ticket was copied to clipboard successfully')
+                print("\n\nRemoving tmp files... Please wait")
                 pyperclip.copy(content)
                 toaster.show_toast("Notifica", "il ticket è stato copiato nella clipboard", duration=10)
+                
     finally:
         # print(path)
         os.remove(path)       
@@ -181,7 +161,7 @@ def get_ip(ip):
     if ip['attackers'] == "":
         print("No attacker ip found...")
     else:
-        print(ip['attackers'])
+        #print(ip['attackers'])
         return ip['attackers']
 
 
@@ -217,6 +197,27 @@ def check_ip(ipv4_address):
         for x in matches_public:
             test.append(("{match}".format(match=x.group())))
     return test
+
+
+def manual_mode_ip(ip_addr):
+    # check if argpase values are null
+    if ip_addr ==[]:
+        ip = ''
+        while True:
+            ip = input('Insert a list of potential malicious ip addresses:')
+            if check_ip(ip) == []:
+                print("Private / Boradcast / Not valid ip address have been insert, please re-try")
+                continue
+            else:
+                break
+        # --- Creating a set ---
+        ips = ip.split(",")
+        ipss = set(ips)
+        # --- End set variable ---
+        attackers = {}
+        attackers['attackers'] = ipss
+        print(attackers)
+        collector(attackers)
 
 
 if __name__ == '__main__':
