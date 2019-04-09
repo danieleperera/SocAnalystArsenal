@@ -6,6 +6,7 @@ from win10toast import ToastNotifier
 from __init__ import SRC
 import re
 from colorama import Fore
+import argparse
 
 # ===================== ************* =================================
 # ----------------- main func do these things -------------------------
@@ -18,26 +19,65 @@ from colorama import Fore
 
 
 def main():
-    Webscapperpath = os.path.join(SRC, "webscapper.py")
+    
     print(Fore.CYAN + filestream.print_banner())
-    exists = os.path.isfile(Webscapperpath)
-    if exists:
-        import webscapper
-        collector(webscapper.get_info())
-        # Testing purposes
-        #info = {'attackers': {'124.164.251.179', '179.251.164.124.adsl-pool.sx.cn'}, 'victims': '10.10.2.140', 'context': 'http GET 46.20.95.185'}
-        #main(info)
+
+    parser = argparse.ArgumentParser()
+
+    parser.add_argument('-m', '--manual-mode', action='store_false',
+                        default=True,
+                        dest='boolean_switch',
+                        help='Set a switch to false')
+
+    parser.add_argument('--ip', action='append', default=[],
+                        dest='ip',
+                        help='give a list of potential malicious ip addresses')
+
+    parser.add_argument('--sha', action='append', dest='sha_collection',
+                        default=[],
+                        help='Add SHA values to a list')
+
+    parser.add_argument('--version', action='version', version='%(prog)s 1.0')
+    results = parser.parse_args()
+
+    # Argparse default siem exist
+    if results.boolean_switch:
+        # check if file webscapper exsist to get data from it
+        Webscapperpath = os.path.join(SRC, "webscapper.py")
+        exists = os.path.isfile(Webscapperpath)
+        if exists:
+            import webscapper
+            collector(webscapper.get_info())
+            # Testing purposes
+            # info = {'attackers': {'124.164.251.179', '179.251.164.124.adsl-pool.sx.cn'}, 'victims': '10.10.2.140', 'context': 'http GET 46.20.95.185'}
+            # main(info)
+        else:
+            print("It seems you don't have webscapper on path... Entering manual mode")
+            # check if argpase values are null
+            if results.ip == []:
+                ip = ''
+                while True:
+                    ip = input('Insert a list of potential malicious ip addresses:')         
+                    if check_ip(ip) == []:
+                        continue
+                    else:
+                        break
+                print(ip)
+                # --- Creating a set ---
+                ips = ip.split(",")
+                ipss = set(ips)
+                # --- End set variable ---
+                attackers = {}
+                attackers['attackers'] = ipss
+                print(attackers)
+                collector(attackers)
     else:
-        print("Il tool automatizzato per cercare gli ip malevoli non esiste, inserisci manualmente gli ip")
-        import argparse
-        parser = argparse.ArgumentParser()
-        parser.add_argument("--ip", dest="ip", help="somehelp bla bla", default="")
-        addr = parser.parse_args()
-        if addr.ip == '':
+        print("Entering manual mode")
+        # check if argpase values are null
+        if results.ip == []:
             ip = ''
             while True:
-                ip = input('Please input ip: ')
-                
+                ip = input('Insert a list of potential malicious ip addresses:')         
                 if check_ip(ip) == []:
                     continue
                 else:
@@ -49,17 +89,6 @@ def main():
             # --- End set variable ---
             attackers = {}
             attackers['attackers'] = ipss
-            print(attackers)
-            collector(attackers)
-        else:
-            print(type(addr.ip))
-            attackers = {}
-            # --- Creating a set ---
-            ips = addr.ip.split(",")
-            ipss = set(ips)
-            # --- End set variable ---
-            attackers['attackers'] = ipss
-            print(type(attackers))
             print(attackers)
             collector(attackers)        
 
