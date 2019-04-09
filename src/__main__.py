@@ -13,7 +13,7 @@ from colorama import Fore
 #  1. if exists use it to gather info
 #  2. if not exists use import argparse and asks user to insert ip addrs
 #  3. Complete manual mode [x]
-#
+# selenium.common.exceptions.StaleElementReferenceException
 # ===================== ************* =================================
 
 
