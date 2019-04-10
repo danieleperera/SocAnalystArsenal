@@ -27,7 +27,7 @@ def main():
 
     parser.add_argument('-m', '--manual-mode', action='store_false',
                         default=True,
-                        dest='boolean_switch',
+                        dest='boolean_switch_mode',
                         help='To enter manual mode use this option')
 
     parser.add_argument('-v', '--version', action='version', version='%(prog)s 1.0')
@@ -39,10 +39,16 @@ def main():
     parser.add_argument('--sha', action='append', dest='sha_collection',
                         default=[],
                         help='Add SHA values to a list')
+
+    parser.add_argument('--v', action='store_false',
+                        default=True,
+                        dest='boolean_switch_verbose',
+                        help='Use this flag to get full data from APIs')
+
     results = parser.parse_args()
 
     # Argparse default siem exist
-    if results.boolean_switch:
+    if results.boolean_switch_mode:
         # check if file webscapper exsist to get data from it
         Webscapperpath = os.path.join(SRC, "webscapper.py")
         exists = os.path.isfile(Webscapperpath)

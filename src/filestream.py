@@ -1,7 +1,6 @@
 import json
 import os
 from __init__ import api
-
 import requests
 from tqdm import tqdm
 from colorama import Fore, init
@@ -20,7 +19,7 @@ init(autoreset=True)
 def print_banner():
     banner = """
           _______
-         /      /| 	;___________________;
+         /      /, 	;___________________;
         /      //  	; Soc-L1-Automation ;
        /______//	;-------------------;
       (______(/	            danieleperera
@@ -249,16 +248,6 @@ def querry_status_virustotal_ip(positions):
             return simple_dict
         except KeyError:
             print("KeyError")
-
-
-
-
-
-
-
-
-
-
 
 
 
