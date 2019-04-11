@@ -13,7 +13,9 @@ init(autoreset=True)
 # ===================== ************* ===============================
 # ----------- using this for testing purposes -----------------------
 # ===================== ************* ===============================
-# info = {'attackers': '178.128.78.235\n167.99.81.228', 'victims': 'SOCUsers', 'context': 'dns bidr.trellian.com'}
+# info = {'attackers': '178.128.78.235\n167.99.81.228',
+#           'victims': 'SOCUsers',
+#           'context': 'dns bidr.trellian.com'}
 
 
 def print_banner():
@@ -29,12 +31,12 @@ def print_banner():
 
 def get_api():
     # os platform indipendent
-    APIpath = os.path.join(api, "api.json") 
+    APIpath = os.path.join(api, "api.json")
     with open(APIpath, "r") as f:
         contents = f.read()
         # print(contents)
         data = json.loads(contents)
-        #print(data)
+        # print(data)
         return data
 
 
@@ -47,13 +49,33 @@ def progressbar_ip(ip_addresses):
 # ===================== ************* =================================
 
 
-def ip_abuseipdb(ip):
+def ip_abuseipdb(ip: str) -> str:
+    """
+    Documentation for ip_abuseipdb.
+    It uses a dictionary and check weather,
+    the key attackers is empty or not.
+    If it's empty then prints No attacker ip found,
+    else returns a ip address as string.
+
+    param
+        ip: dict -- This is a dictionary variable.
+
+    example::
+
+    ```
+     ip[attackers] = {'124.164.251.179',
+                      '179.251.164.124.adsl-pool.sx.cn'},
+    ```
+
+    return
+    str -- Returns only ip addresses as a string.
+
+    """
     # --- abuseipdb data ----
     data = get_api()
     api = (data['API info']['abuseipdb']['api'])
     url = (data['API info']['abuseipdb']['url'])
     request_url = url.replace("API", api)
-    
     colorIP = (Fore.RED + ip)
     print(iconOK + ' Checking Abuseipdb for ' + colorIP)
 
@@ -78,7 +100,6 @@ def ip_urlscan(ip):
     requests_url = querry_ip+ip
     info_json = requests.get(requests_url)
     response = json.loads(info_json.text)
-    
     return querry_status_urlscan_ip(response)
 
 
@@ -92,7 +113,6 @@ def ip_urlhaus(ip):
     params = {"host": ip}
     r = requests.post(querry_host_url, params)
     r.raise_for_status()
-    
     # --- Returns a Dict -> check json infomation
     return querry_status_urlhause_ip(r.json())
 
@@ -111,9 +131,7 @@ def ip_virustotal(ip):
     params = {'apikey': api, 'ip': ip}
     response = requests.get(ip_address_url, params=params)
     response.raise_for_status()
-    
     return querry_status_virustotal_ip(response.json())
-        
     """
         for x in context:
         params = {'apikey': api, 'resource': x}
@@ -153,11 +171,10 @@ def querry_status_urlhause_ip(positions):
     else:
         try:
             response_querry_url_information = {
-            "urlhaus_reference": positions['urls'][0]['urlhaus_reference'],
-            "threat": positions['urls'][0]['threat'],
-            "url_status": positions['urls'][0]['url_status'],
-            "tags": positions['urls'][0]['tags']
-            }
+                "urlhaus_reference": positions['urls'][0]['urlhaus_reference'],
+                "threat": positions['urls'][0]['threat'],
+                "url_status": positions['urls'][0]['url_status'],
+                "tags": positions['urls'][0]['tags']}
             print(response_querry_url_information)
             return response_querry_url_information
         except KeyError:
@@ -218,13 +235,17 @@ def querry_status_abuseipdb(positions):
         return False
     else:
         try:
-            result_with_correct_category = (max(positions, key=lambda x: (len(x['ip']), len(x['category']))))
+            result_with_correct_category = (max(positions, key=lambda x:
+                                            (len(x['ip']),
+                                                len(x['category'])))
+                                            )
             data_from_abuseipdb = {
-            "attacker": result_with_correct_category['ip'],
-            "category": retruncategory(result_with_correct_category['category']),
-            "country": result_with_correct_category['country'],
-            "abuseConfidenceScore": result_with_correct_category['abuseConfidenceScore']
-            }
+                "attacker": result_with_correct_category['ip'],
+                "category":
+                retruncategory(result_with_correct_category['category']),
+                "country": result_with_correct_category['country'],
+                "abuseConfidenceScore":
+                result_with_correct_category['abuseConfidenceScore']}
             print(data_from_abuseipdb)
             return data_from_abuseipdb
         except KeyError:
@@ -238,22 +259,14 @@ def querry_status_virustotal_ip(positions):
     else:
         try:
             simple_dict = {}
-            for index, item in enumerate(positions['detected_downloaded_samples']):
+            for index, item in enumerate(
+                    positions['detected_downloaded_samples']):
                 simple_dict[f"detected_malicious_downloaded_samples_{index}_sha256"] = item['sha256']
                 simple_dict[f"file_score_{index}"] = str(item['positives'])+'/'+str(item['total'])
             for index, item in enumerate(positions['detected_urls']):
                 simple_dict[f"detected_urls_{index}"] = item['url']
                 simple_dict[f"urls_score_{index}"] = str(item['positives'])+'/'+str(item['total'])
-            #print(simple_dict)
+            # print(simple_dict)
             return simple_dict
         except KeyError:
             print("KeyError")
-
-
-
-
-#data_urlscan()
-#data_urlhaus()
-#data_virustotal()
-#data_abuseipdb()
-
