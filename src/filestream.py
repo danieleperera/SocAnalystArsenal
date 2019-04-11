@@ -49,26 +49,24 @@ def progressbar_ip(ip_addresses):
 # ===================== ************* =================================
 
 
-def ip_abuseipdb(ip: str) -> str:
+def ip_abuseipdb(ip: str) -> dict:
     """
     Documentation for ip_abuseipdb.
-    It uses a dictionary and check weather,
-    the key attackers is empty or not.
-    If it's empty then prints No attacker ip found,
-    else returns a ip address as string.
+    It gets one ip addresse at a time as a string,
+    uses request to do a get request to abuseip_db,
+    gets json as text.
 
     param
-        ip: dict -- This is a dictionary variable.
+        ip: str -- This is a string variable.
 
     example::
 
     ```
-     ip[attackers] = {'124.164.251.179',
-                      '179.251.164.124.adsl-pool.sx.cn'},
+     ip = '124.164.251.179'
     ```
 
     return
-    str -- Returns only ip addresses as a string.
+    dict -- Returns json as a dict.
 
     """
     # --- abuseipdb data ----
@@ -90,7 +88,26 @@ def ip_abuseipdb(ip: str) -> str:
         return
 
 
-def ip_urlscan(ip):
+def ip_urlscan(ip: str) -> dict:
+    """
+    Documentation for ip_urlscan.
+    It gets one ip addresse at a time as a string,
+    uses request to do a get request to ip_urlscan,
+    gets json as text.
+
+    param
+        ip: str -- This is a string variable.
+
+    example::
+
+    ```
+     ip = '124.164.251.179'
+    ```
+
+    return
+    str -- Returns json as a string.
+
+    """
     # --- urlscan.io ok----
     data = get_api()
     querry_ip = (data['API info']['urlscan.io']['querry_ip'])
@@ -181,7 +198,58 @@ def querry_status_urlhause_ip(positions):
             print("KeyError")
 
 
-def querry_status_urlscan_ip(positions):
+def querry_status_urlscan_ip(positions: dict) -> dict:
+    """
+    Documentation for querry_status_urlscan_ip.
+    It gets a json a dictionary,
+    it checks whether the dict is emtpy or not.
+    If it's emtpy it prints no result on URLscan.
+    Else it get's the longest group of dict which contains data.
+
+    If a certain key isn't found i'll print key Error
+
+    param
+        positions: dict -- This is a dictionary variable.
+
+    example::
+
+    ```
+     positions =     {
+      "task": {
+        "visibility": "public",
+        "method": "api",
+        "time": "2019-04-11T10:02:31.613Z",
+        "source": "api",
+        "url": "http://civ.pool.mn"
+      },
+      "stats": {
+        "uniqIPs": 2,
+        "consoleMsgs": 0,
+        "dataLength": 54265,
+        "encodedDataLength": 55104,
+        "requests": 2
+      },
+      "page": {
+        "country": "DE",
+        "server": "Apache/2.4.7 (Ubuntu)",
+        "city": "",
+        "domain": "civ.pool.mn",
+        "ip": "136.243.50.159",
+        "asnname": "HETZNER-AS, DE",
+        "asn": "AS24940",
+        "url": "https://civ.pool.mn/",
+        "ptr": "pool.mn"
+      },
+      "uniq_countries": 2,
+      "_id": "336d51e3-e11c-4ed9-a687-dc4f3114f154",
+      "result": "https://urlscan.io/api/v1/result/336d51e3-e11c-4ed9-a687-dc4f3114f154"
+    }
+    ```
+
+    return
+    dict -- Returns dict of values that i chose.
+
+    """
     if positions['total'] == 0:
         print(iconNone + ' No result on URLscan')
         return False
@@ -229,7 +297,38 @@ def retruncategory(test_json):
     return list
 
 
-def querry_status_abuseipdb(positions):
+def querry_status_abuseipdb(positions: dict) -> dict:
+    """
+    Documentation for querry_status_abuseipdb.
+    It gets a json a dictionary,
+    it checks whether the dict is emtpy or not.
+    If it's emtpy it prints no result on abuseipdb.
+    Else it get's the longest group of dict which contains data.
+
+    If a certain key isn't found i'll print key Error
+
+    param
+        positions: dict -- This is a dictionary variable.
+
+    example::
+
+    ```
+     positions =     {  "ip": "51.75.143.169",
+                        "category": [
+                                        18,
+                                        22
+                                    ],
+                        "created": "Thu, 11 Apr 2019 09:27:51 +0000",
+                        "country": "France",
+                        "isoCode": "FR",
+                        "isWhitelisted": false,
+                        "abuseConfidenceScore": 100}
+    ```
+
+    return
+    dict -- Returns dict of values that i chose.
+
+    """
     if positions == []:
         print(iconNone + ' No result on URLscan')
         return False

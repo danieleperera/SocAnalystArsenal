@@ -177,7 +177,7 @@ def collector(info: dict):
 def get_ip(ip: dict) -> str:
     """
     Documentation for get_ip.
-    It uses a dictionary and check weather,
+    It uses a dictionary and check whether,
     the key attackers is empty or not.
     If it's empty then prints No attacker ip found,
     else returns a ip address as string.
