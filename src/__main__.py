@@ -52,7 +52,6 @@ def main():
         Webscapperpath = os.path.join(SRC, "webscapper.py")
         exists = os.path.isfile(Webscapperpath)
         if exists:
-            verbose_mode(results.boolean_switch_verbose)
             import webscapper
             try:
                 # try to get data from webscapper
@@ -60,7 +59,6 @@ def main():
                 collector(webscapper.get_info())
             except exceptions.StaleElementReferenceException:
                 print("Error Occured... Entering manual mode")
-                verbose_mode(results.boolean_switch_verbose)
                 manual_mode_ip(results.ip)
             # Testing purposes
             # info = {'attackers': {'124.164.251.179',
@@ -73,14 +71,12 @@ def main():
             # Enter manual mode
             print("""It seems you don't have webscapper on path...
                     Entering manual mode""")
-            verbose_mode(results.boolean_switch_verbose)
             manual_mode_ip(results.ip)
 
     else:
         # User entered option to get manual mode
         print("Entering manual mode")
         # check if argpase values are null
-        verbose_mode(results.boolean_switch_verbose)
         manual_mode_ip(results.ip)
 
 
