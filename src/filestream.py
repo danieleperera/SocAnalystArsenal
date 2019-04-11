@@ -105,7 +105,7 @@ def ip_urlscan(ip: str) -> dict:
     ```
 
     return
-    str -- Returns json as a string.
+    dict -- Returns json as a dict.
 
     """
     # --- urlscan.io ok----
@@ -120,7 +120,26 @@ def ip_urlscan(ip: str) -> dict:
     return querry_status_urlscan_ip(response)
 
 
-def ip_urlhaus(ip):
+def ip_urlhaus(ip: str) -> str:
+    """
+    Documentation for ip_urlhaus.
+    It gets one ip addresse at a time as a string,
+    uses request to do a get request to ip_urlhaus,
+    gets json as text.
+
+    param
+        ip: str -- This is a string variable.
+
+    example::
+
+    ```
+     ip = '124.164.251.179'
+    ```
+
+    return
+    dict -- Returns json as a dict.
+
+    """
     # --- urlhaus data ok ----
     data = get_api()
     querry_host_url = (data['API info']['urlhaus']['querry_host_url'])
@@ -130,12 +149,30 @@ def ip_urlhaus(ip):
     params = {"host": ip}
     r = requests.post(querry_host_url, params)
     r.raise_for_status()
-    # --- Returns a Dict -> check json infomation
+
     return querry_status_urlhause_ip(r.json())
 
 
-def ip_virustotal(ip):
+def ip_virustotal(ip: str) -> dict:
+    """
+    Documentation for ip_urlhaus.
+    It gets one ip addresse at a time as a string,
+    uses request to do a get request to ip_urlhaus,
+    gets json as text.
 
+    param
+        ip: str -- This is a string variable.
+
+    example::
+
+    ```
+     ip = '124.164.251.179'
+    ```
+
+    return
+    dict -- Returns json as a dict.
+
+    """
     # --- virustotal data ---
     data = get_api()
     colorIP = (Fore.RED + ip)
@@ -182,7 +219,51 @@ def context_virustotal(context):
 # ===================== ************* ===============================
 
 
-def querry_status_urlhause_ip(positions):
+def querry_status_urlhause_ip(positions: dict) -> dict:
+    """
+    Documentation for querry_status_abuseipdb.
+    It gets a json a dictionary,
+    it checks whether the dict is emtpy or not.
+    If it's emtpy it prints no result on abuseipdb.
+    Else it get's the longest group of dict which contains data.
+
+    If a certain key isn't found i'll print key Error
+
+    param
+        positions: dict -- This is a dictionary variable.
+
+    example::
+
+    ```
+     positions = {
+                    "query_status": "ok",
+                    "urlhaus_reference": "https://urlhaus.abuse.ch/host/187.107.132.33/",
+                    "host": "187.107.132.33",
+                    "firstseen": "2019-04-11 10:06:01 UTC",
+                    "url_count": "1",
+                    "blacklists": {
+                        "spamhaus_dbl": "unknown_return_code",
+                        "surbl": "not listed"},
+                    "urls": [{
+                        "id": "175438",
+                        "urlhaus_reference": "https://urlhaus.abuse.ch/url/175438/",
+                        "url": "http://187.107.132.33:19623/.i",
+                        "url_status": "online",
+                        "date_added": "2019-04-11 10:06:10 UTC",
+                        "threat": "malware_download",
+                        "reporter": "zbetcheckin",
+                        "larted": "true",
+                        "takedown_time_seconds": "",
+                    "tags": [
+                        "elf",
+                        "hajime"]}]
+                    }
+    ```
+
+    return
+    dict -- Returns dict of values that i chose.
+
+    """
     if positions['query_status'] != 'ok':
         print(iconNone + ' No result on URLhause')
     else:
@@ -351,7 +432,66 @@ def querry_status_abuseipdb(positions: dict) -> dict:
             print("KeyError")
 
 
-def querry_status_virustotal_ip(positions):
+def querry_status_virustotal_ip(positions: dict) -> dict:
+    """
+    Documentation for querry_status_abuseipdb.
+    It gets a json a dictionary,
+    it checks whether the dict is emtpy or not.
+    If it's emtpy it prints no result on abuseipdb.
+    Else it get's the longest group of dict which contains data.
+
+    If a certain key isn't found i'll print key Error
+
+    param
+        positions: dict -- This is a dictionary variable.
+
+    example::
+
+    ```
+     positions = {
+                    "whois":   "domain: virtua.com.br
+                                server: dns1.virtua.com.br 201.6.4.15
+                                server: dns2.virtua.com.br 201.6.4.61
+                                server: dns3.virtua.com.br 189.6.48.3
+                                created: 19980904 #115278
+                                changed: 20190103
+                                expires: 20210904
+                                status: published
+                                nic-hdl-br: GRSVI
+                                created: 20080512
+                                changed: 20090518
+                                nic-hdl-br: ANPSI74
+                                created: 20090429
+                                changed: 20170427
+                                nic-hdl-br: CLV199
+                                created: 20060321
+                                changed: 20170616% cert.br,
+                                http://www.cert.br/,
+                                respectivelly to [REDACTED]@cert.br",
+                    "whois_timestamp": 1554983890,
+                    "detected_downloaded_samples": [
+                    {
+                        "date": "2019-04-11 10:05:39",
+                        "positives": 32,
+                        "total": 55,
+                        "sha256":
+                            "a04ac6d98ad989312783d4fe3456c53730b212c79a426fb215708b6c6daa3de3"
+                    }],
+                    "response_code": 1,
+                    "as_owner": "CLARO S.A.",
+                    "verbose_msg": "IP address in dataset",
+                    "country": "BR",
+                    "resolutions": [],
+                    "detected_urls": [],
+                    "continent": "SA",
+                    "asn": 28573,
+                    "network": "187.107.128.0/17"}
+    ```
+
+    return
+    dict -- Returns dict of values that i chose.
+
+    """
     if positions['response_code'] == -1:
         print('[!] No result on virustotal')
         return False
