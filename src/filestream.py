@@ -49,7 +49,7 @@ def progressbar_ip(ip_addresses):
 # ===================== ************* =================================
 
 
-def ip_abuseipdb(ip: str) -> dict:
+def ip_abuseipdb(ip: str, boolvalue: bool) -> dict:
     """
     Documentation for ip_abuseipdb.
     It gets one ip addresse at a time as a string,
@@ -82,13 +82,16 @@ def ip_abuseipdb(ip: str) -> dict:
     try:
         info_json = requests.get(final_url, timeout=8)
         response = json.loads(info_json.text)
-        return querry_status_abuseipdb(response)
+        if boolvalue:
+            return response
+        else:
+            return querry_status_abuseipdb(response)
     except requests.exceptions.Timeout:
         print(Fore.RED + 'Timeout error occurred for AbuseIPdb')
         return
 
 
-def ip_urlscan(ip: str) -> dict:
+def ip_urlscan(ip: str, boolvalue: bool) -> dict:
     """
     Documentation for ip_urlscan.
     It gets one ip addresse at a time as a string,
@@ -120,7 +123,7 @@ def ip_urlscan(ip: str) -> dict:
     return querry_status_urlscan_ip(response)
 
 
-def ip_urlhaus(ip: str) -> str:
+def ip_urlhaus(ip: str, boolvalue: bool) -> dict:
     """
     Documentation for ip_urlhaus.
     It gets one ip addresse at a time as a string,
@@ -153,7 +156,7 @@ def ip_urlhaus(ip: str) -> str:
     return querry_status_urlhause_ip(r.json())
 
 
-def ip_virustotal(ip: str) -> dict:
+def ip_virustotal(ip: str, boolvalue: bool) -> dict:
     """
     Documentation for ip_urlhaus.
     It gets one ip addresse at a time as a string,

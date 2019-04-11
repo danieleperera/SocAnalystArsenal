@@ -35,13 +35,13 @@ def main():
                         dest='ip',
                         help='give a list of potential malicious ip addresses')
 
-    parser.add_argument('--sha', action='append', dest='sha_collection',
+    parser.add_argument('--sha', action='append', dest='sha_sum',
                         default=[],
                         help='Add SHA values to a list')
 
     parser.add_argument('--v', action='store_false',
                         default=True,
-                        dest='boolean_switch_verbose',
+                        dest='bool_vb',
                         help='Use this flag to get full data from APIs')
 
     results = parser.parse_args()
@@ -56,10 +56,10 @@ def main():
             try:
                 # try to get data from webscapper
                 # if error occured jump to manual mode
-                collector(webscapper.get_info())
+                collector(webscapper.get_info(), verbose_mode(results.bool_vb))
             except exceptions.StaleElementReferenceException:
                 print("Error Occured... Entering manual mode")
-                manual_mode_ip(results.ip)
+                manual_mode_ip(results.ip, verbose_mode(results.bool_vb, results.sha_sum))
             # Testing purposes
             # info = {'attackers': {'124.164.251.179',
             #                       '179.251.164.124.adsl-pool.sx.cn'},
@@ -71,16 +71,16 @@ def main():
             # Enter manual mode
             print("""It seems you don't have webscapper on path...
                     Entering manual mode""")
-            manual_mode_ip(results.ip)
+            manual_mode_ip(results.ip, verbose_mode(results.bool_vb))
 
     else:
         # User entered option to get manual mode
         print("Entering manual mode")
         # check if argpase values are null
-        manual_mode_ip(results.ip)
+        manual_mode_ip(results.ip, verbose_mode(results.bool_vb))
 
 
-def collector(info: dict):
+def collector(info: dict, verbosity_check: bool):
     """
     Documentation for collector.
     Creates a tmp file and pass the dict to other functions,
@@ -112,28 +112,28 @@ def collector(info: dict):
             # tmp.write(text_header(info))
             for ip in ip_addresses:
                 # --- URLscan ---
-                urlscan = filestream.ip_urlscan(ip)
+                urlscan = filestream.ip_urlscan(ip, verbosity_check)
                 filestream.progressbar_ip(ip_addresses)
 
                 for i in text_body(urlscan):
                     tmp.write(i)
                 # --- URLscan end ---
                 # --- URLhaus ---
-                urlhaus = filestream.ip_urlhaus(ip)
+                urlhaus = filestream.ip_urlhaus(ip, verbosity_check)
                 filestream.progressbar_ip(ip_addresses)
 
                 for i in text_body(urlhaus):
                     tmp.write(i)
                 # --- URLhaus end ---
                 # --- AbuseIPdb ---
-                abuseipdb = filestream.ip_abuseipdb(ip)
+                abuseipdb = filestream.ip_abuseipdb(ip, verbosity_check)
                 filestream.progressbar_ip(ip_addresses)
 
                 for i in text_body(abuseipdb):
                     tmp.write(i)
                 # --- AbuseIPdb end ---
                 # --- virustotal ---
-                virustotal = filestream.ip_virustotal(ip)
+                virustotal = filestream.ip_virustotal(ip, verbosity_check)
                 filestream.progressbar_ip(ip_addresses)
 
                 for i in text_body(virustotal):
@@ -208,7 +208,9 @@ def get_context(context):
 
 """
 def text_header(head):
-    test = '''### Attacker\n{0[attackers]}\n### Victim\n{0[victims]}\n### Context\n{0[context]}\n\n'''.format(head)
+    test = '''  ### Attacker\n{0[attackers]}
+                ### Victim\n{0[victims]}\n
+                ### Context\n{0[context]}\n\n'''.format(head)
     print(test)
     return test
 """
@@ -234,7 +236,7 @@ def check_ip(ipv4_address):
     return test
 
 
-def manual_mode_ip(ip_addr):
+def manual_mode_ip(ip_addr: list, verbosity: bool, sha_sum: list = None):
     # check if argpase values are null
     if ip_addr == []:
         ip = ''
@@ -252,16 +254,21 @@ def manual_mode_ip(ip_addr):
         attackers = {}
         attackers['attackers'] = ipss
         print(attackers)
-        collector(attackers)
+        collector(attackers, verbosity)
     else:
+        print("Sono qua e sono da solo ")
+        print(sha_sum)
+        print(ip_addr)
         pass
 
 
-def verbose_mode(verbosity):
+def verbose_mode(verbosity: bool) -> bool:
     if verbosity:
         print("Flag non c'è")  # verbosity minima
+        return False
     else:
         print("Flag c'è")  # verbosity massima
+        return True
 
 
 if __name__ == '__main__':
