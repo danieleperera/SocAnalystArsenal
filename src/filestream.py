@@ -79,6 +79,7 @@ def ip_abuseipdb(ip: str, boolvalue: bool, sha_sum: list = None) -> dict:
 
     final_url = request_url.replace("IP", ip)
     # --- Add Timeout for request ---
+    
     try:
         info_json = requests.get(final_url, timeout=8)
         response = json.loads(info_json.text)
@@ -182,22 +183,43 @@ def ip_virustotal(ip: str, boolvalue: bool, sha_sum: list = None) -> dict:
     dict -- Returns json as a dict.
 
     """
-    # --- virustotal data ---
-    data = get_api()
-    colorIP = (Fore.RED + ip)
-    api = (data['API info']['virustotal']['api'])
-    print(iconOK + ' Checking virustotal for ' + colorIP)
-    ip_address_url = (data['API info']['virustotal']['ip_address_url'])
+    if sha_sum is None:
+        # --- virustotal data ---
+        data = get_api()
+        colorIP = (Fore.RED + ip)
+        api = (data['API info']['virustotal']['api'])
+        print(iconOK + ' Checking virustotal for ' + colorIP)
+        ip_address_url = (data['API info']['virustotal']['ip_address_url'])
 
-    # https://developers.virustotal.com/v2.0/reference#comments-get
+        # https://developers.virustotal.com/v2.0/reference#comments-get
 
-    params = {'apikey': api, 'ip': ip}
-    response = requests.get(ip_address_url, params=params)
-    response.raise_for_status()
-    if boolvalue:
-        return response.json()
+        params = {'apikey': api, 'ip': ip}
+        response_ip = requests.get(ip_address_url, params=params)
+        if boolvalue:
+            return response_ip.json()
+        else:
+            return querry_status_virustotal_ip(response_ip.json())
     else:
-        return querry_status_virustotal_ip(response.json())
+        print(sha_sum)
+        # --- virustotal data ---
+        data = get_api()
+        colorIP = (Fore.RED + ip)
+        api = (data['API info']['virustotal']['api'])
+        print(iconOK + ' Checking virustotal for ' + colorIP)
+        ip_address_url = (data['API info']['virustotal']['ip_address_url'])
+        file_address_url = (data['API info']['virustotal']['file_url'])
+
+        # https://developers.virustotal.com/v2.0/reference#comments-get
+
+        params_ip = {'apikey': api, 'ip': ip}
+        params_file = {'apikey': api, 'resource': sha_sum}
+        response_ip = requests.get(ip_address_url, params=params_ip)
+        response_file = requests.get(file_address_url, params=params_file)
+
+        if boolvalue:
+            return response_ip.json(), response_file.json()
+        else:
+            return querry_status_virustotal_ip(response_ip.json())
     """
         for x in context:
         params = {'apikey': api, 'resource': x}

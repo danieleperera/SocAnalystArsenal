@@ -48,7 +48,7 @@ def main():
     # Default to webscapper
     if results.boolean_switch_mode:
         # check if file webscapper exsist to get data from it
-        Webscapperpath = os.path.join(SRC, "webscapper.py")
+        Webscapperpath = os.path.join(SRC, "webscapper_1.py")
         exists = os.path.isfile(Webscapperpath)
         if exists:
             import webscapper
@@ -165,13 +165,14 @@ def collector(info: dict, verbosity_check: bool, sha_sum_list: list = None):
                         tmp.write(i)
                     # --- AbuseIPdb end ---
                     # --- virustotal ---
-                    virustotal = filestream.ip_virustotal(ip, verbosity_check, sha_sum_list)
+                    virustotal, sha = filestream.ip_virustotal(ip, verbosity_check, sha_sum_list)
                     filestream.progressbar_ip(ip_addresses)
 
                     for i in text_body(virustotal):
                         tmp.write(i)
-                    # --- virustotal end---                    
-
+                    for a in text_body(sha):
+                        tmp.write(a)
+                        # --- virustotal end---
         # ===================== ************* ===============================
         # ---------------------- END IP addresses -----------------------
         # ===================== ************* ===============================
