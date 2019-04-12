@@ -31,8 +31,7 @@ def main():
     parser.add_argument('-v', '--version', action='version',
                         version='%(prog)s 1.0')
 
-    parser.add_argument('--ip', action='append', default=[],
-                        dest='ip',
+    parser.add_argument('--ip', nargs='+', dest='ip',
                         help='give a list of potential malicious ip addresses')
 
     parser.add_argument('--sha', action='append', dest='sha_sum',
@@ -59,7 +58,7 @@ def main():
                 collector(webscapper.get_info(), verbose_mode(results.bool_vb))
             except exceptions.StaleElementReferenceException:
                 print("Error Occured... Entering manual mode")
-                manual_mode_ip(results.ip, verbose_mode(results.bool_vb, results.sha_sum))
+                manual_mode_ip(results.ip, verbose_mode(results.bool_vb), results.sha_sum)
             # Testing purposes
             # info = {'attackers': {'124.164.251.179',
             #                       '179.251.164.124.adsl-pool.sx.cn'},
@@ -71,13 +70,13 @@ def main():
             # Enter manual mode
             print("""It seems you don't have webscapper on path...
                     Entering manual mode""")
-            manual_mode_ip(results.ip, verbose_mode(results.bool_vb))
+            manual_mode_ip(results.ip, verbose_mode(results.bool_vb), results.sha_sum)
 
     else:
         # User entered option to get manual mode
         print("Entering manual mode")
         # check if argpase values are null
-        manual_mode_ip(results.ip, verbose_mode(results.bool_vb))
+        manual_mode_ip(results.ip, verbose_mode(results.bool_vb), results.sha_sum)
 
 
 def collector(info: dict, verbosity_check: bool):
@@ -256,9 +255,17 @@ def manual_mode_ip(ip_addr: list, verbosity: bool, sha_sum: list = None):
         print(attackers)
         collector(attackers, verbosity)
     else:
+        # --- Complete manual mode ---
         print("Sono qua e sono da solo ")
         print(sha_sum)
         print(ip_addr)
+        for ip in ip_addr:
+            ipss = set(ip_addr)
+        attackers = {}
+        attackers['attackers'] = ipss
+        print(attackers)
+        collector(attackers, verbosity)
+        
         pass
 
 
