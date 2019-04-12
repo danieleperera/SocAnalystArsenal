@@ -49,7 +49,7 @@ def progressbar_ip(ip_addresses):
 # ===================== ************* =================================
 
 
-def ip_abuseipdb(ip: str, boolvalue: bool) -> dict:
+def ip_abuseipdb(ip: str, boolvalue: bool, sha_sum: list = None) -> dict:
     """
     Documentation for ip_abuseipdb.
     It gets one ip addresse at a time as a string,
@@ -91,7 +91,7 @@ def ip_abuseipdb(ip: str, boolvalue: bool) -> dict:
         return
 
 
-def ip_urlscan(ip: str, boolvalue: bool) -> dict:
+def ip_urlscan(ip: str, boolvalue: bool, sha_sum: list = None) -> dict:
     """
     Documentation for ip_urlscan.
     It gets one ip addresse at a time as a string,
@@ -120,10 +120,13 @@ def ip_urlscan(ip: str, boolvalue: bool) -> dict:
     requests_url = querry_ip+ip
     info_json = requests.get(requests_url)
     response = json.loads(info_json.text)
-    return querry_status_urlscan_ip(response)
+    if boolvalue:
+        return response
+    else:
+        return querry_status_urlscan_ip(response)
 
 
-def ip_urlhaus(ip: str, boolvalue: bool) -> dict:
+def ip_urlhaus(ip: str, boolvalue: bool, sha_sum: list = None) -> dict:
     """
     Documentation for ip_urlhaus.
     It gets one ip addresse at a time as a string,
@@ -153,10 +156,13 @@ def ip_urlhaus(ip: str, boolvalue: bool) -> dict:
     r = requests.post(querry_host_url, params)
     r.raise_for_status()
 
-    return querry_status_urlhause_ip(r.json())
+    if boolvalue:
+        return r.json()
+    else:
+        return querry_status_urlhause_ip(r.json())
 
 
-def ip_virustotal(ip: str, boolvalue: bool) -> dict:
+def ip_virustotal(ip: str, boolvalue: bool, sha_sum: list = None) -> dict:
     """
     Documentation for ip_urlhaus.
     It gets one ip addresse at a time as a string,
@@ -188,7 +194,10 @@ def ip_virustotal(ip: str, boolvalue: bool) -> dict:
     params = {'apikey': api, 'ip': ip}
     response = requests.get(ip_address_url, params=params)
     response.raise_for_status()
-    return querry_status_virustotal_ip(response.json())
+    if boolvalue:
+        return response.json()
+    else:
+        return querry_status_virustotal_ip(response.json())
     """
         for x in context:
         params = {'apikey': api, 'resource': x}
@@ -418,10 +427,7 @@ def querry_status_abuseipdb(positions: dict) -> dict:
         return False
     else:
         try:
-            result_with_correct_category = (max(positions, key=lambda x:
-                                            (len(x['ip']),
-                                                len(x['category'])))
-                                            )
+            result_with_correct_category = (max(positions, key=lambda x:(len(x['ip']),len(x['category']))))
             data_from_abuseipdb = {
                 "attacker": result_with_correct_category['ip'],
                 "category":
@@ -433,6 +439,8 @@ def querry_status_abuseipdb(positions: dict) -> dict:
             return data_from_abuseipdb
         except KeyError:
             print("KeyError")
+        except TypeError:
+            print("TypeError")
 
 
 def querry_status_virustotal_ip(positions: dict) -> dict:
