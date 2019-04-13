@@ -1,4 +1,6 @@
-querry_ok = {
+import json
+
+querry_ok = '''{
    "scans": {
      "Bkav": {
        "detected": "False",
@@ -372,11 +374,13 @@ querry_ok = {
    "positives": 16,
    "sha256": "9f101483662fc071b7c10f81c64bb34491ca4a877191d464ff46fd94c7247115",
    "md5": "cc514ad39faa99436978fc5128efae78"
- }
- 
- 
+ }'''
+
+querry_ip_response = json.loads(querry_ok)
+
+
 def querry_status_virustotal_file(resp_json):
-    if resp_json['response_code'] == 0:
+    if resp_json['response_code'] == '0':
         print('[!] Invalid sha')
         return False
     else:
@@ -387,12 +391,15 @@ def querry_status_virustotal_file(resp_json):
             # if the above value is true.
             detected_dict["found_positives"] = ("{} / {}".format(resp_json['positives'], resp_json['total']))
             detected_dict["permalink"] = resp_json["permalink"]
-            if detected == 'True':
+            #detected_dict[av_name] = resp_json['scans'][av_name]['result']
+            print("ciao")
+            print(detected)
+            if detected == 'True' or detected == '\n':
                 # Print Engines which detect malware.
                 # print(f'{av_name} detected Malware!')
                 # Add detected engine name and it's result to the detected_dict.
                 detected_dict[av_name] = resp_json['scans'][av_name]['result']    
-    print(detected_dict)
+    #print(detected_dict)
     return detected_dict
 
 
@@ -404,7 +411,7 @@ def text_body(body):
         pass
 
 
-boh = text_body(querry_status_virustotal_file(querry_ok))
+boh = text_body(querry_status_virustotal_file(querry_ip_response))
 
 for i in boh:
     print(i)

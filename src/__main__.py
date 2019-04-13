@@ -292,8 +292,8 @@ def manual_mode_ip(ip_addr: list, verbosity: bool, sha_sum: list = None):
         collector(attackers, verbosity)
     else:
         # --- Complete manual mode ---
-        print("Sono qua e sono da solo ")
-        print(ip_addr)
+        #print("Sono qua e sono da solo ")
+        #print(ip_addr)
         for ip in ip_addr:
             ipss = set(ip_addr)
         attackers = {}

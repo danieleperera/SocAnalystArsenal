@@ -556,10 +556,10 @@ def querry_status_virustotal_file(resp_json):
             # if the above value is true.
             detected_dict["found_positives"] = ("{} / {}".format(resp_json['positives'], resp_json['total']))
             detected_dict["permalink"] = resp_json["permalink"]
-            if detected == 'True':
+            if detected is True:
                 # Print Engines which detect malware.
                 # print(f'{av_name} detected Malware!')
                 # Add detected engine name and it's result to the detected_dict.
                 detected_dict[av_name] = resp_json['scans'][av_name]['result']
-    print(detected_dict)
+    #print(detected_dict)
     return detected_dict
