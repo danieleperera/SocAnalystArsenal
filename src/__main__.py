@@ -11,7 +11,7 @@ from colorama import Fore
 import argparse
 from selenium.common import exceptions
 
-
+# python .\__main__.py -m --ip 68.183.65.178 --sha 33f810fd192ee4828b331fcbb11a33a567c53ff2bbf24234c48f4a7d68b73f73 -v
 def main():
     """
     Documentation for main.
@@ -28,20 +28,19 @@ def main():
                         dest='boolean_switch_mode',
                         help='To enter manual mode use this option')
 
-    parser.add_argument('-v', '--version', action='version',
+    parser.add_argument('--version', action='version',
                         version='%(prog)s 1.0')
 
-    parser.add_argument('--ip', action='append', default=[],
-                        dest='ip',
+    parser.add_argument('--ip', nargs='+', dest='ip',
                         help='give a list of potential malicious ip addresses')
 
-    parser.add_argument('--sha', action='append', dest='sha_collection',
+    parser.add_argument('--sha', action='append', dest='sha_sum',
                         default=[],
                         help='Add SHA values to a list')
 
-    parser.add_argument('--v', action='store_false',
+    parser.add_argument('-v', '--verbose', action='store_false',
                         default=True,
-                        dest='boolean_switch_verbose',
+                        dest='bool_vb',
                         help='Use this flag to get full data from APIs')
 
     results = parser.parse_args()
@@ -49,17 +48,17 @@ def main():
     # Default to webscapper
     if results.boolean_switch_mode:
         # check if file webscapper exsist to get data from it
-        Webscapperpath = os.path.join(SRC, "webscapper.py")
+        Webscapperpath = os.path.join(SRC, "webscapper_1.py")
         exists = os.path.isfile(Webscapperpath)
         if exists:
             import webscapper
             try:
                 # try to get data from webscapper
                 # if error occured jump to manual mode
-                collector(webscapper.get_info())
+                collector(webscapper.get_info(), verbose_mode(results.bool_vb))
             except exceptions.StaleElementReferenceException:
                 print("Error Occured... Entering manual mode")
-                manual_mode_ip(results.ip)
+                manual_mode_ip(results.ip, verbose_mode(results.bool_vb), results.sha_sum)
             # Testing purposes
             # info = {'attackers': {'124.164.251.179',
             #                       '179.251.164.124.adsl-pool.sx.cn'},
@@ -71,16 +70,16 @@ def main():
             # Enter manual mode
             print("""It seems you don't have webscapper on path...
                     Entering manual mode""")
-            manual_mode_ip(results.ip)
+            manual_mode_ip(results.ip, verbose_mode(results.bool_vb), results.sha_sum)
 
     else:
         # User entered option to get manual mode
         print("Entering manual mode")
         # check if argpase values are null
-        manual_mode_ip(results.ip)
+        manual_mode_ip(results.ip, verbose_mode(results.bool_vb), results.sha_sum)
 
 
-def collector(info: dict):
+def collector(info: dict, verbosity_check: bool, sha_sum_list: list = None):
     """
     Documentation for collector.
     Creates a tmp file and pass the dict to other functions,
@@ -103,6 +102,7 @@ def collector(info: dict):
     toaster = ToastNotifier()
     # --- Clipboard / tmp file ---
     fd, path = tempfile.mkstemp()
+    print(sha_sum_list)
     try:
         with os.fdopen(fd, 'r+') as tmp:
             #  ===================== ************* ===========================
@@ -111,34 +111,69 @@ def collector(info: dict):
             ip_addresses = get_ip(info)
             # tmp.write(text_header(info))
             for ip in ip_addresses:
-                # --- URLscan ---
-                urlscan = filestream.ip_urlscan(ip)
-                filestream.progressbar_ip(ip_addresses)
+                if sha_sum_list is None:
+                    # --- URLscan ---
+                    urlscan = filestream.ip_urlscan(ip, verbosity_check)
+                    filestream.progressbar_ip(ip_addresses)
 
-                for i in text_body(urlscan):
-                    tmp.write(i)
-                # --- URLscan end ---
-                # --- URLhaus ---
-                urlhaus = filestream.ip_urlhaus(ip)
-                filestream.progressbar_ip(ip_addresses)
+                    for i in text_body(urlscan):
+                        tmp.write(i)
 
-                for i in text_body(urlhaus):
-                    tmp.write(i)
-                # --- URLhaus end ---
-                # --- AbuseIPdb ---
-                abuseipdb = filestream.ip_abuseipdb(ip)
-                filestream.progressbar_ip(ip_addresses)
+                    # --- URLscan end ---
+                    # --- URLhaus ---
+                    urlhaus = filestream.ip_urlhaus(ip, verbosity_check)
+                    filestream.progressbar_ip(ip_addresses)
 
-                for i in text_body(abuseipdb):
-                    tmp.write(i)
-                # --- AbuseIPdb end ---
-                # --- virustotal ---
-                virustotal = filestream.ip_virustotal(ip)
-                filestream.progressbar_ip(ip_addresses)
+                    for i in text_body(urlhaus):
+                        tmp.write(i)
+                    # --- URLhaus end ---
+                    # --- AbuseIPdb ---
+                    abuseipdb = filestream.ip_abuseipdb(ip, verbosity_check)
+                    filestream.progressbar_ip(ip_addresses)
 
-                for i in text_body(virustotal):
-                    tmp.write(i)
-                # --- virustotal end---
+                    for i in text_body(abuseipdb):
+                        tmp.write(i)
+                    # --- AbuseIPdb end ---
+                    # --- virustotal ---
+                    virustotal = filestream.ip_virustotal(ip, verbosity_check)
+                    filestream.progressbar_ip(ip_addresses)
+
+                    for i in text_body(virustotal):
+                        tmp.write(i)
+                    # --- virustotal end---
+                else:
+                    # --- URLscan ---
+                    urlscan = filestream.ip_urlscan(ip, verbosity_check, sha_sum_list)
+                    filestream.progressbar_ip(ip_addresses)
+
+                    for i in text_body(urlscan):
+                        tmp.write(i)
+
+                    # --- URLscan end ---
+                    # --- URLhaus ---
+                    urlhaus = filestream.ip_urlhaus(ip, verbosity_check, sha_sum_list)
+                    filestream.progressbar_ip(ip_addresses)
+
+                    for i in text_body(urlhaus):
+                        tmp.write(i)
+                    # --- URLhaus end ---
+                    # --- AbuseIPdb ---
+                    abuseipdb = filestream.ip_abuseipdb(ip, verbosity_check, sha_sum_list)
+                    filestream.progressbar_ip(ip_addresses)
+
+                    for i in text_body(abuseipdb):
+                        tmp.write(i)
+                    # --- AbuseIPdb end ---
+                    # --- virustotal ---
+                    virustotal, sha = filestream.ip_virustotal(ip, verbosity_check, sha_sum_list)
+                    filestream.progressbar_ip(ip_addresses)
+                    
+                    for i in text_body(virustotal):
+                        tmp.write(i)
+                    for a in text_body(sha):
+                        tmp.write(a)
+                    
+                        # --- virustotal end---
         # ===================== ************* ===============================
         # ---------------------- END IP addresses -----------------------
         # ===================== ************* ===============================
@@ -208,7 +243,9 @@ def get_context(context):
 
 """
 def text_header(head):
-    test = '''### Attacker\n{0[attackers]}\n### Victim\n{0[victims]}\n### Context\n{0[context]}\n\n'''.format(head)
+    test = '''  ### Attacker\n{0[attackers]}
+                ### Victim\n{0[victims]}\n
+                ### Context\n{0[context]}\n\n'''.format(head)
     print(test)
     return test
 """
@@ -234,9 +271,9 @@ def check_ip(ipv4_address):
     return test
 
 
-def manual_mode_ip(ip_addr):
+def manual_mode_ip(ip_addr: list, verbosity: bool, sha_sum: list = None):
     # check if argpase values are null
-    if ip_addr == []:
+    if ip_addr is None:
         ip = ''
         while True:
             ip = input('Insert a list of potential malicious ip addresses:')
@@ -252,16 +289,30 @@ def manual_mode_ip(ip_addr):
         attackers = {}
         attackers['attackers'] = ipss
         print(attackers)
-        collector(attackers)
+        collector(attackers, verbosity)
     else:
+        # --- Complete manual mode ---
+        #print("Sono qua e sono da solo ")
+        #print(ip_addr)
+        for ip in ip_addr:
+            ipss = set(ip_addr)
+        attackers = {}
+        attackers['attackers'] = ipss
+        print(attackers)
+        if sha_sum == []:
+            return collector(attackers, verbosity)
+        else:
+            return collector(attackers, verbosity, sha_sum)
         pass
 
 
-def verbose_mode(verbosity):
+def verbose_mode(verbosity: bool) -> bool:
     if verbosity:
         print("Flag non c'è")  # verbosity minima
+        return False
     else:
         print("Flag c'è")  # verbosity massima
+        return True
 
 
 if __name__ == '__main__':

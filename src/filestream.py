@@ -49,7 +49,7 @@ def progressbar_ip(ip_addresses):
 # ===================== ************* =================================
 
 
-def ip_abuseipdb(ip: str) -> dict:
+def ip_abuseipdb(ip: str, boolvalue: bool, sha_sum: list = None) -> dict:
     """
     Documentation for ip_abuseipdb.
     It gets one ip addresse at a time as a string,
@@ -79,16 +79,20 @@ def ip_abuseipdb(ip: str) -> dict:
 
     final_url = request_url.replace("IP", ip)
     # --- Add Timeout for request ---
+    
     try:
         info_json = requests.get(final_url, timeout=8)
         response = json.loads(info_json.text)
-        return querry_status_abuseipdb(response)
+        if boolvalue:
+            return response
+        else:
+            return querry_status_abuseipdb(response)
     except requests.exceptions.Timeout:
         print(Fore.RED + 'Timeout error occurred for AbuseIPdb')
         return
 
 
-def ip_urlscan(ip: str) -> dict:
+def ip_urlscan(ip: str, boolvalue: bool, sha_sum: list = None) -> dict:
     """
     Documentation for ip_urlscan.
     It gets one ip addresse at a time as a string,
@@ -110,17 +114,20 @@ def ip_urlscan(ip: str) -> dict:
     """
     # --- urlscan.io ok----
     data = get_api()
-    querry_ip = (data['API info']['urlscan.io']['querry_ip'])
+    querry_ip = (data['API info']['urlscan.io']['url'])
     colorIP = (Fore.RED + ip)
     print(iconOK + ' Checking URLscan for ' + colorIP)
 
     requests_url = querry_ip+ip
     info_json = requests.get(requests_url)
     response = json.loads(info_json.text)
-    return querry_status_urlscan_ip(response)
+    if boolvalue:
+        return response
+    else:
+        return querry_status_urlscan_ip(response)
 
 
-def ip_urlhaus(ip: str) -> str:
+def ip_urlhaus(ip: str, boolvalue: bool, sha_sum: list = None) -> dict:
     """
     Documentation for ip_urlhaus.
     It gets one ip addresse at a time as a string,
@@ -150,10 +157,13 @@ def ip_urlhaus(ip: str) -> str:
     r = requests.post(querry_host_url, params)
     r.raise_for_status()
 
-    return querry_status_urlhause_ip(r.json())
+    if boolvalue:
+        return r.json()
+    else:
+        return querry_status_urlhause_ip(r.json())
 
 
-def ip_virustotal(ip: str) -> dict:
+def ip_virustotal(ip: str, boolvalue: bool, sha_sum: list = None) -> dict:
     """
     Documentation for ip_urlhaus.
     It gets one ip addresse at a time as a string,
@@ -173,19 +183,43 @@ def ip_virustotal(ip: str) -> dict:
     dict -- Returns json as a dict.
 
     """
-    # --- virustotal data ---
-    data = get_api()
-    colorIP = (Fore.RED + ip)
-    api = (data['API info']['virustotal']['api'])
-    print(iconOK + ' Checking virustotal for ' + colorIP)
-    ip_address_url = (data['API info']['virustotal']['ip_address_url'])
+    if sha_sum is None:
+        # --- virustotal data ---
+        data = get_api()
+        colorIP = (Fore.RED + ip)
+        api = (data['API info']['virustotal']['api'])
+        print(iconOK + ' Checking virustotal for ' + colorIP)
+        ip_address_url = (data['API info']['virustotal']['ip_address_url'])
 
-    # https://developers.virustotal.com/v2.0/reference#comments-get
+        # https://developers.virustotal.com/v2.0/reference#comments-get
 
-    params = {'apikey': api, 'ip': ip}
-    response = requests.get(ip_address_url, params=params)
-    response.raise_for_status()
-    return querry_status_virustotal_ip(response.json())
+        params = {'apikey': api, 'ip': ip}
+        response_ip = requests.get(ip_address_url, params=params)
+        if boolvalue:
+            return response_ip.json()
+        else:
+            return querry_status_virustotal_ip(response_ip.json())
+    else:
+        print(sha_sum)
+        # --- virustotal data ---
+        data = get_api()
+        colorIP = (Fore.RED + ip)
+        api = (data['API info']['virustotal']['api'])
+        print(iconOK + ' Checking virustotal for ' + colorIP)
+        ip_address_url = (data['API info']['virustotal']['ip_address_url'])
+        file_address_url = (data['API info']['virustotal']['file_url'])
+
+        # https://developers.virustotal.com/v2.0/reference#comments-get
+
+        params_ip = {'apikey': api, 'ip': ip}
+        params_file = {'apikey': api, 'resource': sha_sum}
+        response_ip = requests.get(ip_address_url, params=params_ip)
+        response_file = requests.get(file_address_url, params=params_file)
+
+        if boolvalue:
+            return response_ip.json(), response_file.json()
+        else:
+            return querry_status_virustotal_ip(response_ip.json()), querry_status_virustotal_file(response_file.json())
     """
         for x in context:
         params = {'apikey': api, 'resource': x}
@@ -415,10 +449,7 @@ def querry_status_abuseipdb(positions: dict) -> dict:
         return False
     else:
         try:
-            result_with_correct_category = (max(positions, key=lambda x:
-                                            (len(x['ip']),
-                                                len(x['category'])))
-                                            )
+            result_with_correct_category = (max(positions, key=lambda x:(len(x['ip']),len(x['category']))))
             data_from_abuseipdb = {
                 "attacker": result_with_correct_category['ip'],
                 "category":
@@ -430,6 +461,8 @@ def querry_status_abuseipdb(positions: dict) -> dict:
             return data_from_abuseipdb
         except KeyError:
             print("KeyError")
+        except TypeError:
+            print("TypeError")
 
 
 def querry_status_virustotal_ip(positions: dict) -> dict:
@@ -509,3 +542,24 @@ def querry_status_virustotal_ip(positions: dict) -> dict:
             return simple_dict
         except KeyError:
             print("KeyError")
+
+
+def querry_status_virustotal_file(resp_json):
+    if resp_json['response_code'] == 0:
+        print('[!] Invalid sha')
+        return False
+    else:
+        detected_dict = {}
+        for index, av_name in enumerate(resp_json['scans']):
+        # For each Anti-virus name, find the detected value.
+            detected = resp_json['scans'][av_name]['detected']
+            # if the above value is true.
+            detected_dict["found_positives"] = ("{} / {}".format(resp_json['positives'], resp_json['total']))
+            detected_dict["permalink"] = resp_json["permalink"]
+            if detected is True:
+                # Print Engines which detect malware.
+                # print(f'{av_name} detected Malware!')
+                # Add detected engine name and it's result to the detected_dict.
+                detected_dict[av_name] = resp_json['scans'][av_name]['result']
+    #print(detected_dict)
+    return detected_dict
