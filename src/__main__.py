@@ -308,10 +308,10 @@ def manual_mode_ip(ip_addr: list, verbosity: bool, sha_sum: list = None):
 
 def verbose_mode(verbosity: bool) -> bool:
     if verbosity:
-        print("Flag non c'è")  # verbosity minima
+        #print("Flag non c'è")   verbosity minima
         return False
     else:
-        print("Flag c'è")  # verbosity massima
+        #print("Flag c'è")   verbosity massima
         return True
 
 

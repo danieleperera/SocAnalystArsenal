@@ -8,4 +8,3 @@ RES = ROOT / 'res'
 
 drivers = RES / 'drivers'
 api = RES / 'api'
-

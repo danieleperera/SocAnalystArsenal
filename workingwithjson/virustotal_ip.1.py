@@ -392,9 +392,7 @@ def querry_status_virustotal_file(resp_json):
             detected_dict["found_positives"] = ("{} / {}".format(resp_json['positives'], resp_json['total']))
             detected_dict["permalink"] = resp_json["permalink"]
             #detected_dict[av_name] = resp_json['scans'][av_name]['result']
-            print("ciao")
-            print(detected)
-            if detected == 'True' or detected == '\n':
+            if detected == 'True':
                 # Print Engines which detect malware.
                 # print(f'{av_name} detected Malware!')
                 # Add detected engine name and it's result to the detected_dict.
@@ -406,12 +404,25 @@ def querry_status_virustotal_file(resp_json):
 def text_body(body):
     try:
         for key, val in body.items():
-            yield (('{} -> {}').format(key, val))
+            yield (['{},{}'].format(key, val))
     except AttributeError:
         pass
+
+
+def printTable(tbl, borderHorizontal='-', borderVertical='|', borderCross='+'):
+    cols = [list(x) for x in zip(*tbl)]
+    lengths = [max(map(len, map(str, col))) for col in cols]
+    f = borderVertical + borderVertical.join(' {:>%d} ' % l for l in lengths) + borderVertical
+    s = borderCross + borderCross.join(borderHorizontal * (l+2) for l in lengths) + borderCross
+
+    print(s)
+    for row in tbl:
+        print(f.format(*row))
+        print(s)
 
 
 boh = text_body(querry_status_virustotal_file(querry_ip_response))
 
 for i in boh:
+    printTable(i)
     print(i)
