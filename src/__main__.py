@@ -11,7 +11,7 @@ from colorama import Fore
 import argparse
 from selenium.common import exceptions
 
-
+# python .\__main__.py -m --ip 68.183.65.178 --sha 33f810fd192ee4828b331fcbb11a33a567c53ff2bbf24234c48f4a7d68b73f73 -v
 def main():
     """
     Documentation for main.
@@ -167,11 +167,12 @@ def collector(info: dict, verbosity_check: bool, sha_sum_list: list = None):
                     # --- virustotal ---
                     virustotal, sha = filestream.ip_virustotal(ip, verbosity_check, sha_sum_list)
                     filestream.progressbar_ip(ip_addresses)
-
+                    
                     for i in text_body(virustotal):
                         tmp.write(i)
                     for a in text_body(sha):
                         tmp.write(a)
+                    
                         # --- virustotal end---
         # ===================== ************* ===============================
         # ---------------------- END IP addresses -----------------------

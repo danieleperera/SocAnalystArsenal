@@ -375,7 +375,7 @@ querry_ok = {
  }
  
  
-def querry_status_virustotal_ip(resp_json):
+def querry_status_virustotal_file(resp_json):
     if resp_json['response_code'] == 0:
         print('[!] Invalid sha')
         return False
@@ -393,6 +393,18 @@ def querry_status_virustotal_ip(resp_json):
                 # Add detected engine name and it's result to the detected_dict.
                 detected_dict[av_name] = resp_json['scans'][av_name]['result']    
     print(detected_dict)
+    return detected_dict
 
 
-querry_status_virustotal_ip(querry_ok)
+def text_body(body):
+    try:
+        for key, val in body.items():
+            yield (('{} -> {}').format(key, val))
+    except AttributeError:
+        pass
+
+
+boh = text_body(querry_status_virustotal_file(querry_ok))
+
+for i in boh:
+    print(i)

@@ -114,7 +114,7 @@ def ip_urlscan(ip: str, boolvalue: bool, sha_sum: list = None) -> dict:
     """
     # --- urlscan.io ok----
     data = get_api()
-    querry_ip = (data['API info']['urlscan.io']['querry_ip'])
+    querry_ip = (data['API info']['urlscan.io']['url'])
     colorIP = (Fore.RED + ip)
     print(iconOK + ' Checking URLscan for ' + colorIP)
 
@@ -219,7 +219,7 @@ def ip_virustotal(ip: str, boolvalue: bool, sha_sum: list = None) -> dict:
         if boolvalue:
             return response_ip.json(), response_file.json()
         else:
-            return querry_status_virustotal_ip(response_ip.json())
+            return querry_status_virustotal_ip(response_ip.json()), querry_status_virustotal_file(response_file.json())
     """
         for x in context:
         params = {'apikey': api, 'resource': x}
@@ -542,3 +542,24 @@ def querry_status_virustotal_ip(positions: dict) -> dict:
             return simple_dict
         except KeyError:
             print("KeyError")
+
+
+def querry_status_virustotal_file(resp_json):
+    if resp_json['response_code'] == 0:
+        print('[!] Invalid sha')
+        return False
+    else:
+        detected_dict = {}
+        for index, av_name in enumerate(resp_json['scans']):
+        # For each Anti-virus name, find the detected value.
+            detected = resp_json['scans'][av_name]['detected']
+            # if the above value is true.
+            detected_dict["found_positives"] = ("{} / {}".format(resp_json['positives'], resp_json['total']))
+            detected_dict["permalink"] = resp_json["permalink"]
+            if detected == 'True':
+                # Print Engines which detect malware.
+                # print(f'{av_name} detected Malware!')
+                # Add detected engine name and it's result to the detected_dict.
+                detected_dict[av_name] = resp_json['scans'][av_name]['result']
+    print(detected_dict)
+    return detected_dict
