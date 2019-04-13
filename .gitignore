@@ -2,4 +2,12 @@
 debug.log
 res/api/api.json
 src/webscapper.py
+src/webscapper1.py
+src/webscapper2.py
+loginpage.py
 __pycache__
+workingwithjson/abuseipdb.py
+workingwithjson/argparse.py
+workingwithjson/urlhause.py
+workingwithjson/urlscan.py
+workingwithjson/virustotal_ip.py

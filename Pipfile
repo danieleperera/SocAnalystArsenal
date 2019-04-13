@@ -16,6 +16,8 @@ selenium = "*"
 lxml = "*"
 tqdm = "*"
 colorama = "*"
+pyperclip = "*"
+win10toast = "*"
 
 [requires]
 python_version = "3.7"
