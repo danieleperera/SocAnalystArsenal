@@ -426,10 +426,16 @@ def printTable(tbl, borderHorizontal='-', borderVertical='|', borderCross='+'):
     f = borderVertical + borderVertical.join(' {:>%d} ' % l for l in lengths) + borderVertical
     s = borderCross + borderCross.join(borderHorizontal * (l+2) for l in lengths) + borderCross
 
+    string = ''
+    string += s + '\n'
     print(s)
     for col in cols:
+        string += f.format(*col) + '\n'
         print(f.format(*col))
+        string += s + '\n'
         print(s)
+
+    return string
 
 
 tableContent = text_body(querry_status_virustotal_file(querry_ip_response))
