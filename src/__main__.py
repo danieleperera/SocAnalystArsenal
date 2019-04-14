@@ -232,7 +232,7 @@ def collector(info: dict, verbosity_check: bool, sha_sum_list: list = None):
                 print(' Ticket was copied to clipboard successfully')
                 print("\n\nRemoving tmp files... Please wait")
                 pyperclip.copy(content)
-                toaster.show_toast("""Copied to clipboard""", duration=10)
+        toaster.show_toast("""Copied to clipboard""", duration=10)
     finally:
         # print(path)
         os.remove(path)

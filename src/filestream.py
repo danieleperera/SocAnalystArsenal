@@ -533,7 +533,7 @@ def querry_status_virustotal_ip(positions: dict, ip_address_to_view: str) -> dic
             simple_dict = {}
             for index, item in enumerate(
                     positions['detected_downloaded_samples']):
-                simple_dict["Detected samples "] = ('for this ip address : {}'.format(ip_address_to_view))
+                simple_dict["Detected samples "] = ('that communicate this ip address -> {}'.format(ip_address_to_view))
                 simple_dict[f"detected samples_{index}"] = item['sha256']
                 #simple_dict[f"file_score_{index}"] = str(item['positives'])+'/'+str(item['total'])
             for index, item in enumerate(positions['detected_urls']):
