@@ -19,7 +19,7 @@ def main():
     It prints the banner and uses argparse to get data from user.
     If no option is given, it defaults to use webscapper.
     """
-    print(Fore.CYAN + filestream.print_banner())
+    #print(Fore.CYAN + filestream.print_banner())
 
     parser = argparse.ArgumentParser()
 
@@ -142,36 +142,72 @@ def collector(info: dict, verbosity_check: bool, sha_sum_list: list = None):
                         tmp.write(i)
                     # --- virustotal end---
                 else:
-                    # --- URLscan ---
-                    urlscan = filestream.ip_urlscan(ip, verbosity_check, sha_sum_list)
-                    filestream.progressbar_ip(ip_addresses)
+                    if verbosity_check:
+                        # --- URLscan ---
+                        urlscan = filestream.ip_urlscan(ip, verbosity_check, sha_sum_list)
+                        filestream.progressbar_ip(ip_addresses)
 
-                    for i in text_body(urlscan):
-                        tmp.write(i)
+                        for i in text_body(urlscan):
+                            tmp.write(i)
 
-                    # --- URLscan end ---
-                    # --- URLhaus ---
-                    urlhaus = filestream.ip_urlhaus(ip, verbosity_check, sha_sum_list)
-                    filestream.progressbar_ip(ip_addresses)
+                        # --- URLscan end ---
+                        # --- URLhaus ---
+                        urlhaus = filestream.ip_urlhaus(ip, verbosity_check, sha_sum_list)
+                        filestream.progressbar_ip(ip_addresses)
 
-                    for i in text_body(urlhaus):
-                        tmp.write(i)
-                    # --- URLhaus end ---
-                    # --- AbuseIPdb ---
-                    abuseipdb = filestream.ip_abuseipdb(ip, verbosity_check, sha_sum_list)
-                    filestream.progressbar_ip(ip_addresses)
+                        for i in text_body(urlhaus):
+                            tmp.write(i)
+                        # --- URLhaus end ---
+                        # --- AbuseIPdb ---
+                        abuseipdb = filestream.ip_abuseipdb(ip, verbosity_check, sha_sum_list)
+                        filestream.progressbar_ip(ip_addresses)
 
-                    for i in text_body(abuseipdb):
-                        tmp.write(i)
-                    # --- AbuseIPdb end ---
-                    # --- virustotal ---
-                    virustotal, sha = filestream.ip_virustotal(ip, verbosity_check, sha_sum_list)
-                    filestream.progressbar_ip(ip_addresses)
-                    
-                    for i in text_body(virustotal):
-                        tmp.write(i)
-                    for a in text_body(sha):
-                        tmp.write(a)
+                        for i in text_body(abuseipdb):
+                            tmp.write(i)
+                        # --- AbuseIPdb end ---
+                        # --- virustotal ---
+                        virustotal, sha = filestream.ip_virustotal(ip, verbosity_check, sha_sum_list)
+                        filestream.progressbar_ip(ip_addresses)
+                        
+                        for i in text_body(virustotal):
+                            tmp.write(i)
+                        for a in text_body(sha):
+                            tmp.write(a)
+
+                    else:
+                        # --- URLscan ---
+                        urlscan = filestream.ip_urlscan(ip, verbosity_check, sha_sum_list)
+                        filestream.progressbar_ip(ip_addresses)
+
+                        for i in text_body(urlscan):
+                            tmp.write(i)
+
+                        # --- URLscan end ---
+                        # --- URLhaus ---
+                        urlhaus = filestream.ip_urlhaus(ip, verbosity_check, sha_sum_list)
+                        filestream.progressbar_ip(ip_addresses)
+
+                        for i in text_body(urlhaus):
+                            tmp.write(i)
+                        # --- URLhaus end ---
+                        # --- AbuseIPdb ---
+                        abuseipdb = filestream.ip_abuseipdb(ip, verbosity_check, sha_sum_list)
+                        filestream.progressbar_ip(ip_addresses)
+
+                        for i in text_body(abuseipdb):
+                            tmp.write(i)
+                        # --- AbuseIPdb end ---
+                        # --- virustotal ---
+                        virustotal, sha = filestream.ip_virustotal(ip, verbosity_check, sha_sum_list)
+                        filestream.progressbar_ip(ip_addresses)
+                        
+                        tableContent_virustotal = text_body_table(virustotal)
+                        tmp.write('{}'.format(printTable(tableContent_virustotal)))
+                        
+                        tableContent = text_body_table(sha)
+                        test = printTable(tableContent)
+                        tmp.write('{}'.format(test))
+
                     
                         # --- virustotal end---
         # ===================== ************* ===============================
@@ -259,6 +295,14 @@ def text_body(body):
         pass
 
 
+def text_body_table(body):
+    try:
+        for key, val in body.items():
+            yield (('{}, {}').format(key, val))
+    except AttributeError:
+        pass
+
+
 def check_ip(ipv4_address):
     test = []
     for i in ipv4_address.split(","):
@@ -330,10 +374,16 @@ def printTable(tbl, borderHorizontal='-', borderVertical='|', borderCross='+'):
     f = borderVertical + borderVertical.join(' {:>%d} ' % l for l in lengths) + borderVertical
     s = borderCross + borderCross.join(borderHorizontal * (l+2) for l in lengths) + borderCross
 
+    string = ''
+    string += s + '\n'
     print(s)
     for col in cols:
+        string += f.format(*col) + '\n'
         print(f.format(*col))
+        string += s + '\n'
         print(s)
+
+    return string
 
 
 if __name__ == '__main__':

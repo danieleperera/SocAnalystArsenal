@@ -533,11 +533,11 @@ def querry_status_virustotal_ip(positions: dict) -> dict:
             simple_dict = {}
             for index, item in enumerate(
                     positions['detected_downloaded_samples']):
-                simple_dict[f"detected_malicious_downloaded_samples_{index}_sha256"] = item['sha256']
-                simple_dict[f"file_score_{index}"] = str(item['positives'])+'/'+str(item['total'])
+                simple_dict[f"detected_samples_{index}"] = item['sha256']
+                #simple_dict[f"file_score_{index}"] = str(item['positives'])+'/'+str(item['total'])
             for index, item in enumerate(positions['detected_urls']):
                 simple_dict[f"detected_urls_{index}"] = item['url']
-                simple_dict[f"urls_score_{index}"] = str(item['positives'])+'/'+str(item['total'])
+                #simple_dict[f"urls_score_{index}"] = str(item['positives'])+'/'+str(item['total'])
             # print(simple_dict)
             return simple_dict
         except KeyError:
@@ -555,7 +555,7 @@ def querry_status_virustotal_file(resp_json):
             detected = resp_json['scans'][av_name]['detected']
             # if the above value is true.
             detected_dict["found_positives"] = ("{} / {}".format(resp_json['positives'], resp_json['total']))
-            detected_dict["permalink"] = resp_json["permalink"]
+            #detected_dict["permalink"] = resp_json["permalink"]
             if detected is True:
                 # Print Engines which detect malware.
                 # print(f'{av_name} detected Malware!')

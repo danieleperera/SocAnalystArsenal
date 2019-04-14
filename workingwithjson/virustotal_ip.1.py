@@ -403,7 +403,7 @@ def querry_status_virustotal_file(resp_json):
     return detected_dict
 
 
-def text_body(body):
+def text_body_table(body):
     try:
         for key, val in body.items():
             yield (('{}, {}').format(key, val))
