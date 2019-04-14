@@ -315,5 +315,26 @@ def verbose_mode(verbosity: bool) -> bool:
         return True
 
 
+def printTable(tbl, borderHorizontal='-', borderVertical='|', borderCross='+'):
+    # get the columns split by the values
+    cols = [col.split(', ') for col in tbl]
+
+    # find the longests strings
+    lenghts = [[] for _ in range(len(max(cols, key=len)))]
+    for col in cols:
+        for idx, value in enumerate(col):
+            lenghts[idx].append(len(value))
+    lengths = [max(lenght) for lenght in lenghts]
+
+    # create formatting string with the length of the longest elements
+    f = borderVertical + borderVertical.join(' {:>%d} ' % l for l in lengths) + borderVertical
+    s = borderCross + borderCross.join(borderHorizontal * (l+2) for l in lengths) + borderCross
+
+    print(s)
+    for col in cols:
+        print(f.format(*col))
+        print(s)
+
+
 if __name__ == '__main__':
     main()
