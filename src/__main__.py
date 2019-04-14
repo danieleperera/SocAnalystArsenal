@@ -19,7 +19,7 @@ def main():
     It prints the banner and uses argparse to get data from user.
     If no option is given, it defaults to use webscapper.
     """
-    #print(Fore.CYAN + filestream.print_banner())
+    print(Fore.CYAN + filestream.print_banner())
 
     parser = argparse.ArgumentParser()
 
@@ -137,9 +137,9 @@ def collector(info: dict, verbosity_check: bool, sha_sum_list: list = None):
                     # --- virustotal ---
                     virustotal = filestream.ip_virustotal(ip, verbosity_check)
                     filestream.progressbar_ip(ip_addresses)
-
-                    for i in text_body(virustotal):
-                        tmp.write(i)
+                    
+                    tableContent_virustotal = text_body_table(virustotal)
+                    tmp.write('\n {} \n'.format(printTable(tableContent_virustotal)))
                     # --- virustotal end---
                 else:
                     if verbosity_check:
@@ -202,11 +202,11 @@ def collector(info: dict, verbosity_check: bool, sha_sum_list: list = None):
                         filestream.progressbar_ip(ip_addresses)
                         
                         tableContent_virustotal = text_body_table(virustotal)
-                        tmp.write('{}'.format(printTable(tableContent_virustotal)))
+                        tmp.write('\n {} \n'.format(printTable(tableContent_virustotal)))
                         
                         tableContent = text_body_table(sha)
                         test = printTable(tableContent)
-                        tmp.write('{}'.format(test))
+                        tmp.write('{}\n'.format(test))
 
                     
                         # --- virustotal end---

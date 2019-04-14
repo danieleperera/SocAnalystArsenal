@@ -198,7 +198,7 @@ def ip_virustotal(ip: str, boolvalue: bool, sha_sum: list = None) -> dict:
         if boolvalue:
             return response_ip.json()
         else:
-            return querry_status_virustotal_ip(response_ip.json())
+            return querry_status_virustotal_ip(response_ip.json(), ip)
     else:
         print(sha_sum)
         # --- virustotal data ---
@@ -219,7 +219,7 @@ def ip_virustotal(ip: str, boolvalue: bool, sha_sum: list = None) -> dict:
         if boolvalue:
             return response_ip.json(), response_file.json()
         else:
-            return querry_status_virustotal_ip(response_ip.json()), querry_status_virustotal_file(response_file.json())
+            return querry_status_virustotal_ip(response_ip.json(), ip), querry_status_virustotal_file(response_file.json())
     """
         for x in context:
         params = {'apikey': api, 'resource': x}
@@ -465,7 +465,7 @@ def querry_status_abuseipdb(positions: dict) -> dict:
             print("TypeError")
 
 
-def querry_status_virustotal_ip(positions: dict) -> dict:
+def querry_status_virustotal_ip(positions: dict, ip_address_to_view: str) -> dict:
     """
     Documentation for querry_status_abuseipdb.
     It gets a json a dictionary,
@@ -533,7 +533,8 @@ def querry_status_virustotal_ip(positions: dict) -> dict:
             simple_dict = {}
             for index, item in enumerate(
                     positions['detected_downloaded_samples']):
-                simple_dict[f"detected_samples_{index}"] = item['sha256']
+                simple_dict["Detected samples "] = ('for this ip address : {}'.format(ip_address_to_view))
+                simple_dict[f"detected samples_{index}"] = item['sha256']
                 #simple_dict[f"file_score_{index}"] = str(item['positives'])+'/'+str(item['total'])
             for index, item in enumerate(positions['detected_urls']):
                 simple_dict[f"detected_urls_{index}"] = item['url']

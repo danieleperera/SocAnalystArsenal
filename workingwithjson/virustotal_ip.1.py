@@ -438,9 +438,9 @@ def printTable(tbl, borderHorizontal='-', borderVertical='|', borderCross='+'):
     return string
 
 
-tableContent = text_body(querry_status_virustotal_file(querry_ip_response))
+tableContent = text_body_table(querry_status_virustotal_file(querry_ip_response))
 fd, path = tempfile.mkstemp()
 print(path)
 with os.fdopen(fd, 'r+') as tmp:
     test = printTable(tableContent)
-    tmp.write('{}'.format(test))
+    tmp.write('{} \n'.format(test))
