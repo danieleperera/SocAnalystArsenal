@@ -26,6 +26,18 @@ This tool is used to give a quick structure to a SOC level 1 ticket. I used Sele
 ## Getting Started
 
 These instructions will get you a copy of the project up and running on your local machine for development and testing purposes. See deployment for notes on how to deploy the project on a live system.
+```
+virustotal 	    	      -> Check Whois information for IP address/Domain
+shodan     	    	      -> Check information about host and see if it was comprimised
+apility.io  	    	    -> Check reputation and activity through time
+hybrid     	    	      -> Check assosiation with malware
+malshare,urlhause   	  -> Check IP address/Domain was used to deliver malware
+threatcrowd 	    	    -> Check Current status
+abuseipdb	    	        -> Check if it's blacklisted
+urlscan.io,threatminer 	-> Check further more information
+
+>Create SOC L1 ticket<
+```
 
 ### Prerequisites
 
