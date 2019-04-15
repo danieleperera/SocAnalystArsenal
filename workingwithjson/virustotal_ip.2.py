@@ -1,26 +1,19 @@
-def printTable(tbl, borderHorizontal='-', borderVertical='|', borderCross='+'):
-    cols = [list(x) for x in zip(*tbl)]
-    lengths = [max(map(len, map(str, col))) for col in cols]
-    f = borderVertical + borderVertical.join(' {:>%d} ' % l for l in lengths) + borderVertical
-    s = borderCross + borderCross.join(borderHorizontal * (l+2) for l in lengths) + borderCross
-
-    print(s)
-    for row in tbl:
-        print(f.format(*row))
-        print(s)
+info = {'attackers': {
+        '124.164.251.179',
+        '179.251.164.124.adsl-pool.sx.cn'},
+        'victims': '10.10.2.140',
+        'context': 'http GET 46.20.95.185'}
 
 
-x = [
-    ['test', ''], 
-    [0, 0], 
-    [250, 6], 
-    [500, 21], 
-    [750, 50], 
-    [1000, 87], 
-    [1250, 135], 
-    [1500, 196], 
-    [1750, 269], 
-    [2000, 351]
-    ]
+def text_header(head):
+    test = '''### Attackers -> {}
+### Victims   -> {}
+### Context   -> {}'''.format(
+                head.get("attackers", "Not found!"),
+                head.get("victims", "Not found!"),
+                head.get("context", "Not found!"))
+    print(test)
+    return test
 
-printTable(x)
+
+text_header(info)

@@ -29,7 +29,7 @@ def main():
                         help='To enter manual mode use this option')
 
     parser.add_argument('--version', action='version',
-                        version='%(prog)s 1.0')
+                        version='%(prog)s 0.0.1')
 
     parser.add_argument('--ip', nargs='+', dest='ip',
                         help='give a list of potential malicious ip addresses')
@@ -102,14 +102,14 @@ def collector(info: dict, verbosity_check: bool, sha_sum_list: list = None):
     toaster = ToastNotifier()
     # --- Clipboard / tmp file ---
     fd, path = tempfile.mkstemp()
-    print(sha_sum_list)
+    #print(sha_sum_list)
     try:
         with os.fdopen(fd, 'r+') as tmp:
             #  ===================== ************* ===========================
             # ------ IP addresses are getting worked here --------------------
             # ===================== ************* ============================
             ip_addresses = get_ip(info)
-            # tmp.write(text_header(info))
+            tmp.write(text_header(info))
             for ip in ip_addresses:
                 if sha_sum_list is None:
                     # --- URLscan ---
@@ -232,7 +232,7 @@ def collector(info: dict, verbosity_check: bool, sha_sum_list: list = None):
                 print(' Ticket was copied to clipboard successfully')
                 print("\n\nRemoving tmp files... Please wait")
                 pyperclip.copy(content)
-        toaster.show_toast("""Copied to clipboard""", duration=10)
+        toaster.show_toast("""Ticket copied to clipboard""", duration=10)
     finally:
         # print(path)
         os.remove(path)
@@ -277,14 +277,15 @@ def get_context(context):
         return context['context']
 
 
-"""
 def text_header(head):
-    test = '''  ### Attacker\n{0[attackers]}
-                ### Victim\n{0[victims]}\n
-                ### Context\n{0[context]}\n\n'''.format(head)
+    test = '''\n### Attackers -> {}
+### Victims   -> {}
+### Context   -> {}\n\n'''.format(
+                head.get("attackers", "Not found!"),
+                head.get("victims", "Not found!"),
+                head.get("context", "Not found!"))
     print(test)
     return test
-"""
 
 
 def text_body(body):
@@ -332,7 +333,7 @@ def manual_mode_ip(ip_addr: list, verbosity: bool, sha_sum: list = None):
         # --- End set variable ---
         attackers = {}
         attackers['attackers'] = ipss
-        print(attackers)
+        #print(attackers)
         collector(attackers, verbosity)
     else:
         # --- Complete manual mode ---
@@ -342,7 +343,7 @@ def manual_mode_ip(ip_addr: list, verbosity: bool, sha_sum: list = None):
             ipss = set(ip_addr)
         attackers = {}
         attackers['attackers'] = ipss
-        print(attackers)
+        #print(attackers)
         if sha_sum == []:
             return collector(attackers, verbosity)
         else:
