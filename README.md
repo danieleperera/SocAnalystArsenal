@@ -31,8 +31,7 @@ This tool is used to give a quick structure to a SOC level 1 ticket. I used Sele
        /______//        ;-------------------;
       (______(/             danieleperera
       
-usage: __main__.py [-h] [-m] [--version] [--ip IP [IP ...]] [--sha SHA_SUM]
-                   [-v]
+usage: Soc-L1-Automation [-h] [-m] [--version] [--ip IP [IP ...]] [--sha SHA_SUM] [-v]
 
 optional arguments:
   -h, --help         show this help message and exit
