@@ -22,6 +22,26 @@ This tool is used to give a quick structure to a SOC level 1 ticket. I used Sele
   - do more testing in manual mode
   - try to integrate semi-manual mode
   - if no results found don't notify
+
+## Usage
+```
+          _______
+         /      /,      ;___________________;
+        /      //       ; Soc-L1-Automation ;
+       /______//        ;-------------------;
+      (______(/             danieleperera
+      
+usage: __main__.py [-h] [-m] [--version] [--ip IP [IP ...]] [--sha SHA_SUM]
+                   [-v]
+
+optional arguments:
+  -h, --help         show this help message and exit
+  -m, --manual-mode  To enter manual mode use this option
+  --version          show program's version number and exit
+  --ip IP [IP ...]   give a list of potential malicious ip addresses
+  --sha SHA_SUM      Add SHA values to a list
+  -v, --verbose      Use this flag to get full data from APIs
+```
   
 ## Getting Started
 
@@ -29,13 +49,13 @@ These instructions will get you a copy of the project up and running on your loc
 
 | Api         | Description                                                | Auth   |
 |-------------|------------------------------------------------------------|--------|
-| virustotal  | Check Whois information for IP address/Domain              | apikey |
-| shodan      | Check information about host and see if it was compromised | apikey |
-| apility.io  | Check reputation and activity through time                 | apikey |
-| hybrid      | Check association with malware                             | apikey |
-| malshare    | Check IP address/Domain was used to spread malware         | apikey |
+| virustotal  | Check Whois information for IP address/Domain              | `apikey` |
+| shodan      | Check information about host and see if it was compromised | `apikey`|
+| apility.io  | Check reputation and activity through time                 | `apikey` |
+| hybrid      | Check association with malware                             | `apikey` |
+| malshare    | Check IP address/Domain was used to spread malware         | `apikey` |
 | urlhause    | Check IP address/Domain was used to spread malware         | none   |
-| threatcrowd | Check Current status                                       | apikey |
+| threatcrowd | Check Current status                                       | `apikey` |
 | abuseipdb   | Check if it's blacklisted                                  | none   |
 | urlscan.io  | Check further more information                             | none   |
 | threatminer | Check further more information                             | none   |
