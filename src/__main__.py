@@ -29,7 +29,7 @@ def main():
                         help='To enter manual mode use this option')
 
     parser.add_argument('--version', action='version',
-                        version='%(prog)s 1.0')
+                        version='%(prog)s 0.0.1')
 
     parser.add_argument('--ip', nargs='+', dest='ip',
                         help='give a list of potential malicious ip addresses')
@@ -102,14 +102,14 @@ def collector(info: dict, verbosity_check: bool, sha_sum_list: list = None):
     toaster = ToastNotifier()
     # --- Clipboard / tmp file ---
     fd, path = tempfile.mkstemp()
-    print(sha_sum_list)
+    #print(sha_sum_list)
     try:
         with os.fdopen(fd, 'r+') as tmp:
             #  ===================== ************* ===========================
             # ------ IP addresses are getting worked here --------------------
             # ===================== ************* ============================
             ip_addresses = get_ip(info)
-            # tmp.write(text_header(info))
+            tmp.write(text_header(info))
             for ip in ip_addresses:
                 if sha_sum_list is None:
                     # --- URLscan ---
@@ -137,41 +137,77 @@ def collector(info: dict, verbosity_check: bool, sha_sum_list: list = None):
                     # --- virustotal ---
                     virustotal = filestream.ip_virustotal(ip, verbosity_check)
                     filestream.progressbar_ip(ip_addresses)
-
-                    for i in text_body(virustotal):
-                        tmp.write(i)
+                    
+                    tableContent_virustotal = text_body_table(virustotal)
+                    tmp.write('\n {} \n'.format(printTable(tableContent_virustotal)))
                     # --- virustotal end---
                 else:
-                    # --- URLscan ---
-                    urlscan = filestream.ip_urlscan(ip, verbosity_check, sha_sum_list)
-                    filestream.progressbar_ip(ip_addresses)
+                    if verbosity_check:
+                        # --- URLscan ---
+                        urlscan = filestream.ip_urlscan(ip, verbosity_check, sha_sum_list)
+                        filestream.progressbar_ip(ip_addresses)
 
-                    for i in text_body(urlscan):
-                        tmp.write(i)
+                        for i in text_body(urlscan):
+                            tmp.write(i)
 
-                    # --- URLscan end ---
-                    # --- URLhaus ---
-                    urlhaus = filestream.ip_urlhaus(ip, verbosity_check, sha_sum_list)
-                    filestream.progressbar_ip(ip_addresses)
+                        # --- URLscan end ---
+                        # --- URLhaus ---
+                        urlhaus = filestream.ip_urlhaus(ip, verbosity_check, sha_sum_list)
+                        filestream.progressbar_ip(ip_addresses)
 
-                    for i in text_body(urlhaus):
-                        tmp.write(i)
-                    # --- URLhaus end ---
-                    # --- AbuseIPdb ---
-                    abuseipdb = filestream.ip_abuseipdb(ip, verbosity_check, sha_sum_list)
-                    filestream.progressbar_ip(ip_addresses)
+                        for i in text_body(urlhaus):
+                            tmp.write(i)
+                        # --- URLhaus end ---
+                        # --- AbuseIPdb ---
+                        abuseipdb = filestream.ip_abuseipdb(ip, verbosity_check, sha_sum_list)
+                        filestream.progressbar_ip(ip_addresses)
 
-                    for i in text_body(abuseipdb):
-                        tmp.write(i)
-                    # --- AbuseIPdb end ---
-                    # --- virustotal ---
-                    virustotal, sha = filestream.ip_virustotal(ip, verbosity_check, sha_sum_list)
-                    filestream.progressbar_ip(ip_addresses)
-                    
-                    for i in text_body(virustotal):
-                        tmp.write(i)
-                    for a in text_body(sha):
-                        tmp.write(a)
+                        for i in text_body(abuseipdb):
+                            tmp.write(i)
+                        # --- AbuseIPdb end ---
+                        # --- virustotal ---
+                        virustotal, sha = filestream.ip_virustotal(ip, verbosity_check, sha_sum_list)
+                        filestream.progressbar_ip(ip_addresses)
+                        
+                        for i in text_body(virustotal):
+                            tmp.write(i)
+                        for a in text_body(sha):
+                            tmp.write(a)
+
+                    else:
+                        # --- URLscan ---
+                        urlscan = filestream.ip_urlscan(ip, verbosity_check, sha_sum_list)
+                        filestream.progressbar_ip(ip_addresses)
+
+                        for i in text_body(urlscan):
+                            tmp.write(i)
+
+                        # --- URLscan end ---
+                        # --- URLhaus ---
+                        urlhaus = filestream.ip_urlhaus(ip, verbosity_check, sha_sum_list)
+                        filestream.progressbar_ip(ip_addresses)
+
+                        for i in text_body(urlhaus):
+                            tmp.write(i)
+                        # --- URLhaus end ---
+                        # --- AbuseIPdb ---
+                        abuseipdb = filestream.ip_abuseipdb(ip, verbosity_check, sha_sum_list)
+                        filestream.progressbar_ip(ip_addresses)
+
+                        for i in text_body(abuseipdb):
+                            tmp.write(i)
+                        # --- AbuseIPdb end ---
+                        # --- virustotal ---
+                        virustotal, sha = filestream.ip_virustotal(ip, verbosity_check, sha_sum_list)
+                        filestream.progressbar_ip(ip_addresses)
+                        
+                        tableContent_virustotal = text_body_table(virustotal)
+                        tmp.write('\n {} \n'.format(printTable(tableContent_virustotal)))
+                        
+                        tableContent = text_body_table(sha)
+                        test = printTable(tableContent)
+                        tmp.write('{}\n'.format(test))
+
                     
                         # --- virustotal end---
         # ===================== ************* ===============================
@@ -196,7 +232,11 @@ def collector(info: dict, verbosity_check: bool, sha_sum_list: list = None):
                 print(' Ticket was copied to clipboard successfully')
                 print("\n\nRemoving tmp files... Please wait")
                 pyperclip.copy(content)
+<<<<<<< HEAD
         toaster.show_toast("Copied to clipboard", duration=10)
+=======
+        toaster.show_toast("""Ticket copied to clipboard""", duration=10)
+>>>>>>> proto-type
     finally:
         # print(path)
         os.remove(path)
@@ -241,20 +281,29 @@ def get_context(context):
         return context['context']
 
 
-"""
 def text_header(head):
-    test = '''  ### Attacker\n{0[attackers]}
-                ### Victim\n{0[victims]}\n
-                ### Context\n{0[context]}\n\n'''.format(head)
+    test = '''\n### Attackers -> {}
+### Victims   -> {}
+### Context   -> {}\n\n'''.format(
+                head.get("attackers", "Not found!"),
+                head.get("victims", "Not found!"),
+                head.get("context", "Not found!"))
     print(test)
     return test
-"""
 
 
 def text_body(body):
     try:
         for key, val in body.items():
             yield (('\n{} -> {}').format(key, val))
+    except AttributeError:
+        pass
+
+
+def text_body_table(body):
+    try:
+        for key, val in body.items():
+            yield (('{}, {}').format(key, val))
     except AttributeError:
         pass
 
@@ -288,7 +337,7 @@ def manual_mode_ip(ip_addr: list, verbosity: bool, sha_sum: list = None):
         # --- End set variable ---
         attackers = {}
         attackers['attackers'] = ipss
-        print(attackers)
+        #print(attackers)
         collector(attackers, verbosity)
     else:
         # --- Complete manual mode ---
@@ -298,7 +347,7 @@ def manual_mode_ip(ip_addr: list, verbosity: bool, sha_sum: list = None):
             ipss = set(ip_addr)
         attackers = {}
         attackers['attackers'] = ipss
-        print(attackers)
+        #print(attackers)
         if sha_sum == []:
             return collector(attackers, verbosity)
         else:
@@ -313,6 +362,33 @@ def verbose_mode(verbosity: bool) -> bool:
     else:
         #print("Flag c'è")   verbosity massima
         return True
+
+
+def printTable(tbl, borderHorizontal='-', borderVertical='|', borderCross='+'):
+    # get the columns split by the values
+    cols = [col.split(', ') for col in tbl]
+
+    # find the longests strings
+    lenghts = [[] for _ in range(len(max(cols, key=len)))]
+    for col in cols:
+        for idx, value in enumerate(col):
+            lenghts[idx].append(len(value))
+    lengths = [max(lenght) for lenght in lenghts]
+
+    # create formatting string with the length of the longest elements
+    f = borderVertical + borderVertical.join(' {:>%d} ' % l for l in lengths) + borderVertical
+    s = borderCross + borderCross.join(borderHorizontal * (l+2) for l in lengths) + borderCross
+
+    string = ''
+    string += s + '\n'
+    print(s)
+    for col in cols:
+        string += f.format(*col) + '\n'
+        print(f.format(*col))
+        string += s + '\n'
+        print(s)
+
+    return string
 
 
 if __name__ == '__main__':

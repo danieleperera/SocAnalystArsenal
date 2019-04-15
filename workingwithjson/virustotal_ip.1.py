@@ -1,4 +1,6 @@
 import json
+import tempfile
+import os
 
 querry_ok = '''{
    "scans": {
@@ -390,28 +392,55 @@ def querry_status_virustotal_file(resp_json):
             detected = resp_json['scans'][av_name]['detected']
             # if the above value is true.
             detected_dict["found_positives"] = ("{} / {}".format(resp_json['positives'], resp_json['total']))
-            detected_dict["permalink"] = resp_json["permalink"]
+            #detected_dict["permalink"] = resp_json["permalink"]
             #detected_dict[av_name] = resp_json['scans'][av_name]['result']
-            print("ciao")
-            print(detected)
-            if detected == 'True' or detected == '\n':
+            if detected == 'True':
+                detected_dict[av_name] = resp_json['scans'][av_name]['result']
                 # Print Engines which detect malware.
                 # print(f'{av_name} detected Malware!')
                 # Add detected engine name and it's result to the detected_dict.
-                detected_dict[av_name] = resp_json['scans'][av_name]['result']    
     #print(detected_dict)
     return detected_dict
 
 
-def text_body(body):
+def text_body_table(body):
     try:
         for key, val in body.items():
-            yield (('{} -> {}').format(key, val))
+            yield (('{}, {}').format(key, val))
     except AttributeError:
         pass
 
 
-boh = text_body(querry_status_virustotal_file(querry_ip_response))
+def printTable(tbl, borderHorizontal='-', borderVertical='|', borderCross='+'):
+    # get the columns split by the values
+    cols = [col.split(', ') for col in tbl]
 
-for i in boh:
-    print(i)
+    # find the longests strings
+    lenghts = [[] for _ in range(len(max(cols, key=len)))]
+    for col in cols:
+        for idx, value in enumerate(col):
+            lenghts[idx].append(len(value))
+    lengths = [max(lenght) for lenght in lenghts]
+
+    # create formatting string with the length of the longest elements
+    f = borderVertical + borderVertical.join(' {:>%d} ' % l for l in lengths) + borderVertical
+    s = borderCross + borderCross.join(borderHorizontal * (l+2) for l in lengths) + borderCross
+
+    string = ''
+    string += s + '\n'
+    print(s)
+    for col in cols:
+        string += f.format(*col) + '\n'
+        print(f.format(*col))
+        string += s + '\n'
+        print(s)
+
+    return string
+
+
+tableContent = text_body_table(querry_status_virustotal_file(querry_ip_response))
+fd, path = tempfile.mkstemp()
+print(path)
+with os.fdopen(fd, 'r+') as tmp:
+    test = printTable(tableContent)
+    tmp.write('{} \n'.format(test))
