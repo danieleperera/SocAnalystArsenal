@@ -158,7 +158,7 @@ def getipintel_query(query: str, type: str, val: bool, sha_sum: list = None) -> 
         if val:
             return response.json()
         else:
-            pass
+            return json_parser.parse_getipintel(response.json(), query)
 
 """
 def fofa_query(query: str, type: str, val: bool, sha_sum: list = None) -> dict:
@@ -551,13 +551,18 @@ def hybrid_query(query: str, type: str, val: bool, sha_sum: list = None) -> dict
 
 ip = '188.40.75.132'
 # print(fofa_query(ip, 'ip', True))
+
 test = virustotal_query(ip, 'ip', False)
+print(test)
 
 test1 = iphub_query(ip, 'ip', False)
 print(test1)
-"""
-print(getipintel_query(ip, 'ip', True))
+
+test2 = getipintel_query(ip, 'ip', False)
+print(test2)
+
 print(shodan_query(ip, 'ip', True))
+
 print(threatcrowd_query(ip, 'ip', True))
 print(hybrid_query(ip, 'ip', True))
 print(apility_query(ip, 'ip', True))
@@ -565,4 +570,3 @@ print(abuseipdb_query(ip, 'ip', True))
 print(urlscan_query(ip, 'ip', True))
 print(urlhause_query(ip, 'domain', True))
 print(threatminer_query(ip, 'domain', True))
-"""

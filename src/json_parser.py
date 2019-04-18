@@ -130,9 +130,52 @@ def parse_iphub(jdata: dict, query: str, sha_sum: list = None) -> dict:
         simple_dict['ip'] = jdata.get('ip', 'n/a')
         simple_dict['isp'] = jdata.get('isp', 'n/a')
         if jdata['block'] == 1:
-            simple_dict['Proxy/VPN'] = 'yes'
+            simple_dict['Proxy/VPN/Tor'] = 'yes'
         else:
-            simple_dict['Proxy/VPN'] = 'not sufficient data'
+            simple_dict['Proxy/VPN/Tor'] = 'not sufficient data'
+        return simple_dict
+
+
+def parse_getipintel(jdata: dict, query: str, sha_sum: list = None) -> dict:
+    """
+    Documentation for querry_status_abuseipdb.
+    It gets a json a dictionary,
+    it checks whether the dict is emtpy or not.
+    If it's emtpy it prints no result on abuseipdb.
+    Else it get's the longest group of dict which contains data.
+
+    If a certain key isn't found i'll print key Error
+
+    param
+        positions: dict -- This is a dictionary variable.
+
+    example::
+
+    ```
+    jdata = {
+        'ip': '188.40.75.132',
+        'countryCode': 'DE',
+        'countryName': 'Germany',
+        'asn': 24940,
+        'isp': 'HETZNER-AS',
+        'block': 1,
+        'hostname': '188.40.75.132'}
+    ```
+
+    return
+    dict -- Returns dict of values that i chose.
+
+    """
+    
+    errore = jdata.get('status')
+    if errore == 'error':
+        print('[!] No result on iphub')
+    else:
+        simple_dict = {}
+        simple_dict['ip'] = jdata.get('queryIP', 'n/a')
+        simple_dict['isp'] = jdata.get('queryFlags', 'n/a')
+        score = jdata.get('result', 'n/a')
+        simple_dict['Proxy/VPN/Tor'] = "{} %".format(int(score) * int(100))
         return simple_dict
 
 
