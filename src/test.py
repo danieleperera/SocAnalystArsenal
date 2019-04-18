@@ -135,6 +135,7 @@ def collector(info: dict, verbosity_check: bool, sha_sum_list: list = None):
                         # --- virustotal ---
                         print(iconNone, end='')
                         print(' Checking whois information on Virustotal for ' + colorIP)
+                        filestream1.progressbar_ip(ip_addresses)
                         try:
                             whois_info, detected = filestream1.ip_virustotal(element, False)
                         except TypeError:
@@ -150,15 +151,23 @@ def collector(info: dict, verbosity_check: bool, sha_sum_list: list = None):
                         # --- Shodan ---
                         print(iconNone, end='')
                         print(' Checking if host is compromised on Shodan.io ' + colorIP)
+                        filestream1.progressbar_ip(ip_addresses)
                         compromised = filestream1.shodan_ip_info(element)
+                        
                         header_shodan = ('\n\nShodan Information ' + element + '\n')
                         tmp.write(header_shodan)
-                        tableContent_shodan = text_body_table(compromised)
-                        tmp.write('\n {} \n'.format(printTable(tableContent_shodan)))
+                        if compromised == {}:
+                            string = '\nThis IP has not been blacklisted since 1 year\n'
+                            tmp.write(string)
+                            #print(string)
+                        else:
+                            tableContent_shodan = text_body_table(compromised)
+                            tmp.write('\n {} \n'.format(printTable(tableContent_shodan)))
                         # ---End Shodan ---
                         # --- apility --- 
                         print(iconNone, end='')
                         print(' Checking IP reputation through time using apility ' + colorIP)
+                        filestream1.progressbar_ip(ip_addresses)
                         header_apility = ('\n\nApility reputation ' + element + '\n')
                         tmp.write(header_apility)
                         reputation = filestream1.apility_ip_info(element)
@@ -181,10 +190,11 @@ def collector(info: dict, verbosity_check: bool, sha_sum_list: list = None):
                         # --- Hybrid analysis ---
                         print(iconNone, end='')
                         print(' Checking IP association with malware using Hybrid analysis ' + colorIP)
+                        filestream1.progressbar_ip(ip_addresses)
                         associationMalware = filestream1.hybrid_query(element)
                         header_Hybrid = ('\n\nHybrid Analysis ' + element + '\n')
                         tmp.write(header_Hybrid)
-                        print(associationMalware)
+                        #print(associationMalware)
                         if associationMalware is None:
                             string = '\nNo data on hybrid analysis\n'
                             tmp.write(string)
@@ -192,6 +202,27 @@ def collector(info: dict, verbosity_check: bool, sha_sum_list: list = None):
                             for i in text_body(associationMalware):
                                 tmp.write(i)
                         # ---End Hybrid analysis ---
+                        # --- urlhause ---
+                        urlhaus = filestream1.ip_urlhaus(element, False)
+                        filestream1.progressbar_ip(ip_addresses)
+
+                        for i in text_body(urlhaus):
+                            tmp.write(i)                        
+                        # --- End urlhause ---
+                        # --- URLscan ---
+                        urlscan = filestream1.ip_urlscan(element, False)
+                        filestream1.progressbar_ip(ip_addresses)
+
+                        for i in text_body(urlscan):
+                            tmp.write(i)
+                        # --- URLscan end ---
+                        # --- AbuseIPdb ---
+                        abuseipdb = filestream1.ip_abuseipdb(element, False)
+                        filestream1.progressbar_ip(ip_addresses)
+
+                        for i in text_body(abuseipdb):
+                            tmp.write(i)
+                        # --- AbuseIPdb end ---                        
                 else:
                     # pass domain
                     if ip_addresses == []:
@@ -380,7 +411,7 @@ def printTable_row(tbl, borderHorizontal = '-', borderVertical = '|', borderCros
     return string
 
 
-info = {'attackers': {'68.183.65.178'},
+info = {'attackers': {'60.165.248.101'},
         'victims': '10.10.2.140',
         'context': 'http GET 46.20.95.185'}
 
