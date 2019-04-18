@@ -46,18 +46,20 @@ optional arguments:
 
 These instructions will get you a copy of the project up and running on your local machine for development and testing purposes. See deployment for notes on how to deploy the project on a live system.
 
-| Api         | Description                                                | Auth   |
-|-------------|------------------------------------------------------------|--------|
-| virustotal  | Check Whois information for IP address/Domain              | `apikey` |
+| Api         | Description                                                | Auth    |
+|-------------|------------------------------------------------------------|---------|
+| virustotal  | Check Whois information for IP address/Domain              | `apikey`|
+| getipintel  | Check check if the IP is a proxy or spoofed                | `apikey`|
+| iphub       | Check check if the IP is a proxy or spoofed                | `apikey`|
 | shodan      | Check information about host and see if it was compromised | `apikey`|
-| apility.io  | Check reputation and activity through time                 | `apikey` |
-| hybrid      | Check association with malware                             | `apikey` |
-| malshare    | Check IP address/Domain was used to spread malware         | `apikey` |
-| urlhause    | Check IP address/Domain was used to spread malware         | none   |
-| threatcrowd | Check Current status                                       | `apikey` |
-| abuseipdb   | Check if it's blacklisted                                  | none   |
-| urlscan.io  | Check further more information                             | none   |
-| threatminer | Check further more information                             | none   |
+| apility.io  | Check reputation and activity through time                 | `apikey`|
+| hybrid      | Check association with malware                             | `apikey`|
+| malshare    | Check IP address/Domain was used to spread malware         | `apikey`|
+| urlhause    | Check IP address/Domain was used to spread malware         | none    |
+| threatcrowd | Check Current status                                       | `apikey`|
+| abuseipdb   | Check if it's blacklisted                                  | none    |
+| urlscan.io  | Check further more information                             | none    |
+| threatminer | Check further more information                             | none    |
 
 ### Prerequisites
 
