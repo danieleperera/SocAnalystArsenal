@@ -163,7 +163,7 @@ def collector(info: dict, verbosity_check: bool, sha_sum_list: list = None):
                         tmp.write(header_apility)
                         reputation = filestream1.apility_ip_info(element)
                         if reputation is None:
-                            string = '\nThis IP has not been blacklisted since 1 year'
+                            string = '\nThis IP has not been blacklisted since 1 year\n'
                             tmp.write(string)
                             print(string)
                         else:
@@ -178,6 +178,20 @@ def collector(info: dict, verbosity_check: bool, sha_sum_list: list = None):
                             tmp.write('\n {} \n'.format(table_reputation))                 
                             pass
                         # --- End apility ---
+                        # --- Hybrid analysis ---
+                        print(iconNone, end='')
+                        print(' Checking IP association with malware using Hybrid analysis ' + colorIP)
+                        associationMalware = filestream1.hybrid_query(element)
+                        header_Hybrid = ('\n\nHybrid Analysis ' + element + '\n')
+                        tmp.write(header_Hybrid)
+                        print(associationMalware)
+                        if associationMalware is None:
+                            string = '\nNo data on hybrid analysis\n'
+                            tmp.write(string)
+                        else:
+                            for i in text_body(associationMalware):
+                                tmp.write(i)
+                        # ---End Hybrid analysis ---
                 else:
                     # pass domain
                     if ip_addresses == []:

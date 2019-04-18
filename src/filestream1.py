@@ -329,7 +329,56 @@ def apility_ip_info(ip: str) -> dict:
         return data_paser['fullip']['history']['activity']
 
 
+def hybrid_query(query, type: str = 'ip'):
+    key = ("kg4ko8kc00sw4804ws0ww4g0ss0kogc08ko048o8k08csw084k8g0kcgwgwsc40c")  # Get the key from config file, Change it as necessary
+    url = "https://www.hybrid-analysis.com/api/v2/search/terms"  # The api url
+    headers = {"api-key": key, "user-agent": "Falcon Sandbox", "accept": "application/json"}  # The request headers
+    #print(type)
+    if type == "domain":
+        data = {"domain": query}  # The data to post
+    elif type == "ip":
+        data = {"host": query}
+    else:
+        return
+    resp = requests.post(url, headers=headers, data=data)
+    response = json.loads(resp.text)
 
+    if response["count"] == 0:  # If no result was recieved
+        error = "\nCould not recieve value\n"
+        print(error)
+        return None
+    else:
+        c = response["count"]
+        simple_dic = {}
+        if c >= 3:
+            print("[+] Hybrid analysis has got {} matches\n".format(c))
+            for i in range(0, 3): 
+                # Parsing the data
+                print("Match No: {}\n".format(i))
+                simple_dic['verdict'] = response["result"][i]['verdict']
+                simple_dic['av_detect'] = response["result"][i]['av_detect']
+                simple_dic['threat_score'] = response["result"][i]['threat_score']
+                simple_dic['hashed'] = response["result"][i]['sha256']
+                simple_dic['submit_name'] = response["result"][i]['submit_name']
+                simple_dic['analyzed_in'] = response["result"][i]['analysis_start_time']
+                msg = "Verdit: {}\nAV_Detection: {}\nThreat_Score: {}\nSHA256_HASH: {}\nSubmit_Name: {}\nAnalyzed_in: {}\n".format(
+                    simple_dic['verdict'], simple_dic['av_detect'], simple_dic['threat_score'], simple_dic['hashed'], simple_dic['submit_name'], simple_dic['analyzed_in'])
+                print(msg)
+        else:
+            print("[+] Hybrid analysis has got {} matches\n".format(c))
+            for i in range(0, 1):
+                # Parsing the data
+                print("Match No: {}\n".format(i))
+                simple_dic['verdict'] = response["result"][i]['verdict']
+                simple_dic['av_detect'] = response["result"][i]['av_detect']
+                simple_dic['threat_score'] = response["result"][i]['threat_score']
+                simple_dic['hashed'] = response["result"][i]['sha256']
+                simple_dic['submit_name'] = response["result"][i]['submit_name']
+                simple_dic['analyzed_in'] = response["result"][i]['analysis_start_time']
+                msg = "Verdit: {}\nAV_Detection: {}\nThreat_Score: {}\nSHA256_HASH: {}\nSubmit_Name: {}\nAnalyzed_in: {}\n".format(
+                    simple_dic['verdict'], simple_dic['av_detect'], simple_dic['threat_score'], simple_dic['hashed'], simple_dic['submit_name'], simple_dic['analyzed_in'])
+                print(msg)
+        return simple_dic
 
 # ===================== ************* ===============================
 # ------------------- CHECK JSON INFOMATION -----------------------
@@ -682,3 +731,4 @@ def querry_status_virustotal_domain(positions: dict, domain_to_view: str) -> dic
         return whois_dict, category_from_virustotal
 
 
+#hybrid_query('checkip.dyndns.org')
