@@ -49,15 +49,15 @@ These instructions will get you a copy of the project up and running on your loc
 | Api         | Description                                                | Auth    |
 |-------------|------------------------------------------------------------|---------|
 | virustotal  | Check Whois information for IP address/Domain              | `apikey`|
-| getipintel  | Check check if the IP is a proxy or spoofed                | `apikey`|
+| getipintel  | Check check if the IP is a proxy or spoofed                | `email` |
 | iphub       | Check check if the IP is a proxy or spoofed                | `apikey`|
 | shodan      | Check information about host and see if it was compromised | `apikey`|
 | apility.io  | Check reputation and activity through time                 | `apikey`|
 | hybrid      | Check association with malware                             | `apikey`|
 | malshare    | Check IP address/Domain was used to spread malware         | `apikey`|
 | urlhause    | Check IP address/Domain was used to spread malware         | none    |
-| threatcrowd | Check Current status                                       | `apikey`|
-| abuseipdb   | Check if it's blacklisted                                  | none    |
+| threatcrowd | Check Current status                                       | none    |
+| abuseipdb   | Check if it's blacklisted                                  | `apikey`|
 | urlscan.io  | Check further more information                             | none    |
 | threatminer | Check further more information                             | none    |
 
