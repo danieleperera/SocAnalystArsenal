@@ -50,6 +50,7 @@ These instructions will get you a copy of the project up and running on your loc
 |-------------|------------------------------------------------------------|---------|
 | virustotal  | Check Whois information for IP address/Domain              | `apikey`|
 | getipintel  | Check check if the IP is a proxy or spoofed                | `apikey`|
+| iphub       | Check check if the IP is a proxy or spoofed                | `apikey`|
 | shodan      | Check information about host and see if it was compromised | `apikey`|
 | apility.io  | Check reputation and activity through time                 | `apikey`|
 | hybrid      | Check association with malware                             | `apikey`|
