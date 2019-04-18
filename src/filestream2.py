@@ -5,6 +5,7 @@ import requests
 from tqdm import tqdm
 from colorama import Fore, init
 
+
 iconOK = (Fore.GREEN + '[!]')
 iconNone = (Fore.YELLOW + '[!]')
 init(autoreset=True)
@@ -47,6 +48,96 @@ def progressbar_ip(ip_addresses):
 # ===================== ************* =================================
 # ------- Get IP addresses information form api -----------------------
 # ===================== ************* =================================
+
+
+def iphub_query(query: str, type: str, val: bool, sha_sum: list = None) -> dict:
+    data = get_api()
+    api = (data['API info']['iphub']['api'])
+    colorQuery = (Fore.RED + query)
+    print(iconNone, end='')
+    print(' Checking IPhub for ' + colorQuery)
+    if type == "domain":
+        print(Fore.RED + '[x] IPhub does not check domains')  # The data to post
+    elif type == "ip":
+        query_ip = data['API info']['iphub']['query_ip']
+        url = query_ip+query
+        headers = {
+                    'X-Key': api}
+        response = requests.get(url, headers=headers)
+
+        if val:
+            return response.json()
+        else:
+            pass
+
+
+def getipintel_query(query: str, type: str, val: bool, sha_sum: list = None) -> dict:
+    data = get_api()
+    email = data['API info']['getipintel']['email']
+    colorQuery = (Fore.RED + query)
+    print(iconNone, end='')
+    print(' Checking GetIPintel for ' + colorQuery)
+    if type == "domain":
+        print(Fore.RED + '[x] GetIPintel does not check domains')  # The data to post
+    elif type == "ip":
+        query_ip = data['API info']['getipintel']['query_ip']
+        url = query_ip.format(query, email)
+        response = requests.get(url)
+
+        if val:
+            return response.json()
+        else:
+            pass
+
+"""
+def fofa_query(query: str, type: str, val: bool, sha_sum: list = None) -> dict:
+    data = get_api()
+    email = data['API info']['fofa']['email']
+    api_key = data['API info']['fofa']['api']
+    colorQuery = (Fore.RED + query)
+    print(iconNone, end='')
+    print(' Checking fofa for ' + colorQuery)
+    b64query = base64.b64encode(query)
+    print(b64query)
+    if type == "domain" or type == "ip":
+        query_all = data['API info']['fofa']['query_all']
+        params = {
+            'email': email,
+            'key': api_key,
+            'qbase64': b64query
+        }
+
+        response = requests.get(query_all, params=params)
+
+        if val:
+            return response.json()
+        else:
+            pass
+
+"""
+
+
+def threatcrowd_query(query: str, type: str, val: bool, sha_sum: list = None) -> dict:
+    data = get_api()
+
+    colorQuery = (Fore.RED + query)
+    print(iconNone, end='')
+    print(' Checking threatcrowd for ' + colorQuery)
+
+    if type == "domain":
+        pass
+    elif type == "ip":
+        query_all = data['API info']['threatcrowd']['query_ip']
+        params = {
+            'ip': query,
+        }
+
+        response = requests.get(query_all, params=params)
+
+    if val:
+        return response.json()
+    else:
+        pass
 
 
 def abuseipdb_query(query: str, type: str, val: bool, sha_sum: list = None) -> dict:
@@ -434,12 +525,16 @@ def hybrid_query(query: str, type: str, val: bool, sha_sum: list = None) -> dict
 # ===================== ************* ===============================
 # -----------Working and testing from here on -----------------------
 # ===================== ************* ===============================
+#http://check.getipintel.net/check.php?ip=66.228.119.72&contact=mr.px0r@gmail.com&format=json
 
-
-ip = '91.80.37.231'
+ip = '188.40.75.132'
 
 print(virustotal_query(ip, 'ip', True))
+print(iphub_query(ip, 'ip', True))
+print(getipintel_query(ip, 'ip', True))
 print(shodan_query(ip, 'ip', True))
+#print(fofa_query(ip, 'ip', True))
+print(threatcrowd_query(ip, 'ip', True))
 print(hybrid_query(ip, 'ip', True))
 print(apility_query(ip, 'ip', True))
 print(abuseipdb_query(ip, 'ip', True))
