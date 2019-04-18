@@ -4,6 +4,7 @@ from __init__ import api
 import requests
 from tqdm import tqdm
 from colorama import Fore, init
+import json_parser
 
 
 iconOK = (Fore.GREEN + '[!]')
@@ -50,6 +51,76 @@ def progressbar_ip(ip_addresses):
 # ===================== ************* =================================
 
 
+def virustotal_query(query: str, type: str, val: bool, sha_sum: list = None) -> dict:
+    """
+    Documentation for ip_urlhaus.
+    It gets one ip addresse at a time as a string,
+    uses request to do a get request to ip_urlhaus,
+    gets json as text.
+
+    param
+        ip: str -- This is a string variable.
+
+    example::
+
+    ```
+     ip = '124.164.251.179'
+    ```
+
+    return
+    dict -- Returns json as a dict.
+
+    """
+    # --- API info ---
+    data = get_api()
+    api = (data['API info']['virustotal']['api'])
+    # print 
+    colorQuery = (Fore.RED + query)
+    print(iconNone, end='')
+    print(' Checking virustotal for ' + colorQuery)
+    if sha_sum is None:
+        if type == "domain":
+            data = {"domain": query}  # The data to post
+        elif type == "ip":
+            query_ip = (data['API info']['virustotal']['query_ip'])
+            params = {'apikey': api, 'ip': query}
+            response = requests.get(query_ip, params=params)
+        else:
+            return
+
+        if val:
+            return response.json()
+        else:
+            return json_parser.parse_virustotal(response.json(), query)
+    else:
+        print(sha_sum)
+        # --- virustotal data ---
+        data = get_api()
+        #colorIP = (Fore.RED + ip)
+        api = (data['API info']['virustotal']['api'])
+        #print(iconOK + ' Checking virustotal for ' + colorIP)
+        ip_address_url = (data['API info']['virustotal']['ip_address_url'])
+        file_address_url = (data['API info']['virustotal']['file_url'])
+
+        # https://developers.virustotal.com/v2.0/reference#comments-get
+
+        params_ip = {'apikey': api, 'ip': ip}
+        params_file = {'apikey': api, 'resource': sha_sum}
+        response_ip = requests.get(ip_address_url, params=params_ip)
+        response_file = requests.get(file_address_url, params=params_file)
+
+        if val:
+            return response_ip.json(), response_file.json()
+        else:
+            return 
+    """
+        for x in context:
+        params = {'apikey': api, 'resource': x}
+        response = requests.get(scan_url, params=params)
+        print(response.json())
+    """
+
+
 def iphub_query(query: str, type: str, val: bool, sha_sum: list = None) -> dict:
     data = get_api()
     api = (data['API info']['iphub']['api'])
@@ -68,7 +139,7 @@ def iphub_query(query: str, type: str, val: bool, sha_sum: list = None) -> dict:
         if val:
             return response.json()
         else:
-            pass
+            return json_parser.parse_iphub(response.json(), query)
 
 
 def getipintel_query(query: str, type: str, val: bool, sha_sum: list = None) -> dict:
@@ -288,76 +359,6 @@ def urlhause_query(query: str, type: str, val: bool, sha_sum: list = None) -> di
         return
 
 
-def virustotal_query(query: str, type: str, val: bool, sha_sum: list = None) -> dict:
-    """
-    Documentation for ip_urlhaus.
-    It gets one ip addresse at a time as a string,
-    uses request to do a get request to ip_urlhaus,
-    gets json as text.
-
-    param
-        ip: str -- This is a string variable.
-
-    example::
-
-    ```
-     ip = '124.164.251.179'
-    ```
-
-    return
-    dict -- Returns json as a dict.
-
-    """
-    # --- API info ---
-    data = get_api()
-    api = (data['API info']['virustotal']['api'])
-    # print 
-    colorQuery = (Fore.RED + query)
-    print(iconNone, end='')
-    print(' Checking virustotal for ' + colorQuery)
-    if sha_sum is None:
-        if type == "domain":
-            data = {"domain": query}  # The data to post
-        elif type == "ip":
-            query_ip = (data['API info']['virustotal']['query_ip'])
-            params = {'apikey': api, 'ip': query}
-            response_ip = requests.get(query_ip, params=params)
-        else:
-            return
-
-        if val:
-            return response_ip.json(),response_ip.json()
-        else:
-            return
-    else:
-        print(sha_sum)
-        # --- virustotal data ---
-        data = get_api()
-        #colorIP = (Fore.RED + ip)
-        api = (data['API info']['virustotal']['api'])
-        #print(iconOK + ' Checking virustotal for ' + colorIP)
-        ip_address_url = (data['API info']['virustotal']['ip_address_url'])
-        file_address_url = (data['API info']['virustotal']['file_url'])
-
-        # https://developers.virustotal.com/v2.0/reference#comments-get
-
-        params_ip = {'apikey': api, 'ip': ip}
-        params_file = {'apikey': api, 'resource': sha_sum}
-        response_ip = requests.get(ip_address_url, params=params_ip)
-        response_file = requests.get(file_address_url, params=params_file)
-
-        if val:
-            return response_ip.json(), response_file.json()
-        else:
-            return
-    """
-        for x in context:
-        params = {'apikey': api, 'resource': x}
-        response = requests.get(scan_url, params=params)
-        print(response.json())
-    """
-
-
 def domain_virustotal(domain: str, boolvalue: bool, sha_sum: list = None) -> dict:
     """
     Documentation for ip_urlhaus.
@@ -547,13 +548,16 @@ def hybrid_query(query: str, type: str, val: bool, sha_sum: list = None) -> dict
 # ===================== ************* ===============================
 #http://check.getipintel.net/check.php?ip=66.228.119.72&contact=mr.px0r@gmail.com&format=json
 
-ip = '188.40.75.132'
 
-print(virustotal_query(ip, 'ip', True))
-print(iphub_query(ip, 'ip', True))
+ip = '188.40.75.132'
+# print(fofa_query(ip, 'ip', True))
+test = virustotal_query(ip, 'ip', False)
+
+test1 = iphub_query(ip, 'ip', False)
+print(test1)
+"""
 print(getipintel_query(ip, 'ip', True))
 print(shodan_query(ip, 'ip', True))
-#print(fofa_query(ip, 'ip', True))
 print(threatcrowd_query(ip, 'ip', True))
 print(hybrid_query(ip, 'ip', True))
 print(apility_query(ip, 'ip', True))
@@ -561,3 +565,4 @@ print(abuseipdb_query(ip, 'ip', True))
 print(urlscan_query(ip, 'ip', True))
 print(urlhause_query(ip, 'domain', True))
 print(threatminer_query(ip, 'domain', True))
+"""
