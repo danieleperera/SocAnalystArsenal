@@ -117,6 +117,26 @@ def fofa_query(query: str, type: str, val: bool, sha_sum: list = None) -> dict:
 """
 
 
+def threatminer_query(query: str, type: str, val: bool, sha_sum: list = None) -> dict:
+    data = get_api()
+
+    colorQuery = (Fore.RED + query)
+    print(iconNone, end='')
+    print(' Checking threatminer for ' + colorQuery)
+
+    if type == "domain":
+        pass
+    elif type == "ip":
+        query_ip = data['API info']['threatminer']['query_ip']
+        url = query_ip.format(query)
+        response = requests.get(url)
+
+        if val:
+            return response.json()
+        else:
+            pass
+
+
 def threatcrowd_query(query: str, type: str, val: bool, sha_sum: list = None) -> dict:
     data = get_api()
 
@@ -540,3 +560,4 @@ print(apility_query(ip, 'ip', True))
 print(abuseipdb_query(ip, 'ip', True))
 print(urlscan_query(ip, 'ip', True))
 print(urlhause_query(ip, 'domain', True))
+print(threatminer_query(ip, 'domain', True))
