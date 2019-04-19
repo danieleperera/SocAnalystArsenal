@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 # -*- style: PEP8 -*-
-import filestream
+import query
 import os
 import tempfile
 import pyperclip
@@ -79,7 +79,7 @@ def main():
         manual_mode_ip(results.ip, verbose_mode(results.bool_vb), results.sha_sum)
 
 
-def collector(info: dict, verbosity_check: bool, sha_sum_list: list = None):
+def collector(verbosity_check: bool, sha_sum_list: list = None):
     """
     Documentation for collector.
     Creates a tmp file and pass the dict to other functions,
@@ -98,6 +98,9 @@ def collector(info: dict, verbosity_check: bool, sha_sum_list: list = None):
             'context': 'http GET 46.20.95.185'}
     ```
     """
+    info = {'attackers': {'124.164.251.179'},
+            'victims': '10.10.2.140',
+            'context': 'http GET 46.20.95.185'}
     # --- Notification ---
     toaster = ToastNotifier()
     # --- Clipboard / tmp file ---
@@ -112,6 +115,62 @@ def collector(info: dict, verbosity_check: bool, sha_sum_list: list = None):
             tmp.write(text_header(info))
             for ip in ip_addresses:
                 if sha_sum_list is None:
+
+                    virustotal = query.virustotal_query(ip, 'ip', verbosity_check)
+                    query.progressbar_ip(ip_addresses)
+                    tableContent_virustotal = text_body_table(virustotal)
+                    tmp.write('\n {} \n'.format(printTable(tableContent_virustotal)))
+                        
+                    iphub = query.iphub_query(ip, 'ip', verbosity_check)
+                    query.progressbar_ip(ip_addresses)
+                    for i in text_body(iphub):
+                        tmp.write(i)
+                      
+                    getipintel = query.getipintel_query(ip, 'ip', verbosity_check)
+                    query.progressbar_ip(ip_addresses)
+                    for i in text_body(getipintel):
+                        tmp.write(i)
+                    """  
+                    shodan = query.shodan_query(ip, 'ip', verbosity_check)
+                    query.progressbar_ip(ip_addresses)
+                    for i in text_body(shodan):
+                        tmp.write(i)
+                    
+                    threatcrowd = query.threatcrowd_query(ip, 'ip', verbosity_check)
+                    query.progressbar_ip(ip_addresses)
+                    for i in text_body(threatcrowd):
+                        tmp.write(i)
+
+                    hybrid = query.hybrid_query(ip, 'ip', verbosity_check)
+                    query.progressbar_ip(ip_addresses)
+                    for i in text_body(hybrid):
+                        tmp.write(i)
+
+                    apility = query.apility_query(ip, 'ip', verbosity_check)
+                    query.progressbar_ip(ip_addresses)
+                    for i in text_body(apility):
+                        tmp.write(i)
+                    
+                    abuseipdb = query.abuseipdb_query(ip, 'ip', verbosity_check)
+                    query.progressbar_ip(ip_addresses)
+                    for i in text_body(abuseipdb):
+                        tmp.write(i)
+
+                    urlscan = query.urlscan_query(ip, 'ip', verbosity_check)
+                    query.progressbar_ip(ip_addresses)
+                    for i in text_body(urlscan):
+                        tmp.write(i)
+
+                    urlhause = query.urlhause_query(ip, 'ip', verbosity_check)
+                    query.progressbar_ip(ip_addresses)
+                    for i in text_body(urlhause):
+                        tmp.write(i)
+
+                    threatminer = query.threatminer_query(ip, 'ip', verbosity_check)
+                    query.progressbar_ip(ip_addresses)
+                    for i in text_body(threatminer):
+                        tmp.write(i)
+                    
                     # --- URLscan ---
                     urlscan = filestream.ip_urlscan(ip, verbosity_check)
                     filestream.progressbar_ip(ip_addresses)
@@ -208,7 +267,7 @@ def collector(info: dict, verbosity_check: bool, sha_sum_list: list = None):
                         test = printTable(tableContent)
                         tmp.write('{}\n'.format(test))
 
-                    
+                    """
                         # --- virustotal end---
         # ===================== ************* ===============================
         # ---------------------- END IP addresses -----------------------
@@ -388,4 +447,5 @@ def printTable(tbl, borderHorizontal='-', borderVertical='|', borderCross='+'):
 
 
 if __name__ == '__main__':
-    main()
+    #main()
+    collector(False)

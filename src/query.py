@@ -210,7 +210,7 @@ def threatminer_query(query: str, type: str, val: bool, sha_sum: list = None) ->
         if val:
             return response.json()
         else:
-            pass
+            return json_parser.parse_threatminer(response.json(), query)
 
 
 def threatcrowd_query(query: str, type: str, val: bool, sha_sum: list = None) -> dict:
@@ -274,12 +274,11 @@ def abuseipdb_query(query: str, type: str, val: bool, sha_sum: list = None) -> d
     else:
         pass
     try:
-        info_json = requests.get(final_url, timeout=10)
-        response = json.loads(info_json.text)
+        response = requests.get(final_url, timeout=10)
         if val:
-            return response  # this returns only huge dict
+            return response.json()  # this returns only huge dict
         else:
-            return  # this prints some data
+            return json_parser.parse_abuseipdb(response.json(), query)
     except requests.exceptions.Timeout:
         print(Fore.RED + 'Timeout error occurred for AbuseIPdb')
         return
@@ -319,12 +318,12 @@ def urlscan_query(query: str, type: str, val: bool, sha_sum: list = None) -> dic
         # --- urlscan.io ok----
         query_ip = data['API info']['urlscan.io']['query_ip']
         requests_url = query_ip+query
-        info_json = requests.get(requests_url)
-        response = json.loads(info_json.text)
+        response = requests.get(requests_url)
+
     if val:
-        return response
+        return response.json()
     else:
-        return
+        return json_parser.parse_urlscan(response.json(), query)
 
 
 def urlhause_query(query: str, type: str, val: bool, sha_sum: list = None) -> dict:
@@ -356,16 +355,15 @@ def urlhause_query(query: str, type: str, val: bool, sha_sum: list = None) -> di
         # --- urlhaus data ok ----
         querry_host_url = (data['API info']['urlhaus']['querry_host_url'])
         params = {"host": query}
-        r = requests.post(querry_host_url, params)
-        r.raise_for_status()
+        response = requests.post(querry_host_url, params)
     elif type == "url":
         data = {"host": query}
     else:
         pass
     if val:
-        return r.json()
+        return response.json()
     else:
-        return
+        return json_parser.parse_urlhause(response.json(), query)
 
 
 def domain_virustotal(domain: str, boolvalue: bool, sha_sum: list = None) -> dict:
@@ -471,15 +469,11 @@ def apility_query(query: str, type: str, val: bool, sha_sum: list = None) -> dic
         get_url_ip = data['API info']['apility']['url_ip_request']
         headers = {'Accept': 'application/json', 'X-Auth-Token': api_key}
         url = get_url_ip+query
-        r = requests.get(url, headers=headers)
-        data_paser = r.json()
+        response = requests.get(url, headers=headers)
     if val:
-        return r.json()
+        return response.json()
     else:
-        if data_paser['fullip']['history']['score_1year'] is False:
-            return None
-        else:
-            return data_paser['fullip']['history']['activity']
+        return json_parser.parse_apility(response.json(), query)
 
 
 def hybrid_query(query: str, type: str, val: bool, sha_sum: list = None) -> dict:
@@ -502,7 +496,7 @@ def hybrid_query(query: str, type: str, val: bool, sha_sum: list = None) -> dict
     else:
         pass
     if val:
-        return response
+        return response.json()
     else:
         return json_parser.parse_hybrid(response.json(), query)
 
@@ -513,7 +507,7 @@ def hybrid_query(query: str, type: str, val: bool, sha_sum: list = None) -> dict
 
 #ip ='68.183.65.178'
 
-ip = '188.40.75.132'
+#ip = '188.40.75.132'
 """
 # print(fofa_query(ip, 'ip', True))
 
@@ -536,19 +530,28 @@ print(test3)
 test4 = threatcrowd_query(ip, 'ip', False)
 #progressbar_ip(ip)
 print(test4)
-"""
+
 test5 = hybrid_query(ip, 'ip', False)
 #progressbar_ip(ip)
 print(test5)
-"""
-test6 = apility_query(ip, 'ip', True)
-progressbar_ip(ip)
-test7 = abuseipdb_query(ip, 'ip', True)
-progressbar_ip(ip)
-test8 = urlscan_query(ip, 'ip', True)
-progressbar_ip(ip)
-test9 = urlhause_query(ip, 'domain', True)
-progressbar_ip(ip)
+
+test6 = apility_query(ip, 'ip', False)
+#progressbar_ip(ip)
+print(test6)
+
+test7 = abuseipdb_query(ip, 'ip', False)
+#progressbar_ip(ip)
+print(test7)
+
+test8 = urlscan_query(ip, 'ip', False)
+#progressbar_ip(ip)
+print(test8)
+
+test9 = urlhause_query(ip, 'domain', False)
+#progressbar_ip(ip)
+print(test9)
+
 test10 = threatminer_query(ip, 'domain', True)
-progressbar_ip(ip)
+#progressbar_ip(ip)
+print(test10)
 """

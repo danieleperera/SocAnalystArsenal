@@ -1,6 +1,9 @@
 # ===================== ************* ===============================
 # ------------------- parse JSON INFOMATION -----------------------
 # ===================== ************* ===============================
+import time
+from colorama import Fore, init
+iconNone = (Fore.YELLOW + '[!]')
 
 
 def parse_virustotal(jdata: dict, query: str, sha_sum: list = None) -> dict:
@@ -175,7 +178,7 @@ def parse_getipintel(jdata: dict, query: str, sha_sum: list = None) -> dict:
         simple_dict['ip'] = jdata.get('queryIP', 'n/a')
         simple_dict['isp'] = jdata.get('queryFlags', 'n/a')
         score = jdata.get('result', 'n/a')
-        simple_dict['Proxy/VPN/Tor'] = "{} %".format(int(score) * int(100))
+        simple_dict['Proxy/VPN/Tor'] = "{} %".format(float(score) * int(100))
         return simple_dict
 
 
@@ -387,30 +390,54 @@ def parse_hybrid(jdata: dict, query: str, sha_sum: list = None) -> dict:
                 }
     ```
     """
-    simple_dic = {}    
     try:
         if jdata["count"] == 0:  # If no result was recieved
             print("Could not recieve value")
             return
         else:
             c = jdata["count"]
-            print("[+] Hybrid analysis has got {} matches\n".format(c))
+            content_list = []
+            header_list = ['verdict', 'av_detect', 'threat_score', 'sha256', 'submit_name', 'analysis_start_time']
+            body_list = []
+            content_list.append(header_list)
             for i in range(0, c):
-                # Parsing the data
-                simple_dic[f'{i}_verdict_'] = jdata["result"][i]['verdict']
-                simple_dic[f'{i}_av_detect'] = jdata["result"][i]['av_detect']
-                simple_dic[f'{i}_threat_score'] = jdata["result"][i]['threat_score']
-                simple_dic[f'{i}_hash'] = jdata["result"][i]['sha256']
-                simple_dic[f'{i}_submit_name'] = jdata["result"][i]['submit_name']
-                simple_dic[f'{i}_analyzed_in'] = jdata["result"][i]['analysis_start_time']
+                body_list.append([
+                    jdata["result"][i]['verdict'],
+                    jdata["result"][i]['av_detect'],
+                    jdata["result"][i]['threat_score'],
+                    jdata["result"][i]['sha256'],
+                    jdata["result"][i]['submit_name'],
+                    jdata["result"][i]['analysis_start_time']]) 
+                content_list.append(body_list)
     except IndexError:
         print("Index Error")
     finally:
-        return simple_dic
+        return content_list
 
 
+def parse_apility(jdata: dict, query: str, sha_sum: list = None) -> list:
+    try:
+        reputation = jdata['fullip']['history']['activity']
+        if reputation is None:
+            string = '\nThis IP has not been blacklisted since 1 year'
+            print(string)
+            return string
+        else:
+            content_list = []
+            content_list.append(list(reputation[0].keys()))
+            for i in range(len(reputation)):
+                tp = reputation[i]['timestamp']
+                date = time.strftime('%Y-%m-%d', time.localtime(tp/1000))
+                reputation[i].update(timestamp=date)
+                content_list.append(list(reputation[i].values()))              
+    except IndexError:
+        print("Index Error")
+    finally:
+        return content_list
+    pass
 
-def querry_status_urlhause_ip(positions: dict) -> dict:
+
+def parse_urlhause(jdata: dict, query: str, sha_sum: list = None) -> list:
     """
     Documentation for querry_status_abuseipdb.
     It gets a json a dictionary,
@@ -455,22 +482,22 @@ def querry_status_urlhause_ip(positions: dict) -> dict:
     dict -- Returns dict of values that i chose.
 
     """
-    if positions['query_status'] != 'ok':
+    if jdata['query_status'] != 'ok':
         print(iconNone + ' No result on URLhause')
     else:
         try:
             response_querry_url_information = {
-                "urlhaus_reference": positions['urls'][0]['urlhaus_reference'],
-                "threat": positions['urls'][0]['threat'],
-                "url_status": positions['urls'][0]['url_status'],
-                "tags": positions['urls'][0]['tags']}
+                "urlhaus_reference": jdata['urls'][0]['urlhaus_reference'],
+                "threat": jdata['urls'][0]['threat'],
+                "url_status": jdata['urls'][0]['url_status'],
+                "tags": jdata['urls'][0]['tags']}
             print(response_querry_url_information)
             return response_querry_url_information
         except KeyError:
             print("KeyError")
 
 
-def querry_status_urlscan_ip(positions: dict) -> dict:
+def parse_urlscan(jdata: dict, query: str, sha_sum: list = None) -> list:
     """
     Documentation for querry_status_urlscan_ip.
     It gets a json a dictionary,
@@ -522,12 +549,12 @@ def querry_status_urlscan_ip(positions: dict) -> dict:
     dict -- Returns dict of values that i chose.
 
     """
-    if positions['total'] == 0:
-        print(iconNone + ' No result on URLscan')
+    if jdata['total'] == 0:
+        #print(iconNone + ' No result on URLscan')
         return False
     else:
         try:
-            results = {"urlscan": positions['results'][0]['task']['url']}
+            results = {"urlscan": jdata['results'][0]['task']['url']}
             print(results)
             return results
         except KeyError:
@@ -569,7 +596,7 @@ def retruncategory(test_json):
     return list
 
 
-def querry_status_abuseipdb(positions: dict) -> dict:
+def parse_abuseipdb(jdata: dict, query: str, sha_sum: list = None) -> list:
     """
     Documentation for querry_status_abuseipdb.
     It gets a json a dictionary,
@@ -601,12 +628,12 @@ def querry_status_abuseipdb(positions: dict) -> dict:
     dict -- Returns dict of values that i chose.
 
     """
-    if positions == []:
-        print(iconNone + ' No result on URLscan')
-        return False
-    else:
-        try:
-            result_with_correct_category = (max(positions, key=lambda x:(len(x['ip']),len(x['category']))))
+    try:
+        if jdata == []:
+            print(iconNone + ' No result on URLscan')
+            return False
+        else:
+            result_with_correct_category = (max(jdata, key=lambda x:(len(x['ip']),len(x['category']))))
             data_from_abuseipdb = {
                 "attacker": result_with_correct_category['ip'],
                 "category":
@@ -615,11 +642,21 @@ def querry_status_abuseipdb(positions: dict) -> dict:
                 "abuseConfidenceScore":
                 result_with_correct_category['abuseConfidenceScore']}
             print(data_from_abuseipdb)
-            return data_from_abuseipdb
-        except KeyError:
-            print("KeyError")
-        except TypeError:
-            print("TypeError")
+    except KeyError:
+        print("KeyError")
+    except TypeError:
+        print("TypeError")
+    finally:
+        return data_from_abuseipdb
+
+
+def parse_threatminer(jdata: dict, query: str, sha_sum: list = None) -> dict:
+    try:
+        pass
+    except TypeError:
+        print("KeyError")
+    finally:
+        return jdata
 
 
 def querry_status_virustotal_file(resp_json):
