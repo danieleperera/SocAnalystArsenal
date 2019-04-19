@@ -98,7 +98,7 @@ def collector(verbosity_check: bool, sha_sum_list: list = None):
             'context': 'http GET 46.20.95.185'}
     ```
     """
-    info = {'attackers': {'124.164.251.179'},
+    info = {'attackers': {'68.183.65.178'},
             'victims': '10.10.2.140',
             'context': 'http GET 46.20.95.185'}
     # --- Notification ---
@@ -113,64 +113,90 @@ def collector(verbosity_check: bool, sha_sum_list: list = None):
             # ===================== ************* ============================
             ip_addresses = get_ip(info)
             tmp.write(text_header(info))
-            for ip in ip_addresses:
+            for element in info['attackers']:
                 if sha_sum_list is None:
 
-                    virustotal = query.virustotal_query(ip, 'ip', verbosity_check)
+                    virustotal = query.virustotal_query(element, 'ip', verbosity_check)
                     query.progressbar_ip(ip_addresses)
+                    header_whois = ('\nWhois Information ' + element + '\n')
+                    tmp.write(header_whois)
                     tableContent_virustotal = text_body_table(virustotal)
-                    tmp.write('\n {} \n'.format(printTable(tableContent_virustotal)))
+                    tmp.write('{}'.format(printTable(tableContent_virustotal)))
                         
-                    iphub = query.iphub_query(ip, 'ip', verbosity_check)
+                    iphub = query.iphub_query(element, 'ip', verbosity_check)
                     query.progressbar_ip(ip_addresses)
+                    header_spoofed_IPhub = ('\n\nVPN/Proxy/Tor Information IPhub ' + element + '\n')
+                    tmp.write(header_spoofed_IPhub)                    
                     for i in text_body(iphub):
                         tmp.write(i)
                       
-                    getipintel = query.getipintel_query(ip, 'ip', verbosity_check)
+                    getipintel = query.getipintel_query(element, 'ip', verbosity_check)
                     query.progressbar_ip(ip_addresses)
+                    header_spoofed_getipintel = ('\n\nVPN/Proxy/Tor Information GetIPintel ' + element + '\n')
+                    tmp.write(header_spoofed_getipintel)                        
                     for i in text_body(getipintel):
                         tmp.write(i)
-                    """  
-                    shodan = query.shodan_query(ip, 'ip', verbosity_check)
+                     
+                    shodan = query.shodan_query(element, 'ip', verbosity_check)
                     query.progressbar_ip(ip_addresses)
-                    for i in text_body(shodan):
-                        tmp.write(i)
-                    
-                    threatcrowd = query.threatcrowd_query(ip, 'ip', verbosity_check)
+                    header_compromised = ('\n\nCompromised Information ' + element + '\n')
+                    tmp.write(header_compromised)
+                    tableContent_shodan = text_body_table(shodan)
+                    tmp.write('{}'.format(printTable(tableContent_shodan)))                    
+                     
+                    threatcrowd = query.threatcrowd_query(element, 'ip', verbosity_check)
                     query.progressbar_ip(ip_addresses)
+                    header_status = ('\n\nCurrent status information ' + element + '\n')
+                    tmp.write(header_status)
                     for i in text_body(threatcrowd):
                         tmp.write(i)
-
-                    hybrid = query.hybrid_query(ip, 'ip', verbosity_check)
+                    
+                    hybrid = query.hybrid_query(element, 'ip', verbosity_check)
                     query.progressbar_ip(ip_addresses)
-                    for i in text_body(hybrid):
-                        tmp.write(i)
-
-                    apility = query.apility_query(ip, 'ip', verbosity_check)
+                    header_association = ('\n\nAssociation with malware information ' + element + '\n')
+                    tmp.write(header_association)
+                    table_association = printTable_row(hybrid)
+                    tmp.write('{}'.format(table_association)) 
+                    
+                    apility = query.apility_query(element, 'ip', verbosity_check)
                     query.progressbar_ip(ip_addresses)
+                    header_reputation = ('\n\nReputation and activity through time ' + element + '\n')
+                    tmp.write(header_reputation)                    
                     for i in text_body(apility):
                         tmp.write(i)
                     
-                    abuseipdb = query.abuseipdb_query(ip, 'ip', verbosity_check)
+                    abuseipdb = query.abuseipdb_query(element, 'ip', verbosity_check)
                     query.progressbar_ip(ip_addresses)
+                    header_blacklisted = ('\n\nBlacklisted Data ' + element + '\n')
+                    tmp.write(header_blacklisted)                       
                     for i in text_body(abuseipdb):
                         tmp.write(i)
 
-                    urlscan = query.urlscan_query(ip, 'ip', verbosity_check)
+                    urlhause = query.urlhause_query(element, 'ip', verbosity_check)
                     query.progressbar_ip(ip_addresses)
-                    for i in text_body(urlscan):
-                        tmp.write(i)
-
-                    urlhause = query.urlhause_query(ip, 'ip', verbosity_check)
-                    query.progressbar_ip(ip_addresses)
+                    header_spread = ('\n\nIP address/Domain was used to spread malware ' + element + '\n')
+                    tmp.write(header_spread)                       
                     for i in text_body(urlhause):
                         tmp.write(i)
 
-                    threatminer = query.threatminer_query(ip, 'ip', verbosity_check)
+                    threatminer = query.threatminer_query(element, 'ip', verbosity_check)
                     query.progressbar_ip(ip_addresses)
+                    header_info2 = ('\n\nMore information ' + element + '\n')
+                    tmp.write(header_info2)                       
                     for i in text_body(threatminer):
                         tmp.write(i)
                     
+                    urlscan = query.urlscan_query(element, 'ip', verbosity_check)
+                    query.progressbar_ip(ip_addresses)
+                    header_info = ('\n\nMore information ' + element + '\n')
+                    tmp.write(header_info)                       
+                    for i in text_body(urlscan):
+                        tmp.write(i)
+
+
+
+
+                    """
                     # --- URLscan ---
                     urlscan = filestream.ip_urlscan(ip, verbosity_check)
                     filestream.progressbar_ip(ip_addresses)
@@ -420,30 +446,52 @@ def verbose_mode(verbosity: bool) -> bool:
 
 
 def printTable(tbl, borderHorizontal='-', borderVertical='|', borderCross='+'):
-    # get the columns split by the values
-    cols = [col.split(', ') for col in tbl]
-
-    # find the longests strings
-    lenghts = [[] for _ in range(len(max(cols, key=len)))]
-    for col in cols:
-        for idx, value in enumerate(col):
-            lenghts[idx].append(len(value))
-    lengths = [max(lenght) for lenght in lenghts]
-
-    # create formatting string with the length of the longest elements
-    f = borderVertical + borderVertical.join(' {:>%d} ' % l for l in lengths) + borderVertical
-    s = borderCross + borderCross.join(borderHorizontal * (l+2) for l in lengths) + borderCross
-
     string = ''
-    string += s + '\n'
-    print(s)
-    for col in cols:
-        string += f.format(*col) + '\n'
-        print(f.format(*col))
+    try:
+        # get the columns split by the values
+        cols = [col.split(', ') for col in tbl]
+
+        # find the longests strings
+        lenghts = [[] for _ in range(len(max(cols, key=len)))]
+        for col in cols:
+            for idx, value in enumerate(col):
+                lenghts[idx].append(len(value))
+        lengths = [max(lenght) for lenght in lenghts]
+
+        # create formatting string with the length of the longest elements
+        f = borderVertical + borderVertical.join(' {:>%d} ' % l for l in lengths) + borderVertical
+        s = borderCross + borderCross.join(borderHorizontal * (l+2) for l in lengths) + borderCross
         string += s + '\n'
         print(s)
+        for col in cols:
+            string += f.format(*col) + '\n'
+            print(f.format(*col))
+            string += s + '\n'
+            print(s)
+    except ValueError:
+        print('value error')
+    finally:
+        return string
 
-    return string
+
+def printTable_row(tbl, borderHorizontal = '-', borderVertical = '|', borderCross = '+'):
+    string = ''
+    try:
+        cols = [list(x) for x in zip(*tbl)]
+        lengths = [max(map(len, map(str, col))) for col in cols]
+        f = borderVertical + borderVertical.join(' {:>%d} ' % l for l in lengths) + borderVertical
+        s = borderCross + borderCross.join(borderHorizontal * (l+2) for l in lengths) + borderCross
+        string += s + '\n'
+        print(s)
+        for row in tbl:
+            string += f.format(*row) + '\n'
+            print(f.format(*row))
+            string += s + '\n'
+            print(s)
+    except TypeError:
+        print("Type Error")
+    finally:
+        return string
 
 
 if __name__ == '__main__':

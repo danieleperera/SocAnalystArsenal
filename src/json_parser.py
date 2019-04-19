@@ -390,13 +390,13 @@ def parse_hybrid(jdata: dict, query: str, sha_sum: list = None) -> dict:
                 }
     ```
     """
+    content_list = []
     try:
         if jdata["count"] == 0:  # If no result was recieved
             print("Could not recieve value")
             return
         else:
             c = jdata["count"]
-            content_list = []
             header_list = ['verdict', 'av_detect', 'threat_score', 'sha256', 'submit_name', 'analysis_start_time']
             body_list = []
             content_list.append(header_list)

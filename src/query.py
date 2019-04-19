@@ -505,9 +505,29 @@ def hybrid_query(query: str, type: str, val: bool, sha_sum: list = None) -> dict
 # ===================== ************* ===============================
 #http://check.getipintel.net/check.php?ip=66.228.119.72&contact=mr.px0r@gmail.com&format=json
 
+
+def printTable_row(tbl, borderHorizontal = '-', borderVertical = '|', borderCross = '+'):
+    string = ''
+    try:
+        cols = [list(x) for x in zip(*tbl)]
+        lengths = [max(map(len, map(str, col))) for col in cols]
+        f = borderVertical + borderVertical.join(' {:>%d} ' % l for l in lengths) + borderVertical
+        s = borderCross + borderCross.join(borderHorizontal * (l+2) for l in lengths) + borderCross
+        string += s + '\n'
+        print(s)
+        for row in tbl:
+            string += f.format(*row) + '\n'
+            print(f.format(*row))
+            string += s + '\n'
+            print(s)
+    except TypeError:
+        print("Type Error")
+    finally:
+        return string
+        
 #ip ='68.183.65.178'
 
-#ip = '188.40.75.132'
+ip = '188.40.75.132'
 """
 # print(fofa_query(ip, 'ip', True))
 
@@ -530,11 +550,11 @@ print(test3)
 test4 = threatcrowd_query(ip, 'ip', False)
 #progressbar_ip(ip)
 print(test4)
-
+"""
 test5 = hybrid_query(ip, 'ip', False)
 #progressbar_ip(ip)
 print(test5)
-
+"""
 test6 = apility_query(ip, 'ip', False)
 #progressbar_ip(ip)
 print(test6)
