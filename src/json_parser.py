@@ -67,8 +67,9 @@ def parse_virustotal(jdata: dict, query: str, sha_sum: list = None) -> dict:
 
     """
     if jdata['response_code'] == -1:
-        print('[!] No result on virustotal')
-        return False, False
+        #print('[!] No result on virustotal')
+        pass
+        return
     else:
         whois_dict = {}
         whois_dict['Country'] = jdata.get('country', 'not found')
@@ -89,7 +90,8 @@ def parse_virustotal(jdata: dict, query: str, sha_sum: list = None) -> dict:
             # print(simple_dict)
             #detected_dict = {k: str.encode(v, 'ascii', 'replace') for k,v in detected_dict.items()}
         except KeyError:
-            print('key error')
+            #print('key error')
+            pass
         finally:
             return whois_dict
 
@@ -393,7 +395,8 @@ def parse_hybrid(jdata: dict, query: str, sha_sum: list = None) -> dict:
     content_list = []
     try:
         if jdata["count"] == 0:  # If no result was recieved
-            print("Could not recieve value")
+            #print("Could not recieve value")
+            pass
             return
         else:
             c = jdata["count"]
@@ -410,7 +413,8 @@ def parse_hybrid(jdata: dict, query: str, sha_sum: list = None) -> dict:
                     jdata["result"][i]['analysis_start_time']]) 
                 content_list.append(body_list)
     except IndexError:
-        print("Index Error")
+        #print("Index Error")
+        pass
     finally:
         return content_list
 
@@ -420,7 +424,7 @@ def parse_apility(jdata: dict, query: str, sha_sum: list = None) -> list:
         reputation = jdata['fullip']['history']['activity']
         if reputation is None:
             string = '\nThis IP has not been blacklisted since 1 year'
-            print(string)
+            #print(string)
             return string
         else:
             content_list = []
@@ -431,7 +435,8 @@ def parse_apility(jdata: dict, query: str, sha_sum: list = None) -> list:
                 reputation[i].update(timestamp=date)
                 content_list.append(list(reputation[i].values()))              
     except IndexError:
-        print("Index Error")
+        #print("Index Error")
+        pass
     finally:
         return content_list
     pass
@@ -492,10 +497,11 @@ def parse_urlhause(jdata: dict, query: str, sha_sum: list = None) -> list:
                 "threat": jdata['urls'][0]['threat'],
                 "url_status": jdata['urls'][0]['url_status'],
                 "tags": jdata['urls'][0]['tags']}
-            print(response_querry_url_information)
+            #print(response_querry_url_information)
             return response_querry_url_information
         except KeyError:
-            print("KeyError")
+            #print("KeyError")
+            pass
 
 
 def parse_urlscan(jdata: dict, query: str, sha_sum: list = None) -> list:
@@ -556,10 +562,11 @@ def parse_urlscan(jdata: dict, query: str, sha_sum: list = None) -> list:
     else:
         try:
             results = {"urlscan": jdata['results'][0]['task']['url']}
-            print(results)
+            #print(results)
             return results
         except KeyError:
-            print("KeyError")
+            #print("KeyError")
+            pass
 
 
 # --- Abuseipdb Category ---
@@ -643,11 +650,13 @@ def parse_abuseipdb(jdata: dict, query: str, sha_sum: list = None) -> list:
                 "country": result_with_correct_category['country'],
                 "abuseConfidenceScore":
                 result_with_correct_category['abuseConfidenceScore']}
-            print(data_from_abuseipdb)
+            #print(data_from_abuseipdb)
     except KeyError:
-        print("KeyError")
+        #print("KeyError")
+        pass
     except TypeError:
-        print("TypeError")
+        #print("TypeError")
+        pass
     finally:
         return data_from_abuseipdb
 
@@ -656,7 +665,8 @@ def parse_threatminer(jdata: dict, query: str, sha_sum: list = None) -> dict:
     try:
         pass
     except TypeError:
-        print("KeyError")
+        #print("KeyError")
+        pass
     finally:
         return jdata
 

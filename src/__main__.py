@@ -12,6 +12,8 @@ import argparse
 from selenium.common import exceptions
 
 # python .\__main__.py -m --ip 68.183.65.178 --sha 33f810fd192ee4828b331fcbb11a33a567c53ff2bbf24234c48f4a7d68b73f73 -v
+
+
 def main():
     """
     Documentation for main.
@@ -19,7 +21,7 @@ def main():
     It prints the banner and uses argparse to get data from user.
     If no option is given, it defaults to use webscapper.
     """
-    print(Fore.CYAN + filestream.print_banner())
+    print(Fore.CYAN + query.print_banner())
 
     parser = argparse.ArgumentParser()
 
@@ -98,9 +100,6 @@ def collector(info: dict, verbosity_check: bool, sha_sum_list: list = None):
             'context': 'http GET 46.20.95.185'}
     ```
     """
-    info = {'attackers': {'188.40.75.132'},
-            'victims': '10.10.2.140',
-            'context': 'http GET 46.20.95.185'}
     # --- Notification ---
     toaster = ToastNotifier()
     # --- Clipboard / tmp file ---
@@ -294,17 +293,9 @@ def collector(info: dict, verbosity_check: bool, sha_sum_list: list = None):
                         tmp.write('{}\n'.format(test))
 
                     """
-                        # --- virustotal end---
         # ===================== ************* ===============================
         # ---------------------- END IP addresses -----------------------
         # ===================== ************* ===============================
-            """
-            multiple_context = get_context(info).split(" ")[1:]
-            for context in tqdm(multiple_context):
-                #print(context)
-                pass
-            """
-
             tmp.seek(0)
             content = tmp.read()
             if content == '':
@@ -353,13 +344,6 @@ def get_ip(ip: dict) -> str:
     else:
         # print(ip['attackers'])
         return ip['attackers']
-
-
-def get_context(context):
-    if context['context'] == "":
-        print("No context found...")
-    else:
-        return context['context']
 
 
 def text_header(head):
