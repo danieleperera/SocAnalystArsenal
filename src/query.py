@@ -76,8 +76,9 @@ def virustotal_query(query: str, type: str, val: bool, sha_sum: list = None) -> 
     api = (data['API info']['virustotal']['api'])
     # print 
     colorQuery = (Fore.RED + query)
-    print(iconNone, end='')
-    print(' Checking virustotal for ' + colorQuery)
+    colorString = (Fore.GREEN + 'VirusTotal')
+    print(iconNone + ' ' + colorString, end='')
+    print(' checking WhoIs Information for ' + colorQuery)
     if sha_sum is None:
         if type == "domain":
             data = {"domain": query}  # The data to post
@@ -125,8 +126,9 @@ def iphub_query(query: str, type: str, val: bool, sha_sum: list = None) -> dict:
     data = get_api()
     api = (data['API info']['iphub']['api'])
     colorQuery = (Fore.RED + query)
-    print(iconNone, end='')
-    print(' Checking IPhub for ' + colorQuery)
+    colorString = (Fore.GREEN + 'IPhub')
+    print(iconNone + ' ' + colorString, end='')
+    print(' checking proxy or spoofed ' + colorQuery)
     if type == "domain":
         print(Fore.RED + '[x] IPhub does not check domains')  # The data to post
     elif type == "ip":
@@ -146,8 +148,9 @@ def getipintel_query(query: str, type: str, val: bool, sha_sum: list = None) -> 
     data = get_api()
     email = data['API info']['getipintel']['email']
     colorQuery = (Fore.RED + query)
-    print(iconNone, end='')
-    print(' Checking GetIPintel for ' + colorQuery)
+    colorString = (Fore.GREEN + 'GetIPintel')
+    print(iconNone + ' ' + colorString, end='')
+    print(' checking Proxy VPN Tor ' + colorQuery)
     if type == "domain":
         print(Fore.RED + '[x] GetIPintel does not check domains')  # The data to post
     elif type == "ip":
@@ -192,8 +195,9 @@ def threatminer_query(query: str, type: str, val: bool, sha_sum: list = None) ->
     data = get_api()
 
     colorQuery = (Fore.RED + query)
-    print(iconNone, end='')
-    print(' Checking threatminer for ' + colorQuery)
+    colorString = (Fore.GREEN + 'Threatminer')
+    print(iconNone + ' ' + colorString, end='')
+    print(' checking further information ' + colorQuery)
 
     if type == "domain":
         pass
@@ -212,8 +216,9 @@ def threatcrowd_query(query: str, type: str, val: bool, sha_sum: list = None) ->
     data = get_api()
 
     colorQuery = (Fore.RED + query)
-    print(iconNone, end='')
-    print(' Checking threatcrowd for ' + colorQuery)
+    colorString = (Fore.GREEN + 'Threatcrowd')
+    print(iconNone + ' ' + colorString, end='')
+    print(' checking current status' + colorQuery)
 
     if type == "domain":
         pass
@@ -253,8 +258,9 @@ def abuseipdb_query(query: str, type: str, val: bool, sha_sum: list = None) -> d
     """
     data = get_api()
     colorQuery = (Fore.RED + query)
-    print(iconNone, end='')
-    print(' Checking Abuseipdb for ' + colorQuery)
+    colorString = (Fore.GREEN + 'Abuseipdb')
+    print(iconNone + ' ' + colorString, end='')
+    print(' checking blacklisted ' + colorQuery)
     if type == "domain":
         print(Fore.RED + '[x] AbuseIPdb does not check domains')  # The data to post
     elif type == "ip":
@@ -300,8 +306,9 @@ def urlscan_query(query: str, type: str, val: bool, sha_sum: list = None) -> dic
     """
     data = get_api()
     colorQuery = (Fore.RED + query)
-    print(iconNone, end='')
-    print(' Checking URLscan for ' + colorQuery)
+    colorString = (Fore.GREEN + 'URLscan')
+    print(iconNone + ' ' + colorString, end='')
+    print(' checking further information ' + colorQuery)
     if type == "domain":
         query_domain = data['API info']['urlscan.io']['query_domain']
         requests_url = query_domain+query
@@ -341,8 +348,9 @@ def urlhause_query(query: str, type: str, val: bool, sha_sum: list = None) -> di
     """
     data = get_api()
     colorQuery = (Fore.RED + query)
-    print(iconNone, end='')
-    print(' Checking urlhause for ' + colorQuery)
+    colorString = (Fore.GREEN + 'UrlHause')
+    print(iconNone + ' ' + colorString, end='')
+    print(' checking IP address/Domain was used to spread malware ' + colorQuery)
     if type == "domain" or type == "ip":
         # --- urlhaus data ok ----
         querry_host_url = (data['API info']['urlhaus']['querry_host_url'])
@@ -430,8 +438,9 @@ def shodan_query(query: str, type: str, val: bool, sha_sum: list = None) -> dict
     api_key = data['API info']['shodan']['api']
     # print 
     colorQuery = (Fore.RED + query)
-    print(iconNone, end='')
-    print(' Checking Shodan for ' + colorQuery)    
+    colorString = (Fore.GREEN + 'Shodan')
+    print(iconNone + ' ' + colorString, end='')
+    print(' Checking information about host and see if it was compromised ' + colorQuery)    
     if type == "domain":
         data = {"domain": query}  # The data to post
     elif type == "ip":
@@ -465,8 +474,9 @@ def apility_query(query: str, type: str, val: bool, sha_sum: list = None) -> dic
     api_key = data['API info']['apility']['api']
     # print 
     colorQuery = (Fore.RED + query)
-    print(iconNone, end='')
-    print(' Checking apility for ' + colorQuery)     
+    colorString = (Fore.GREEN + 'Apility')
+    print(iconNone + ' ' + colorString, end='')
+    print(' checking reputation and activity through time ' + colorQuery)     
     if type == "domain":
         data = {"domain": query}  # The data to post
     elif type == "ip":
@@ -490,8 +500,9 @@ def hybrid_query(query: str, type: str, val: bool, sha_sum: list = None) -> dict
     api_key = data['API info']['hybrid']['api']
     # printing name
     colorQuery = (Fore.RED + query)
-    print(iconNone, end='')
-    print(' Checking hybrid for ' + colorQuery)  
+    colorString = (Fore.GREEN + 'Hybrid')
+    print(iconNone + ' ' + colorString, end='')
+    print(' checking association with malware ' + colorQuery)  
 
     if type == "domain":
         data = {"domain": query}  # The data to post
@@ -553,20 +564,31 @@ ip = '188.40.75.132'
 # print(fofa_query(ip, 'ip', True))
 
 test = virustotal_query(ip, 'ip', False)
-print(test)
+progressbar_ip(ip)
+#print(test)
 
 test1 = iphub_query(ip, 'ip', False)
-print(test1)
+progressbar_ip(ip)
+#print(test1)
 
 test2 = getipintel_query(ip, 'ip', False)
-print(test2)
+progressbar_ip(ip)
+#print(test2)
 
-print(shodan_query(ip, 'ip', True))
+test3 = shodan_query(ip, 'ip', True)
+progressbar_ip(ip)
 
-print(threatcrowd_query(ip, 'ip', True))
-print(hybrid_query(ip, 'ip', True))
-print(apility_query(ip, 'ip', True))
-print(abuseipdb_query(ip, 'ip', True))
-print(urlscan_query(ip, 'ip', True))
-print(urlhause_query(ip, 'domain', True))
-print(threatminer_query(ip, 'domain', True))
+test4 = threatcrowd_query(ip, 'ip', True)
+progressbar_ip(ip)
+test5 = hybrid_query(ip, 'ip', True)
+progressbar_ip(ip)
+test6 = apility_query(ip, 'ip', True)
+progressbar_ip(ip)
+test7 = abuseipdb_query(ip, 'ip', True)
+progressbar_ip(ip)
+test8 = urlscan_query(ip, 'ip', True)
+progressbar_ip(ip)
+test9 = urlhause_query(ip, 'domain', True)
+progressbar_ip(ip)
+test10 = threatminer_query(ip, 'domain', True)
+progressbar_ip(ip)
