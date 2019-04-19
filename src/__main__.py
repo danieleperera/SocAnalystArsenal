@@ -30,7 +30,7 @@ def main():
                         help='To enter manual mode use this option')
 
     parser.add_argument('--version', action='version',
-                        version='%(prog)s 0.0.1')
+                        version='%(prog)s 1.0.0')
 
     parser.add_argument('--ip', nargs='+', dest='ip',
                         help='give a list of potential malicious ip addresses')
