@@ -5,7 +5,7 @@ import requests
 from tqdm import tqdm
 from colorama import Fore, init
 import json_parser
-
+import time
 
 iconOK = (Fore.GREEN + '[!]')
 iconNone = (Fore.YELLOW + '[!]')
@@ -43,7 +43,8 @@ def get_api():
 
 
 def progressbar_ip(ip_addresses):
-    for i in tqdm(ip_addresses):
+    for i in tqdm(ip_addresses, unit="data"):
+        time.sleep(0.01)
         pass
 
 # ===================== ************* =================================
@@ -233,7 +234,7 @@ def threatcrowd_query(query: str, type: str, val: bool, sha_sum: list = None) ->
     if val:
         return response.json()
     else:
-        pass
+        return json_parser.parse_threatcrowd(response.json(), query)
 
 
 def abuseipdb_query(query: str, type: str, val: bool, sha_sum: list = None) -> dict:
@@ -449,23 +450,10 @@ def shodan_query(query: str, type: str, val: bool, sha_sum: list = None) -> dict
     else:
         return
 
-    #print(response.json())
-
-    host = response.json()
-    simple_dic = {}
-    try:
-        for index, item in enumerate(host['data']):
-            hd = (item['data'])
-            simple_dic[f'Detected_{index+1}_open_port: '] = item['port']
-            simple_dic[f'Detected_info_{index+1}'] = "{} {}".format(hd.splitlines()[0], hd.splitlines()[1])
-        #simple_dic = {k: str.encode(v, 'utf-8', 'replace') for k,v in simple_dic.items()}
-    except IndexError:
-        print("Index Error")
-    finally:
-        if val:
-            return response.json()
-        else:
-            return
+    if val:
+        return response.json()
+    else:
+        return json_parser.parse_shodan(response.json(), query)
 
 
 def apility_query(query: str, type: str, val: bool, sha_sum: list = None) -> dict:
@@ -510,78 +498,49 @@ def hybrid_query(query: str, type: str, val: bool, sha_sum: list = None) -> dict
         url = "https://www.hybrid-analysis.com/api/v2/search/terms"  # The api url
         headers = {"api-key": api_key, "user-agent": "Falcon Sandbox", "accept": "application/json"}  # The request headers
         data = {"host": query}
-        resp = requests.post(url, headers=headers, data=data)
-        response = json.loads(resp.text)
+        response = requests.post(url, headers=headers, data=data)
     else:
         pass
     if val:
         return response
     else:
-        if response["count"] == 0:  # If no result was recieved
-            error = "\nCould not recieve value\n"
-            print(error)
-            return None
-        else:
-            c = response["count"]
-            simple_dic = {}
-            if c >= 3:
-                print("[+] Hybrid analysis has got {} matches\n".format(c))
-                for i in range(0, 3): 
-                    # Parsing the data
-                    print("Match No: {}\n".format(i))
-                    simple_dic['verdict'] = response["result"][i]['verdict']
-                    simple_dic['av_detect'] = response["result"][i]['av_detect']
-                    simple_dic['threat_score'] = response["result"][i]['threat_score']
-                    simple_dic['hashed'] = response["result"][i]['sha256']
-                    simple_dic['submit_name'] = response["result"][i]['submit_name']
-                    simple_dic['analyzed_in'] = response["result"][i]['analysis_start_time']
-                    msg = "Verdit: {}\nAV_Detection: {}\nThreat_Score: {}\nSHA256_HASH: {}\nSubmit_Name: {}\nAnalyzed_in: {}\n".format(
-                        simple_dic['verdict'], simple_dic['av_detect'], simple_dic['threat_score'], simple_dic['hashed'], simple_dic['submit_name'], simple_dic['analyzed_in'])
-                    print(msg)
-            else:
-                print("[+] Hybrid analysis has got {} matches\n".format(c))
-                for i in range(0, 1):
-                    # Parsing the data
-                    print("Match No: {}\n".format(i))
-                    simple_dic['verdict'] = response["result"][i]['verdict']
-                    simple_dic['av_detect'] = response["result"][i]['av_detect']
-                    simple_dic['threat_score'] = response["result"][i]['threat_score']
-                    simple_dic['hashed'] = response["result"][i]['sha256']
-                    simple_dic['submit_name'] = response["result"][i]['submit_name']
-                    simple_dic['analyzed_in'] = response["result"][i]['analysis_start_time']
-                    msg = "Verdit: {}\nAV_Detection: {}\nThreat_Score: {}\nSHA256_HASH: {}\nSubmit_Name: {}\nAnalyzed_in: {}\n".format(
-                        simple_dic['verdict'], simple_dic['av_detect'], simple_dic['threat_score'], simple_dic['hashed'], simple_dic['submit_name'], simple_dic['analyzed_in'])
-                    print(msg)
-            return simple_dic
+        return json_parser.parse_hybrid(response.json(), query)
 
 # ===================== ************* ===============================
 # -----------Working and testing from here on -----------------------
 # ===================== ************* ===============================
 #http://check.getipintel.net/check.php?ip=66.228.119.72&contact=mr.px0r@gmail.com&format=json
 
+#ip ='68.183.65.178'
 
 ip = '188.40.75.132'
+"""
 # print(fofa_query(ip, 'ip', True))
 
 test = virustotal_query(ip, 'ip', False)
-progressbar_ip(ip)
-#print(test)
+#progressbar_ip(ip)
+print(test)
 
 test1 = iphub_query(ip, 'ip', False)
-progressbar_ip(ip)
-#print(test1)
+#progressbar_ip(ip)
+print(test1)
 
 test2 = getipintel_query(ip, 'ip', False)
 progressbar_ip(ip)
-#print(test2)
+print(test2)
 
-test3 = shodan_query(ip, 'ip', True)
+test3 = shodan_query(ip, 'ip', False)
 progressbar_ip(ip)
+print(test3)
 
-test4 = threatcrowd_query(ip, 'ip', True)
-progressbar_ip(ip)
-test5 = hybrid_query(ip, 'ip', True)
-progressbar_ip(ip)
+test4 = threatcrowd_query(ip, 'ip', False)
+#progressbar_ip(ip)
+print(test4)
+"""
+test5 = hybrid_query(ip, 'ip', False)
+#progressbar_ip(ip)
+print(test5)
+"""
 test6 = apility_query(ip, 'ip', True)
 progressbar_ip(ip)
 test7 = abuseipdb_query(ip, 'ip', True)
@@ -592,3 +551,4 @@ test9 = urlhause_query(ip, 'domain', True)
 progressbar_ip(ip)
 test10 = threatminer_query(ip, 'domain', True)
 progressbar_ip(ip)
+"""

@@ -104,7 +104,7 @@ def collector(info: dict, verbosity_check: bool, sha_sum_list: list = None):
     fd, path = tempfile.mkstemp()
     #print(sha_sum_list)
     try:
-        with os.fdopen(fd, 'r+') as tmp:
+        with os.fdopen(fd, 'r+', encoding='utf-8') as tmp:
             #  ===================== ************* ===========================
             # ------ IP addresses are getting worked here --------------------
             # ===================== ************* ============================
