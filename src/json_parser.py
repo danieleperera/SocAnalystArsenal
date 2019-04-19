@@ -401,7 +401,7 @@ def parse_hybrid(jdata: dict, query: str, sha_sum: list = None) -> dict:
             body_list = []
             content_list.append(header_list)
             for i in range(0, c):
-                body_list.append([
+                body_list.extend([
                     jdata["result"][i]['verdict'],
                     jdata["result"][i]['av_detect'],
                     jdata["result"][i]['threat_score'],
@@ -483,7 +483,8 @@ def parse_urlhause(jdata: dict, query: str, sha_sum: list = None) -> list:
 
     """
     if jdata['query_status'] != 'ok':
-        print(iconNone + ' No result on URLhause')
+        #print(iconNone + ' No result on URLhause')
+        pass
     else:
         try:
             response_querry_url_information = {
@@ -628,9 +629,10 @@ def parse_abuseipdb(jdata: dict, query: str, sha_sum: list = None) -> list:
     dict -- Returns dict of values that i chose.
 
     """
+    data_from_abuseipdb = {}
     try:
         if jdata == []:
-            print(iconNone + ' No result on URLscan')
+            #print(iconNone + ' No result on URLscan')
             return False
         else:
             result_with_correct_category = (max(jdata, key=lambda x:(len(x['ip']),len(x['category']))))

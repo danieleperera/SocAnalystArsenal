@@ -79,7 +79,7 @@ def main():
         manual_mode_ip(results.ip, verbose_mode(results.bool_vb), results.sha_sum)
 
 
-def collector(verbosity_check: bool, sha_sum_list: list = None):
+def collector(info: dict, verbosity_check: bool, sha_sum_list: list = None):
     """
     Documentation for collector.
     Creates a tmp file and pass the dict to other functions,
@@ -98,7 +98,7 @@ def collector(verbosity_check: bool, sha_sum_list: list = None):
             'context': 'http GET 46.20.95.185'}
     ```
     """
-    info = {'attackers': {'68.183.65.178'},
+    info = {'attackers': {'188.40.75.132'},
             'victims': '10.10.2.140',
             'context': 'http GET 46.20.95.185'}
     # --- Notification ---
@@ -162,8 +162,8 @@ def collector(verbosity_check: bool, sha_sum_list: list = None):
                     query.progressbar_ip(ip_addresses)
                     header_reputation = ('\n\nReputation and activity through time ' + element + '\n')
                     tmp.write(header_reputation)                    
-                    for i in text_body(apility):
-                        tmp.write(i)
+                    table_reputation = printTable_row(apility)
+                    tmp.write('{}'.format(table_reputation))
                     
                     abuseipdb = query.abuseipdb_query(element, 'ip', verbosity_check)
                     query.progressbar_ip(ip_addresses)
@@ -462,38 +462,34 @@ def printTable(tbl, borderHorizontal='-', borderVertical='|', borderCross='+'):
         f = borderVertical + borderVertical.join(' {:>%d} ' % l for l in lengths) + borderVertical
         s = borderCross + borderCross.join(borderHorizontal * (l+2) for l in lengths) + borderCross
         string += s + '\n'
-        print(s)
+        #print(s)
         for col in cols:
             string += f.format(*col) + '\n'
-            print(f.format(*col))
+            #print(f.format(*col))
             string += s + '\n'
-            print(s)
+            #print(s)
     except ValueError:
-        print('value error')
+        pass
     finally:
         return string
 
 
 def printTable_row(tbl, borderHorizontal = '-', borderVertical = '|', borderCross = '+'):
     string = ''
-    try:
-        cols = [list(x) for x in zip(*tbl)]
-        lengths = [max(map(len, map(str, col))) for col in cols]
-        f = borderVertical + borderVertical.join(' {:>%d} ' % l for l in lengths) + borderVertical
-        s = borderCross + borderCross.join(borderHorizontal * (l+2) for l in lengths) + borderCross
+    cols = [list(x) for x in zip(*tbl)]
+    lengths = [max(map(len, map(str, col))) for col in cols]
+    f = borderVertical + borderVertical.join(' {:>%d} ' % l for l in lengths) + borderVertical
+    s = borderCross + borderCross.join(borderHorizontal * (l+2) for l in lengths) + borderCross
+    string += s + '\n'
+    #print(s)
+    for row in tbl:
+        string += f.format(*row) + '\n'
+        #print(f.format(*row))
         string += s + '\n'
-        print(s)
-        for row in tbl:
-            string += f.format(*row) + '\n'
-            print(f.format(*row))
-            string += s + '\n'
-            print(s)
-    except TypeError:
-        print("Type Error")
-    finally:
-        return string
+        #print(s)
+    return string
 
 
 if __name__ == '__main__':
-    #main()
-    collector(False)
+    main()
+    #collector(False)
