@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+# -*- style: PEP8 -*-
 import json
 import os
 from __init__ import api
@@ -6,6 +8,8 @@ from tqdm import tqdm
 from colorama import Fore, init
 import json_parser
 import time
+import re
+import __main__ as main
 
 iconOK = (Fore.GREEN + '[!]')
 iconNone = (Fore.YELLOW + '[!]')
@@ -573,3 +577,163 @@ print(test10)
 """
 #table_reputation = printTable_row(test5)
 #table_reputation = printTable_row(test6)
+
+# ===================== ************* ===============================
+# ---------- Various Checks and printing ticket --------------------
+# ===================== ************* ===============================
+
+def get_ip(ip: dict) -> str:
+    """
+    Documentation for get_ip.
+    It uses a dictionary and check whether,
+    the key attackers is empty or not.
+    If it's empty then prints No attacker ip found,
+    else returns a ip address as string.
+
+    param
+        ip: dict -- This is a dictionary variable.
+
+    example::
+
+    ```
+     ip[attackers] = {'124.164.251.179',
+                      '179.251.164.124.adsl-pool.sx.cn'},
+    ```
+
+    return
+    str -- Returns only ip addresses as a string.
+
+    """
+    if ip['attackers'] == "":
+        print("No attacker ip found...")
+    else:
+        # print(ip['attackers'])
+        return ip['attackers']
+
+
+def text_header(head):
+    test = '''\n### Attackers -> {}
+### Victims   -> {}
+### Context   -> {}\n\n'''.format(
+                head.get("attackers", "Not found!"),
+                head.get("victims", "Not found!"),
+                head.get("context", "Not found!"))
+    print(test)
+    return test
+
+
+def text_body(body):
+    try:
+        for key, val in body.items():
+            yield (('\n{} -> {}').format(key, val))
+    except AttributeError:
+        pass
+
+
+def text_body_table(body):
+    try:
+        for key, val in body.items():
+            yield (('{}, {}').format(key, val))
+    except AttributeError:
+        pass
+
+
+def check_ip(ipv4_address):
+    test = []
+    for i in ipv4_address.split(","):
+        # print(i)
+        regex_ipv4_public = r"^([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])(?<!172\.(16|17|18|19|20|21|22|23|24|25|26|27|28|29|30|31))(?<!127)(?<!^10)(?<!^0)\.([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])(?<!192\.168)(?<!172\.(16|17|18|19|20|21|22|23|24|25|26|27|28|29|30|31))\.([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])(?<!\.255$)$"
+        matches_public = re.finditer(regex_ipv4_public, i, re.MULTILINE)
+
+        for x in matches_public:
+            test.append(("{match}".format(match=x.group())))
+    return test
+
+
+def manual_mode_ip(ip_addr: list, verbosity: bool, sha_sum: list = None):
+    # check if argpase values are null
+    if ip_addr is None:
+        ip = ''
+        while True:
+            ip = input('Insert a list of potential malicious ip addresses:')
+            if check_ip(ip) == []:
+                print("Not valid ip address have been insert, please re-try")
+                continue
+            else:
+                break
+        # --- Creating a set ---
+        ips = ip.split(",")
+        ipss = set(ips)
+        # --- End set variable ---
+        attackers = {}
+        attackers['attackers'] = ipss
+        #print(attackers)
+        main.collector(attackers, verbosity)
+    else:
+        # --- Complete manual mode ---
+        #print("Sono qua e sono da solo ")
+        #print(ip_addr)
+        for ip in ip_addr:
+            ipss = set(ip_addr)
+        attackers = {}
+        attackers['attackers'] = ipss
+        #print(attackers)
+        if sha_sum == []:
+            return main.collector(attackers, verbosity)
+        else:
+            return main.collector(attackers, verbosity, sha_sum)
+        pass
+
+
+def verbose_mode(verbosity: bool) -> bool:
+    if verbosity:
+        #print("Flag non c'è")   verbosity minima
+        return False
+    else:
+        #print("Flag c'è")   verbosity massima
+        return True
+
+
+def printTable(tbl, borderHorizontal='-', borderVertical='|', borderCross='+'):
+    string = ''
+    try:
+        # get the columns split by the values
+        cols = [col.split(', ') for col in tbl]
+
+        # find the longests strings
+        lenghts = [[] for _ in range(len(max(cols, key=len)))]
+        for col in cols:
+            for idx, value in enumerate(col):
+                lenghts[idx].append(len(value))
+        lengths = [max(lenght) for lenght in lenghts]
+
+        # create formatting string with the length of the longest elements
+        f = borderVertical + borderVertical.join(' {:>%d} ' % l for l in lengths) + borderVertical
+        s = borderCross + borderCross.join(borderHorizontal * (l+2) for l in lengths) + borderCross
+        string += s + '\n'
+        #print(s)
+        for col in cols:
+            string += f.format(*col) + '\n'
+            #print(f.format(*col))
+            string += s + '\n'
+            #print(s)
+    except ValueError:
+        pass
+    finally:
+        return string
+
+
+def printTable_row(tbl, borderHorizontal = '-', borderVertical = '|', borderCross = '+'):
+    string = ''
+    cols = [list(x) for x in zip(*tbl)]
+    lengths = [max(map(len, map(str, col))) for col in cols]
+    f = borderVertical + borderVertical.join(' {:>%d} ' % l for l in lengths) + borderVertical
+    s = borderCross + borderCross.join(borderHorizontal * (l+2) for l in lengths) + borderCross
+    string += s + '\n'
+    #print(s)
+    for row in tbl:
+        string += f.format(*row) + '\n'
+        #print(f.format(*row))
+        string += s + '\n'
+        #print(s)
+    return string

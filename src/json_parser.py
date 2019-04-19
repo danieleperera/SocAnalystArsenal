@@ -1,8 +1,10 @@
+# -*- coding: utf-8 -*-
+# -*- style: PEP8 -*-
 # ===================== ************* ===============================
 # ------------------- parse JSON INFOMATION -----------------------
 # ===================== ************* ===============================
 import time
-from colorama import Fore, init
+from colorama import Fore
 iconNone = (Fore.YELLOW + '[!]')
 
 
@@ -724,5 +726,5 @@ print(hybrid_query(ip, 'ip', True))
 print(apility_query(ip, 'ip', True))
 print(abuseipdb_query(ip, 'ip', True))
 print(urlscan_query(ip, 'ip', True))
-print(urlhause_query(ip, 'domain', True))"""
-
+print(urlhause_query(ip, 'domain', True))
+"""
