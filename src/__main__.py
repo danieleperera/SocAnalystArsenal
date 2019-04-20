@@ -113,7 +113,6 @@ def collector(info: dict, verbosity_check: bool, sha_sum_list: list = None):
             tmp.write(query.text_header(info))
             for element in info['attackers']:
                 if sha_sum_list is None:
-
                     virustotal = query.virustotal_query(element, 'ip', verbosity_check)
                     query.progressbar_ip(ip_addresses)
                     header_whois = ('\nWhois Information ' + element + '\n')

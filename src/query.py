@@ -474,10 +474,13 @@ def apility_query(query: str, type: str, val: bool, sha_sum: list = None) -> dic
         headers = {'Accept': 'application/json', 'X-Auth-Token': api_key}
         url = get_url_ip+query
         response = requests.get(url, headers=headers)
-    if val:
-        return response.json()
-    else:
-        return json_parser.parse_apility(response.json(), query)
+    try:
+        if val:
+            return response.json()
+        else:
+            return json_parser.parse_apility(response.json(), query)
+    except json.decoder.JSONDecodeError:
+        pass
 
 
 def hybrid_query(query: str, type: str, val: bool, sha_sum: list = None) -> dict:
@@ -509,21 +512,6 @@ def hybrid_query(query: str, type: str, val: bool, sha_sum: list = None) -> dict
 # ===================== ************* ===============================
 #http://check.getipintel.net/check.php?ip=66.228.119.72&contact=mr.px0r@gmail.com&format=json
 
-
-def printTable_row(tbl, borderHorizontal = '-', borderVertical = '|', borderCross = '+'):
-    string = ''
-    cols = [list(x) for x in zip(*tbl)]
-    lengths = [max(map(len, map(str, col))) for col in cols]
-    f = borderVertical + borderVertical.join(' {:>%d} ' % l for l in lengths) + borderVertical
-    s = borderCross + borderCross.join(borderHorizontal * (l+2) for l in lengths) + borderCross
-    string += s + '\n'
-    print(s)
-    for row in tbl:
-        string += f.format(*row) + '\n'
-        print(f.format(*row))
-        string += s + '\n'
-        print(s)
-    return string
 
 #ip ='68.183.65.178'
 
@@ -721,19 +709,22 @@ def printTable(tbl, borderHorizontal='-', borderVertical='|', borderCross='+'):
         pass
     finally:
         return string
-
+    
 
 def printTable_row(tbl, borderHorizontal = '-', borderVertical = '|', borderCross = '+'):
     string = ''
-    cols = [list(x) for x in zip(*tbl)]
-    lengths = [max(map(len, map(str, col))) for col in cols]
-    f = borderVertical + borderVertical.join(' {:>%d} ' % l for l in lengths) + borderVertical
-    s = borderCross + borderCross.join(borderHorizontal * (l+2) for l in lengths) + borderCross
-    string += s + '\n'
-    #print(s)
-    for row in tbl:
-        string += f.format(*row) + '\n'
-        #print(f.format(*row))
+    try:
+        cols = [list(x) for x in zip(*tbl)]
+        lengths = [max(map(len, map(str, col))) for col in cols]
+        f = borderVertical + borderVertical.join(' {:>%d} ' % l for l in lengths) + borderVertical
+        s = borderCross + borderCross.join(borderHorizontal * (l+2) for l in lengths) + borderCross
         string += s + '\n'
-        #print(s)
-    return string
+        print(s)
+        for row in tbl:
+            string += f.format(*row) + '\n'
+            print(f.format(*row))
+            string += s + '\n'
+            print(s)
+        return string
+    except TypeError:
+        pass
