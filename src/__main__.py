@@ -9,6 +9,7 @@ from __init__ import SRC
 from colorama import Fore, init
 import argparse
 from selenium.common import exceptions
+import sys
 # icons
 iconOK = (Fore.GREEN + '[ok]')
 iconNone = (Fore.YELLOW + '[*]')
@@ -132,7 +133,7 @@ def collector(info: dict, verbosity_check: bool, sha_sum_list: list = None):
             tmp.write(query.text_header(info))
             for data, type_data in query.check_domain_or_ip(info['attackers']):
                 for element in data:
-                    print('Creating ticket for {}\n\n'.format(element))
+                    print('\n ======= Creating ticket for {} =======\n\n'.format(element))
                     if sha_sum_list is None:
                         virustotal = query.virustotal_query(
                                                             element,
@@ -297,5 +298,11 @@ def collector(info: dict, verbosity_check: bool, sha_sum_list: list = None):
 
 
 if __name__ == '__main__':
-    main()
+    try:
+        main()
+    except KeyboardInterrupt:
+        print('deleting tmp files')
+        print(iconOK, end='')
+        print(" Exit")
+        sys.exit()
     # collector(False)
