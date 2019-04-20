@@ -119,7 +119,7 @@ def virustotal_query(
         if val:
             return response_ip.json(), response_file.json()
         else:
-            return 
+            return
     """
         for x in context:
         params = {'apikey': api, 'resource': x}
@@ -343,7 +343,7 @@ def urlscan_query(
         query_domain = data['API info']['urlscan.io']['query_domain']
         requests_url = query_domain+query
         info_json = requests.get(requests_url)
-        response = json.loads(info_json.text)        
+        response = json.loads(info_json.text)
     elif type == "ip":
         # --- urlscan.io ok----
         query_ip = data['API info']['urlscan.io']['query_ip']
@@ -481,7 +481,7 @@ def shodan_query(
     # --- API info ---
     data = get_api()
     api_key = data['API info']['shodan']['api']
-    # print 
+    # print
     colorQuery = (Fore.RED + query)
     colorString = (Fore.GREEN + 'Shodan')
     print(iconNone + ' ' + colorString, end='')
@@ -516,7 +516,7 @@ def apility_query(
     colorQuery = (Fore.RED + query)
     colorString = (Fore.GREEN + 'Apility')
     print(iconNone + ' ' + colorString, end='')
-    print(' checking reputation and activity through time ' + colorQuery)     
+    print(' checking reputation and activity through time ' + colorQuery)
     if type == "domain":
         data = {"domain": query}  # The data to post
     elif type == "ip":
@@ -545,12 +545,12 @@ def hybrid_query(
     colorQuery = (Fore.RED + query)
     colorString = (Fore.GREEN + 'Hybrid')
     print(iconNone + ' ' + colorString, end='')
-    print(' checking association with malware ' + colorQuery)  
+    print(' checking association with malware ' + colorQuery)
 
     if type == "domain":
         data = {"domain": query}  # The data to post
     elif type == "ip":
-        url = "https://www.hybrid-analysis.com/api/v2/search/terms"  
+        url = "https://www.hybrid-analysis.com/api/v2/search/terms"
         # The api url
         headers = {
             "api-key": api_key,
@@ -690,7 +690,14 @@ def check_ip(ipv4_address):
     test = []
     for i in ipv4_address.split(","):
         # print(i)
-        regex_ipv4_public = (r"^([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])(?<!172\.(16|17|18|19|20|21|22|23|24|25|26|27|28|29|30|31))(?<!127)(?<!^10)(?<!^0)\.([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])(?<!192\.168)(?<!172\.(16|17|18|19|20|21|22|23|24|25|26|27|28|29|30|31))\.([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])(?<!\.255$)$")
+        regex_ipv4_public = (r"""
+        ^([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])
+        (?<!172\.(16|17|18|19|20|21|22|23|24|25|26|27|28|29|30|31))
+        (?<!127)(?<!^10)(?<!^0)\.([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])
+        (?<!192\.168)
+        (?<!172\.(16|17|18|19|20|21|22|23|24|25|26|27|28|29|30|31))
+        \.([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])
+        \.([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])(?<!\.255$)$""")
         matches_public = re.finditer(regex_ipv4_public, i, re.MULTILINE)
 
         for x in matches_public:
@@ -727,10 +734,10 @@ def manual_mode_ip(ip_addr: list, verbosity: bool, sha_sum: list = None):
 
 def verbose_mode(verbosity: bool) -> bool:
     if verbosity:
-        #print("Flag non c'è")   verbosity minima
+        # print("Flag non c'è")   verbosity minima
         return False
     else:
-        #print("Flag c'è")   verbosity massima
+        # print("Flag c'è")   verbosity massima
         return True
 
 
@@ -748,28 +755,36 @@ def printTable(tbl, borderHorizontal='-', borderVertical='|', borderCross='+'):
         lengths = [max(lenght) for lenght in lenghts]
 
         # create formatting string with the length of the longest elements
-        f = borderVertical + borderVertical.join(' {:>%d} ' % l for l in lengths) + borderVertical
-        s = borderCross + borderCross.join(borderHorizontal * (l+2) for l in lengths) + borderCross
+        f = borderVertical + borderVertical.join(
+            ' {:>%d} ' % l for l in lengths) + borderVertical
+        s = borderCross + borderCross.join(
+            borderHorizontal * (l+2) for l in lengths) + borderCross
         string += s + '\n'
-        #print(s)
+        # print(s)
         for col in cols:
             string += f.format(*col) + '\n'
-            #print(f.format(*col))
+            # print(f.format(*col))
             string += s + '\n'
-            #print(s)
+            # print(s)
     except ValueError:
         pass
     finally:
         return string
-    
 
-def printTable_row(tbl, borderHorizontal = '-', borderVertical = '|', borderCross = '+'):
+
+def printTable_row(
+        tbl,
+        borderHorizontal='-',
+        borderVertical='|',
+        borderCross='+'):
     string = ''
     try:
         cols = [list(x) for x in zip(*tbl)]
         lengths = [max(map(len, map(str, col))) for col in cols]
-        f = borderVertical + borderVertical.join(' {:>%d} ' % l for l in lengths) + borderVertical
-        s = borderCross + borderCross.join(borderHorizontal * (l+2) for l in lengths) + borderCross
+        f = borderVertical + borderVertical.join(
+            ' {:>%d} ' % l for l in lengths) + borderVertical
+        s = borderCross + borderCross.join(
+            borderHorizontal * (l+2) for l in lengths) + borderCross
         string += s + '\n'
         print(s)
         for row in tbl:
@@ -783,10 +798,16 @@ def printTable_row(tbl, borderHorizontal = '-', borderVertical = '|', borderCros
 
 
 def check_domain_or_ip(data: list) -> str:
-    #print(data)
     ip = []
     for i in data:
-        regex_ipv4_public = r"^([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])(?<!172\.(16|17|18|19|20|21|22|23|24|25|26|27|28|29|30|31))(?<!127)(?<!^10)(?<!^0)\.([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])(?<!192\.168)(?<!172\.(16|17|18|19|20|21|22|23|24|25|26|27|28|29|30|31))\.([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])(?<!\.255$)$"
+        regex_ipv4_public = (r"""
+        ^([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])
+        (?<!172\.(16|17|18|19|20|21|22|23|24|25|26|27|28|29|30|31))
+        (?<!127)(?<!^10)(?<!^0)\.([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])
+        (?<!192\.168)
+        (?<!172\.(16|17|18|19|20|21|22|23|24|25|26|27|28|29|30|31))
+        \.([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])
+        \.([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])(?<!\.255$)$""")
         matches_public = re.finditer(regex_ipv4_public, i, re.MULTILINE)
         for x in matches_public:
             ip.append(("{match}".format(match=x.group())))
@@ -794,10 +815,10 @@ def check_domain_or_ip(data: list) -> str:
     yield ip, 'ip'
     domain = []
     for z in data:
-        #print(z)
+        # print(z)
         regex_domain = r"^([a-z0-9]+(-[a-z0-9]+)*\.)+[a-z]{2,}$"
         matches_domain = re.finditer(regex_domain, z, re.MULTILINE)
         for f in matches_domain:
             domain.append(("{match}".format(match=f.group())))
-    #print(domain)
+    # print(domain)
     yield domain, 'domain'
