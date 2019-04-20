@@ -69,7 +69,6 @@ def parse_virustotal(jdata: dict, query: str, sha_sum: list = None) -> dict:
 
     """
     if jdata['response_code'] == -1:
-        #print('[!] No result on virustotal')
         pass
         return
     else:
@@ -79,20 +78,25 @@ def parse_virustotal(jdata: dict, query: str, sha_sum: list = None) -> dict:
         whois_dict['Organization'] = jdata.get('as_owner', 'not found')
         whois_dict['Autonomous System Number'] = jdata.get('asn', 'not found')
         # --- only sample detected for certain ip or domain
-        #whois_dict = {k: str.encode(v, 'ascii', 'replace') for k,v in whois_dict.items()}
+        # whois_dict = {k: str.encode(v, 'ascii', 'replace')
+        # for k,v in whois_dict.items()}
         try:
             for index, item in enumerate(
                     jdata['detected_downloaded_samples']):
-                whois_dict["Detected samples "] = ('that communicate this ip address -> {}'.format(query))
+                whois_dict["Detected samples "] = (
+                    'that communicate this ip address -> {}'.format(query))
                 whois_dict[f"detected samples_{index}"] = item['sha256']
-                #simple_dict[f"file_score_{index}"] = str(item['positives'])+'/'+str(item['total'])
+                # simple_dict[f"file_score_{index}"] =
+                # str(item['positives'])+'/'+str(item['total'])
             for index, item in enumerate(jdata['detected_urls']):
                 whois_dict[f"detected_urls_{index}"] = item['url']
-                #simple_dict[f"urls_score_{index}"] = str(item['positives'])+'/'+str(item['total'])
+                # simple_dict[f"urls_score_{index}"] =
+                # str(item['positives'])+'/'+str(item['total'])
             # print(simple_dict)
-            #detected_dict = {k: str.encode(v, 'ascii', 'replace') for k,v in detected_dict.items()}
+            # detected_dict = {k: str.encode(v, 'ascii', 'replace')
+            # for k,v in detected_dict.items()}
         except KeyError:
-            #print('key error')
+            # print('key error')
             pass
         finally:
             return whois_dict
@@ -173,7 +177,7 @@ def parse_getipintel(jdata: dict, query: str, sha_sum: list = None) -> dict:
     dict -- Returns dict of values that i chose.
 
     """
-    
+
     errore = jdata.get('status')
     if errore == 'error':
         print('[!] No result on iphub')
@@ -192,8 +196,11 @@ def parse_shodan(jdata: dict, query: str, sha_sum: list = None) -> dict:
         for index, item in enumerate(jdata['data']):
             hd = (item['data'])
             simple_dic[f'Detected_{index+1}_open_port: '] = item['port']
-            simple_dic[f'Detected_info_{index+1}'] = "{} {}".format(hd.splitlines()[0], hd.splitlines()[1])
-        #simple_dic = {k: str.encode(v, 'utf-8', 'replace') for k,v in simple_dic.items()}
+            simple_dic[f'Detected_info_{index+1}'] = "{} {}".format(
+                hd.splitlines()[0],
+                hd.splitlines()[1])
+        # simple_dic = {k: str.encode(v, 'utf-8', 'replace')
+        # for k,v in simple_dic.items()}
     except IndexError:
         print("Index Error")
     finally:
@@ -366,7 +373,8 @@ def parse_hybrid(jdata: dict, query: str, sha_sum: list = None) -> dict:
                     "threat_score": 43,
                     "vx_family": "Unrated site",
                     "job_id": "5b5195967ca3e125e26f0645",
-                    "sha256": "502b6d5e3199250fa210ee04fda0bff7e32020889869cdbd8cb871774baae996",
+                    "sha256": "
+                        502b6d5e3199250fa210ee04fda0bff7e32020889869cdbd8cb871774baae996",
                     "environment_id": 120,
                     "analysis_start_time": "2018-07-20 08:54:48",
                     "submit_name": "http188.40.75.132.url",
@@ -381,7 +389,8 @@ def parse_hybrid(jdata: dict, query: str, sha_sum: list = None) -> dict:
                     "threat_score": 20,
                     "vx_family": "Unrated site",
                     "job_id": "5b2ba9b87ca3e162a95979d9",
-                    "sha256": "502b6d5e3199250fa210ee04fda0bff7e32020889869cdbd8cb871774baae996",
+                    "sha256": "
+                        502b6d5e3199250fa210ee04fda0bff7e32020889869cdbd8cb871774baae996",
                     "environment_id": 100,
                     "analysis_start_time": "2018-06-21 15:36:36",
                     "submit_name": "http188.40.75.132.url",
@@ -397,12 +406,17 @@ def parse_hybrid(jdata: dict, query: str, sha_sum: list = None) -> dict:
     content_list = []
     try:
         if jdata["count"] == 0:  # If no result was recieved
-            #print("Could not recieve value")
             pass
             return
         else:
             c = jdata["count"]
-            header_list = ['verdict', 'av_detect', 'threat_score', 'sha256', 'submit_name', 'analysis_start_time']
+            header_list = [
+                'verdict',
+                'av_detect',
+                'threat_score',
+                'sha256',
+                'submit_name',
+                'analysis_start_time']
             body_list = []
             content_list.append(header_list)
             for i in range(0, c):
@@ -412,10 +426,9 @@ def parse_hybrid(jdata: dict, query: str, sha_sum: list = None) -> dict:
                     jdata["result"][i]['threat_score'],
                     jdata["result"][i]['sha256'],
                     jdata["result"][i]['submit_name'],
-                    jdata["result"][i]['analysis_start_time']]) 
+                    jdata["result"][i]['analysis_start_time']])
                 content_list.append(body_list)
     except IndexError:
-        #print("Index Error")
         pass
     finally:
         return content_list
@@ -426,7 +439,6 @@ def parse_apility(jdata: dict, query: str, sha_sum: list = None) -> list:
         reputation = jdata['fullip']['history']['activity']
         if reputation is None:
             string = '\nThis IP has not been blacklisted since 1 year'
-            #print(string)
             return string
         else:
             content_list = []
@@ -435,9 +447,8 @@ def parse_apility(jdata: dict, query: str, sha_sum: list = None) -> list:
                 tp = reputation[i]['timestamp']
                 date = time.strftime('%Y-%m-%d', time.localtime(tp/1000))
                 reputation[i].update(timestamp=date)
-                content_list.append(list(reputation[i].values()))              
+                content_list.append(list(reputation[i].values()))
     except IndexError:
-        #print("Index Error")
         pass
     finally:
         return content_list
@@ -462,7 +473,8 @@ def parse_urlhause(jdata: dict, query: str, sha_sum: list = None) -> list:
     ```
      positions = {
                     "query_status": "ok",
-                    "urlhaus_reference": "https://urlhaus.abuse.ch/host/187.107.132.33/",
+                    "urlhaus_reference": "
+                        https://urlhaus.abuse.ch/host/187.107.132.33/",
                     "host": "187.107.132.33",
                     "firstseen": "2019-04-11 10:06:01 UTC",
                     "url_count": "1",
@@ -471,7 +483,8 @@ def parse_urlhause(jdata: dict, query: str, sha_sum: list = None) -> list:
                         "surbl": "not listed"},
                     "urls": [{
                         "id": "175438",
-                        "urlhaus_reference": "https://urlhaus.abuse.ch/url/175438/",
+                        "urlhaus_reference": "
+                            https://urlhaus.abuse.ch/url/175438/",
                         "url": "http://187.107.132.33:19623/.i",
                         "url_status": "online",
                         "date_added": "2019-04-11 10:06:10 UTC",
@@ -490,7 +503,6 @@ def parse_urlhause(jdata: dict, query: str, sha_sum: list = None) -> list:
 
     """
     if jdata['query_status'] != 'ok':
-        #print(iconNone + ' No result on URLhause')
         pass
     else:
         try:
@@ -499,10 +511,8 @@ def parse_urlhause(jdata: dict, query: str, sha_sum: list = None) -> list:
                 "threat": jdata['urls'][0]['threat'],
                 "url_status": jdata['urls'][0]['url_status'],
                 "tags": jdata['urls'][0]['tags']}
-            #print(response_querry_url_information)
             return response_querry_url_information
         except KeyError:
-            #print("KeyError")
             pass
 
 
@@ -550,7 +560,8 @@ def parse_urlscan(jdata: dict, query: str, sha_sum: list = None) -> list:
       },
       "uniq_countries": 2,
       "_id": "336d51e3-e11c-4ed9-a687-dc4f3114f154",
-      "result": "https://urlscan.io/api/v1/result/336d51e3-e11c-4ed9-a687-dc4f3114f154"
+      "result": "
+        https://urlscan.io/api/v1/result/336d51e3-e11c-4ed9-a687-dc4f3114f154"
     }
     ```
 
@@ -559,15 +570,12 @@ def parse_urlscan(jdata: dict, query: str, sha_sum: list = None) -> list:
 
     """
     if jdata['total'] == 0:
-        #print(iconNone + ' No result on URLscan')
         return False
     else:
         try:
             results = {"urlscan": jdata['results'][0]['task']['url']}
-            #print(results)
             return results
         except KeyError:
-            #print("KeyError")
             pass
 
 
@@ -641,10 +649,13 @@ def parse_abuseipdb(jdata: dict, query: str, sha_sum: list = None) -> list:
     data_from_abuseipdb = {}
     try:
         if jdata == []:
-            #print(iconNone + ' No result on URLscan')
             return False
         else:
-            result_with_correct_category = (max(jdata, key=lambda x:(len(x['ip']),len(x['category']))))
+            result_with_correct_category = (
+                max(
+                    jdata,
+                    key=lambda x:
+                    (len(x['ip']), len(x['category']))))
             data_from_abuseipdb = {
                 "attacker": result_with_correct_category['ip'],
                 "category":
@@ -652,12 +663,9 @@ def parse_abuseipdb(jdata: dict, query: str, sha_sum: list = None) -> list:
                 "country": result_with_correct_category['country'],
                 "abuseConfidenceScore":
                 result_with_correct_category['abuseConfidenceScore']}
-            #print(data_from_abuseipdb)
     except KeyError:
-        #print("KeyError")
         pass
     except TypeError:
-        #print("TypeError")
         pass
     finally:
         return data_from_abuseipdb
@@ -667,7 +675,6 @@ def parse_threatminer(jdata: dict, query: str, sha_sum: list = None) -> dict:
     try:
         pass
     except TypeError:
-        #print("KeyError")
         pass
     finally:
         return jdata
@@ -680,41 +687,56 @@ def querry_status_virustotal_file(resp_json):
     else:
         detected_dict = {}
         for index, av_name in enumerate(resp_json['scans']):
-        # For each Anti-virus name, find the detected value.
+            # For each Anti-virus name, find the detected value.
             detected = resp_json['scans'][av_name]['detected']
             # if the above value is true.
-            detected_dict["found_positives"] = ("{} / {}".format(resp_json['positives'], resp_json['total']))
-            #detected_dict["permalink"] = resp_json["permalink"]
+            detected_dict["found_positives"] = ("{} / {}".format(
+                resp_json['positives'],
+                resp_json['total']))
+            # detected_dict["permalink"] = resp_json["permalink"]
             if detected is True:
                 # Print Engines which detect malware.
                 # print(f'{av_name} detected Malware!')
-                # Add detected engine name and it's result to the detected_dict.
+                # Add detected engine name and it's result to the
+                # detected_dict.
                 detected_dict[av_name] = resp_json['scans'][av_name]['result']
-    #print(detected_dict)
     return detected_dict
 
 
-def querry_status_virustotal_domain(positions: dict, domain_to_view: str) -> dict:
+def querry_status_virustotal_domain(
+        positions: dict,
+        domain_to_view: str) -> dict:
     if positions['response_code'] == -1:
         print('[!] No result on virustotal')
         return False, False
     else:
         try:
             whois_dict = {}
-            whois_dict = dict(pair.split(": ") for pair in positions["whois"].split("\n"))
-            #whois_dict = {k: str.encode(v, 'ascii', 'replace') for k,v in whois_dict.items()}
+            whois_dict = dict(
+                pair.split(": ") for pair in positions["whois"].split("\n"))
+            # whois_dict = {k: str.encode(v, 'ascii', 'replace')
+            # for k,v in whois_dict.items()}
             # --- only sample detected for certain ip or domain
-            
+
         except AttributeError:
             print('No whois data found')
         category_from_virustotal = {}
-        category_from_virustotal['Opera domain info'] = positions.get('Opera domain info', 'Not found')
-        category_from_virustotal['BitDefender domain info'] = positions.get('BitDefender domain info', 'Not found')
-        category_from_virustotal['Dr.Web category'] = positions.get('Dr.Web category', 'Not found')
-        category_from_virustotal['Malwarebytes Hosts info'] = positions.get('Malwarebytes hpHosts info', 'Not found')
-        #print(category_from_virustotal)
-        #category_from_virustotal = {k: str.encode(v, 'ascii', 'replace') for k,v in category_from_virustotal.items()}
+        category_from_virustotal['Opera domain info'] = positions.get(
+            'Opera domain info',
+            'Not found')
+        category_from_virustotal['BitDefender domain info'] = positions.get(
+            'BitDefender domain info',
+            'Not found')
+        category_from_virustotal['Dr.Web category'] = positions.get(
+            'Dr.Web category',
+            'Not found')
+        category_from_virustotal['Malwarebytes Hosts info'] = positions.get(
+            'Malwarebytes hpHosts info',
+            'Not found')
+        # category_from_virustotal = {k: str.encode(v, 'ascii', 'replace')
+        # for k,v in category_from_virustotal.items()}
         return whois_dict, category_from_virustotal
+
 
 """
 #hybrid_query('checkip.dyndns.org')

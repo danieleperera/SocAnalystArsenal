@@ -56,7 +56,11 @@ def progressbar_ip(ip_addresses):
 # ===================== ************* =================================
 
 
-def virustotal_query(query: str, type: str, val: bool, sha_sum: list = None) -> dict:
+def virustotal_query(
+        query: str,
+        type: str,
+        val: bool,
+        sha_sum: list = None) -> dict:
     """
     Documentation for ip_urlhaus.
     It gets one ip addresse at a time as a string,
@@ -79,7 +83,6 @@ def virustotal_query(query: str, type: str, val: bool, sha_sum: list = None) -> 
     # --- API info ---
     data = get_api()
     api = (data['API info']['virustotal']['api'])
-    # print 
     colorQuery = (Fore.RED + query)
     colorString = (Fore.GREEN + 'VirusTotal')
     print(iconNone + ' ' + colorString, end='')
@@ -102,15 +105,13 @@ def virustotal_query(query: str, type: str, val: bool, sha_sum: list = None) -> 
         print(sha_sum)
         # --- virustotal data ---
         data = get_api()
-        #colorIP = (Fore.RED + ip)
         api = (data['API info']['virustotal']['api'])
-        #print(iconOK + ' Checking virustotal for ' + colorIP)
         ip_address_url = (data['API info']['virustotal']['ip_address_url'])
         file_address_url = (data['API info']['virustotal']['file_url'])
 
         # https://developers.virustotal.com/v2.0/reference#comments-get
 
-        params_ip = {'apikey': api, 'ip': ip}
+        params_ip = {'apikey': api, 'ip': query}
         params_file = {'apikey': api, 'resource': sha_sum}
         response_ip = requests.get(ip_address_url, params=params_ip)
         response_file = requests.get(file_address_url, params=params_file)
@@ -127,7 +128,11 @@ def virustotal_query(query: str, type: str, val: bool, sha_sum: list = None) -> 
     """
 
 
-def iphub_query(query: str, type: str, val: bool, sha_sum: list = None) -> dict:
+def iphub_query(
+        query: str,
+        type: str,
+        val: bool,
+        sha_sum: list = None) -> dict:
     data = get_api()
     api = (data['API info']['iphub']['api'])
     colorQuery = (Fore.RED + query)
@@ -135,7 +140,7 @@ def iphub_query(query: str, type: str, val: bool, sha_sum: list = None) -> dict:
     print(iconNone + ' ' + colorString, end='')
     print(' checking proxy or spoofed ' + colorQuery)
     if type == "domain":
-        print(Fore.RED + '[x] IPhub does not check domains')  # The data to post
+        print(Fore.RED + '[x] IPhub does not check domains')
     elif type == "ip":
         query_ip = data['API info']['iphub']['query_ip']
         url = query_ip+query
@@ -149,7 +154,11 @@ def iphub_query(query: str, type: str, val: bool, sha_sum: list = None) -> dict:
             return json_parser.parse_iphub(response.json(), query)
 
 
-def getipintel_query(query: str, type: str, val: bool, sha_sum: list = None) -> dict:
+def getipintel_query(
+        query: str,
+        type: str,
+        val: bool,
+        sha_sum: list = None) -> dict:
     data = get_api()
     email = data['API info']['getipintel']['email']
     colorQuery = (Fore.RED + query)
@@ -157,7 +166,7 @@ def getipintel_query(query: str, type: str, val: bool, sha_sum: list = None) -> 
     print(iconNone + ' ' + colorString, end='')
     print(' checking Proxy VPN Tor ' + colorQuery)
     if type == "domain":
-        print(Fore.RED + '[x] GetIPintel does not check domains')  # The data to post
+        print(Fore.RED + '[x] GetIPintel does not check domains')
     elif type == "ip":
         query_ip = data['API info']['getipintel']['query_ip']
         url = query_ip.format(query, email)
@@ -167,6 +176,7 @@ def getipintel_query(query: str, type: str, val: bool, sha_sum: list = None) -> 
             return response.json()
         else:
             return json_parser.parse_getipintel(response.json(), query)
+
 
 """
 def fofa_query(query: str, type: str, val: bool, sha_sum: list = None) -> dict:
@@ -196,7 +206,11 @@ def fofa_query(query: str, type: str, val: bool, sha_sum: list = None) -> dict:
 """
 
 
-def threatminer_query(query: str, type: str, val: bool, sha_sum: list = None) -> dict:
+def threatminer_query(
+        query: str,
+        type: str,
+        val: bool,
+        sha_sum: list = None) -> dict:
     data = get_api()
 
     colorQuery = (Fore.RED + query)
@@ -217,7 +231,11 @@ def threatminer_query(query: str, type: str, val: bool, sha_sum: list = None) ->
             return json_parser.parse_threatminer(response.json(), query)
 
 
-def threatcrowd_query(query: str, type: str, val: bool, sha_sum: list = None) -> dict:
+def threatcrowd_query(
+        query: str,
+        type: str,
+        val: bool,
+        sha_sum: list = None) -> dict:
     data = get_api()
 
     colorQuery = (Fore.RED + query)
@@ -241,7 +259,11 @@ def threatcrowd_query(query: str, type: str, val: bool, sha_sum: list = None) ->
         return json_parser.parse_threatcrowd(response.json(), query)
 
 
-def abuseipdb_query(query: str, type: str, val: bool, sha_sum: list = None) -> dict:
+def abuseipdb_query(
+        query: str,
+        type: str,
+        val: bool,
+        sha_sum: list = None) -> dict:
     """
     Documentation for ip_abuseipdb.
     It gets one ip addresse at a time as a string,
@@ -267,7 +289,7 @@ def abuseipdb_query(query: str, type: str, val: bool, sha_sum: list = None) -> d
     print(iconNone + ' ' + colorString, end='')
     print(' checking blacklisted ' + colorQuery)
     if type == "domain":
-        print(Fore.RED + '[x] AbuseIPdb does not check domains')  # The data to post
+        print(Fore.RED + '[x] AbuseIPdb does not check domains')
     elif type == "ip":
         # --- abuseipdb data ----
         api = (data['API info']['abuseipdb']['api'])
@@ -288,7 +310,11 @@ def abuseipdb_query(query: str, type: str, val: bool, sha_sum: list = None) -> d
         return
 
 
-def urlscan_query(query: str, type: str, val: bool, sha_sum: list = None) -> dict:
+def urlscan_query(
+        query: str,
+        type: str,
+        val: bool,
+        sha_sum: list = None) -> dict:
     """
     Documentation for ip_urlscan.
     It gets one ip addresse at a time as a string,
@@ -330,7 +356,11 @@ def urlscan_query(query: str, type: str, val: bool, sha_sum: list = None) -> dic
         return json_parser.parse_urlscan(response.json(), query)
 
 
-def urlhause_query(query: str, type: str, val: bool, sha_sum: list = None) -> dict:
+def urlhause_query(
+        query: str,
+        type: str,
+        val: bool,
+        sha_sum: list = None) -> dict:
     """
     Documentation for ip_urlhaus.
     It gets one ip addresse at a time as a string,
@@ -354,7 +384,9 @@ def urlhause_query(query: str, type: str, val: bool, sha_sum: list = None) -> di
     colorQuery = (Fore.RED + query)
     colorString = (Fore.GREEN + 'UrlHause')
     print(iconNone + ' ' + colorString, end='')
-    print(' checking IP address/Domain was used to spread malware ' + colorQuery)
+    print(
+        ' checking IP address/Domain was used to spread malware '
+        + colorQuery)
     if type == "domain" or type == "ip":
         # --- urlhaus data ok ----
         querry_host_url = (data['API info']['urlhaus']['querry_host_url'])
@@ -370,7 +402,10 @@ def urlhause_query(query: str, type: str, val: bool, sha_sum: list = None) -> di
         return json_parser.parse_urlhause(response.json(), query)
 
 
-def domain_virustotal(domain: str, boolvalue: bool, sha_sum: list = None) -> dict:
+def domain_virustotal(
+        domain: str,
+        boolvalue: bool,
+        sha_sum: list = None) -> dict:
     """
     Documentation for ip_urlhaus.
     It gets one ip addresse at a time as a string,
@@ -393,10 +428,10 @@ def domain_virustotal(domain: str, boolvalue: bool, sha_sum: list = None) -> dic
     if sha_sum is None:
         # --- virustotal data ---
         data = get_api()
-        #colorIP = (Fore.RED + ip)
-        api = (data['API info']['virustotal']['api'])
-        #print(iconOK + ' Checking virustotal for ' + colorIP)
-        domain_address_url = (data['API info']['virustotal']['domain_address_url'])
+        api = (
+            data['API info']['virustotal']['api'])
+        domain_address_url = (
+            data['API info']['virustotal']['domain_address_url'])
 
         # https://developers.virustotal.com/v2.0/reference#comments-get
 
@@ -405,16 +440,16 @@ def domain_virustotal(domain: str, boolvalue: bool, sha_sum: list = None) -> dic
         if boolvalue:
             return response_domain.json(), response_domain.json()
         else:
-            return querry_status_virustotal_domain(response_domain.json(), domain)
+            return None
+            # querry_status_virustotal_domain(response_domain.json(), domain)
     else:
         print(sha_sum)
         # --- virustotal data ---
         data = get_api()
-        #colorIP = (Fore.RED + ip)
         api = (data['API info']['virustotal']['api'])
-        #print(iconOK + ' Checking virustotal for ' + colorIP)
         ip_address_url = (data['API info']['virustotal']['ip_address_url'])
-        domain_address_url = (data['API info']['virustotal']['domain_address_url'])
+        domain_address_url = (
+            data['API info']['virustotal']['domain_address_url'])
 
         # https://developers.virustotal.com/v2.0/reference#comments-get
 
@@ -426,7 +461,10 @@ def domain_virustotal(domain: str, boolvalue: bool, sha_sum: list = None) -> dic
         if boolvalue:
             return domain_address_url.json(), response_file.json()
         else:
-            return querry_status_virustotal_domain(domain_address_url.json(), domain), querry_status_virustotal_file(response_file.json())
+            return None
+            # querry_status_virustotal_domain(
+            # domain_address_url.json(), domain),
+            # querry_status_virustotal_file(response_file.json())
     """
         for x in context:
         params = {'apikey': api, 'resource': x}
@@ -435,7 +473,11 @@ def domain_virustotal(domain: str, boolvalue: bool, sha_sum: list = None) -> dic
     """
 
 
-def shodan_query(query: str, type: str, val: bool, sha_sum: list = None) -> dict:
+def shodan_query(
+        query: str,
+        type: str,
+        val: bool,
+        sha_sum: list = None) -> dict:
     # --- API info ---
     data = get_api()
     api_key = data['API info']['shodan']['api']
@@ -443,11 +485,15 @@ def shodan_query(query: str, type: str, val: bool, sha_sum: list = None) -> dict
     colorQuery = (Fore.RED + query)
     colorString = (Fore.GREEN + 'Shodan')
     print(iconNone + ' ' + colorString, end='')
-    print(' Checking information about host and see if it was compromised ' + colorQuery)    
+    print(
+        ' Checking information about host and see if it was compromised '
+        + colorQuery)
     if type == "domain":
         data = {"domain": query}  # The data to post
     elif type == "ip":
-        url = 'https://api.shodan.io/shodan/host/{}?key={}'.format(query, api_key)
+        url = 'https://api.shodan.io/shodan/host/{}?key={}'.format(
+            query,
+            api_key)
         response = requests.get(url)
     else:
         return
@@ -458,11 +504,15 @@ def shodan_query(query: str, type: str, val: bool, sha_sum: list = None) -> dict
         return json_parser.parse_shodan(response.json(), query)
 
 
-def apility_query(query: str, type: str, val: bool, sha_sum: list = None) -> dict:
+def apility_query(
+        query: str,
+        type: str,
+        val: bool,
+        sha_sum: list = None) -> dict:
     # --- API info ---
     data = get_api()
     api_key = data['API info']['apility']['api']
-    # print 
+    # print
     colorQuery = (Fore.RED + query)
     colorString = (Fore.GREEN + 'Apility')
     print(iconNone + ' ' + colorString, end='')
@@ -483,7 +533,11 @@ def apility_query(query: str, type: str, val: bool, sha_sum: list = None) -> dic
         pass
 
 
-def hybrid_query(query: str, type: str, val: bool, sha_sum: list = None) -> dict:
+def hybrid_query(
+        query: str,
+        type: str,
+        val: bool,
+        sha_sum: list = None) -> dict:
     # --- API info ---
     data = get_api()
     api_key = data['API info']['hybrid']['api']
@@ -496,8 +550,13 @@ def hybrid_query(query: str, type: str, val: bool, sha_sum: list = None) -> dict
     if type == "domain":
         data = {"domain": query}  # The data to post
     elif type == "ip":
-        url = "https://www.hybrid-analysis.com/api/v2/search/terms"  # The api url
-        headers = {"api-key": api_key, "user-agent": "Falcon Sandbox", "accept": "application/json"}  # The request headers
+        url = "https://www.hybrid-analysis.com/api/v2/search/terms"  
+        # The api url
+        headers = {
+            "api-key": api_key,
+            "user-agent": "Falcon Sandbox",
+            "accept": "application/json"}
+        # The request headers
         data = {"host": query}
         response = requests.post(url, headers=headers, data=data)
     else:
@@ -510,12 +569,12 @@ def hybrid_query(query: str, type: str, val: bool, sha_sum: list = None) -> dict
 # ===================== ************* ===============================
 # -----------Working and testing from here on -----------------------
 # ===================== ************* ===============================
-#http://check.getipintel.net/check.php?ip=66.228.119.72&contact=mr.px0r@gmail.com&format=json
+# http://check.getipintel.net/check.php?ip=66.228.119.72&contact=mr.px0r@gmail.com&format=json
 
 
-#ip ='68.183.65.178'
+# ip ='68.183.65.178'
 
-#ip = '188.40.75.132'
+# ip = '188.40.75.132'
 """
 # print(fofa_query(ip, 'ip', True))
 
@@ -563,12 +622,13 @@ test10 = threatminer_query(ip, 'domain', True)
 #progressbar_ip(ip)
 print(test10)
 """
-#table_reputation = printTable_row(test5)
-#table_reputation = printTable_row(test6)
+# table_reputation = printTable_row(test5)
+# table_reputation = printTable_row(test6)
 
 # ===================== ************* ===============================
 # ---------- Various Checks and printing ticket --------------------
 # ===================== ************* ===============================
+
 
 def get_ip(ip: dict) -> str:
     """
@@ -630,7 +690,7 @@ def check_ip(ipv4_address):
     test = []
     for i in ipv4_address.split(","):
         # print(i)
-        regex_ipv4_public = r"^([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])(?<!172\.(16|17|18|19|20|21|22|23|24|25|26|27|28|29|30|31))(?<!127)(?<!^10)(?<!^0)\.([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])(?<!192\.168)(?<!172\.(16|17|18|19|20|21|22|23|24|25|26|27|28|29|30|31))\.([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])(?<!\.255$)$"
+        regex_ipv4_public = (r"^([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])(?<!172\.(16|17|18|19|20|21|22|23|24|25|26|27|28|29|30|31))(?<!127)(?<!^10)(?<!^0)\.([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])(?<!192\.168)(?<!172\.(16|17|18|19|20|21|22|23|24|25|26|27|28|29|30|31))\.([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])(?<!\.255$)$")
         matches_public = re.finditer(regex_ipv4_public, i, re.MULTILINE)
 
         for x in matches_public:

@@ -10,7 +10,8 @@ from colorama import Fore
 import argparse
 from selenium.common import exceptions
 
-# python .\__main__.py -m --ip 68.183.65.178 --sha 33f810fd192ee4828b331fcbb11a33a567c53ff2bbf24234c48f4a7d68b73f73 -v
+# python .\__main__.py -m --ip 68.183.65.178 --sha
+# 33f810fd192ee4828b331fcbb11a33a567c53ff2bbf24234c48f4a7d68b73f73 -v
 
 
 def main():
@@ -56,10 +57,16 @@ def main():
             try:
                 # try to get data from webscapper
                 # if error occured jump to manual mode
-                collector(webscapper.get_info(), query.verbose_mode(results.bool_vb))
+                collector(
+                    webscapper.get_info(),
+                    query.verbose_mode(results.bool_vb))
+
             except exceptions.StaleElementReferenceException:
                 print("Error Occured... Entering manual mode")
-                query.manual_mode_ip(results.ip, query.verbose_mode(results.bool_vb), results.sha_sum)
+                query.manual_mode_ip(
+                    results.ip,
+                    query.verbose_mode(results.bool_vb),
+                    results.sha_sum)
             # Testing purposes
             # info = {'attackers': {'124.164.251.179',
             #                       '179.251.164.124.adsl-pool.sx.cn'},
@@ -71,13 +78,19 @@ def main():
             # Enter manual mode
             print("""It seems you don't have webscapper on path...
                     Entering manual mode""")
-            query.manual_mode_ip(results.ip, query.verbose_mode(results.bool_vb), results.sha_sum)
+            query.manual_mode_ip(
+                results.ip,
+                query.verbose_mode(results.bool_vb),
+                results.sha_sum)
 
     else:
         # User entered option to get manual mode
         print("Entering manual mode")
         # check if argpase values are null
-        query.manual_mode_ip(results.ip, query.verbose_mode(results.bool_vb), results.sha_sum)
+        query.manual_mode_ip(
+            results.ip,
+            query.verbose_mode(results.bool_vb),
+            results.sha_sum)
 
 
 def collector(info: dict, verbosity_check: bool, sha_sum_list: list = None):
@@ -103,7 +116,6 @@ def collector(info: dict, verbosity_check: bool, sha_sum_list: list = None):
     toaster = ToastNotifier()
     # --- Clipboard / tmp file ---
     fd, path = tempfile.mkstemp()
-    #print(sha_sum_list)
     try:
         with os.fdopen(fd, 'r+', encoding='utf-8') as tmp:
             #  ===================== ************* ===========================
@@ -115,80 +127,144 @@ def collector(info: dict, verbosity_check: bool, sha_sum_list: list = None):
                 for element in data:
                     print('Creating ticket for {}'.format(element))
                     if sha_sum_list is None:
-                        virustotal = query.virustotal_query(element, type_data, verbosity_check)
+                        virustotal = query.virustotal_query(
+                                                            element,
+                                                            type_data,
+                                                            verbosity_check)
                         query.progressbar_ip(ip_addresses)
-                        header_whois = ('\nWhois Information ' + element + '\n')
+                        header_whois = (
+                            '\nWhois Information ' + element + '\n')
                         tmp.write(header_whois)
-                        tableContent_virustotal = query.text_body_table(virustotal)
-                        tmp.write('{}'.format(query.printTable(tableContent_virustotal)))
-                            
-                        iphub = query.iphub_query(element, type_data, verbosity_check)
+                        tableContent_virustotal = query.text_body_table(
+                            virustotal)
+                        tmp.write('{}'.format(query.printTable(
+                            tableContent_virustotal)))
+
+                        iphub = query.iphub_query(
+                                                    element,
+                                                    type_data,
+                                                    verbosity_check)
                         query.progressbar_ip(ip_addresses)
-                        header_spoofed_IPhub = ('\n\nVPN/Proxy/Tor Information IPhub ' + element + '\n')
-                        tmp.write(header_spoofed_IPhub)                    
+                        header_spoofed_IPhub = (
+                            '\n\nVPN/Proxy/Tor Information IPhub '
+                            + element + '\n')
+                        tmp.write(header_spoofed_IPhub)
                         for i in query.text_body(iphub):
                             tmp.write(i)
-                        
-                        getipintel = query.getipintel_query(element, type_data, verbosity_check)
+
+                        getipintel = query.getipintel_query(
+                                                            element,
+                                                            type_data,
+                                                            verbosity_check)
                         query.progressbar_ip(ip_addresses)
-                        header_spoofed_getipintel = ('\n\nVPN/Proxy/Tor Information GetIPintel ' + element + '\n')
-                        tmp.write(header_spoofed_getipintel)                        
+                        header_spoofed_getipintel = (
+                            '\n\nVPN/Proxy/Tor Information GetIPintel '
+                            + element + '\n')
+                        tmp.write(header_spoofed_getipintel)
                         for i in query.text_body(getipintel):
                             tmp.write(i)
-                        
-                        shodan = query.shodan_query(element, type_data, verbosity_check)
+
+                        shodan = query.shodan_query(
+                            element,
+                            type_data,
+                            verbosity_check)
+
                         query.progressbar_ip(ip_addresses)
-                        header_compromised = ('\n\nCompromised Information ' + element + '\n')
+                        header_compromised = (
+                            '\n\nCompromised Information '
+                            + element + '\n')
                         tmp.write(header_compromised)
                         tableContent_shodan = query.text_body_table(shodan)
-                        tmp.write('{}'.format(query.printTable(tableContent_shodan)))                    
-                        
-                        threatcrowd = query.threatcrowd_query(element, type_data, verbosity_check)
+                        tmp.write('{}'.format(query.printTable(
+                            tableContent_shodan)))
+
+                        threatcrowd = query.threatcrowd_query(
+                            element,
+                            type_data,
+                            verbosity_check)
+
                         query.progressbar_ip(ip_addresses)
-                        header_status = ('\n\nCurrent status information ' + element + '\n')
+                        header_status = (
+                            '\n\nCurrent status information '
+                            + element + '\n')
                         tmp.write(header_status)
                         for i in query.text_body(threatcrowd):
                             tmp.write(i)
-                        
-                        hybrid = query.hybrid_query(element, type_data, verbosity_check)
+
+                        hybrid = query.hybrid_query(
+                            element,
+                            type_data,
+                            verbosity_check)
+
                         query.progressbar_ip(ip_addresses)
-                        header_association = ('\n\nAssociation with malware information ' + element + '\n')
+                        header_association = (
+                            '\n\nAssociation with malware information '
+                            + element + '\n')
                         tmp.write(header_association)
                         table_association = query.printTable_row(hybrid)
-                        tmp.write('{}'.format(table_association)) 
-                        
-                        apility = query.apility_query(element, type_data, verbosity_check)
+                        tmp.write('{}'.format(table_association))
+
+                        apility = query.apility_query(
+                            element,
+                            type_data,
+                            verbosity_check)
+
                         query.progressbar_ip(ip_addresses)
-                        header_reputation = ('\n\nReputation and activity through time ' + element + '\n')
-                        tmp.write(header_reputation)                    
+                        header_reputation = (
+                            '\n\nReputation and activity through time '
+                            + element + '\n')
+                        tmp.write(header_reputation)
                         table_reputation = query.printTable_row(apility)
                         tmp.write('{}'.format(table_reputation))
-                        
-                        abuseipdb = query.abuseipdb_query(element, type_data, verbosity_check)
+
+                        abuseipdb = query.abuseipdb_query(
+                            element,
+                            type_data,
+                            verbosity_check)
                         query.progressbar_ip(ip_addresses)
-                        header_blacklisted = ('\n\nBlacklisted Data ' + element + '\n')
-                        tmp.write(header_blacklisted)                       
+                        header_blacklisted = (
+                            '\n\nBlacklisted Data '
+                            + element + '\n')
+                        tmp.write(header_blacklisted)
                         for i in query.text_body(abuseipdb):
                             tmp.write(i)
 
-                        urlhause = query.urlhause_query(element, type_data, verbosity_check)
+                        urlhause = query.urlhause_query(
+                            element,
+                            type_data,
+                            verbosity_check)
+
                         query.progressbar_ip(ip_addresses)
-                        header_spread = ('\n\nIP address/Domain was used to spread malware ' + element + '\n')
-                        tmp.write(header_spread)                       
+                        header_spread = (
+                            '\n\nIP address/Domain was used to spread malware '
+                            + element + '\n')
+                        tmp.write(header_spread)
                         for i in query.text_body(urlhause):
                             tmp.write(i)
 
-                        threatminer = query.threatminer_query(element, type_data, verbosity_check)
+                        threatminer = query.threatminer_query(
+                            element,
+                            type_data,
+                            verbosity_check)
+
                         query.progressbar_ip(ip_addresses)
-                        header_info2 = ('\n\nMore information ' + element + '\n')
-                        tmp.write(header_info2)                       
+                        header_info2 = (
+                            '\n\nMore information '
+                            + element + '\n')
+                        tmp.write(header_info2)
                         for i in query.text_body(threatminer):
                             tmp.write(i)
-                        
-                        urlscan = query.urlscan_query(element, type_data, verbosity_check)
+
+                        urlscan = query.urlscan_query(
+                            element,
+                            type_data,
+                            verbosity_check)
+
                         query.progressbar_ip(ip_addresses)
-                        header_info = ('\n\nMore information ' + element + '\n')
-                        tmp.write(header_info)                       
+                        header_info = (
+                            '\n\nMore information '
+                            + element + '\n')
+                        tmp.write(header_info)
                         for i in query.text_body(urlscan):
                             tmp.write(i)
         # ===================== ************* ===============================
@@ -217,4 +293,4 @@ def collector(info: dict, verbosity_check: bool, sha_sum_list: list = None):
 
 if __name__ == '__main__':
     main()
-    #collector(False)
+    # collector(False)
