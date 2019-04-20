@@ -11,8 +11,9 @@ import time
 import re
 import __main__ as main
 
-iconOK = (Fore.GREEN + '[!]')
-iconNone = (Fore.YELLOW + '[!]')
+iconOK = (Fore.GREEN + '[ok]')
+iconNone = (Fore.YELLOW + '[*]')
+iconError = (Fore.RED + '[!]')
 init(autoreset=True)
 
 
@@ -48,7 +49,7 @@ def get_api():
 
 def progressbar_ip(ip_addresses):
     for i in tqdm(ip_addresses, unit="data"):
-        time.sleep(0.01)
+        time.sleep(0.1)
         pass
 
 # ===================== ************* =================================
@@ -660,9 +661,9 @@ def get_ip(ip: dict) -> str:
 
 
 def text_header(head):
-    test = '''\n### Attackers ->{}
+    test = '''### Attackers ->{}
 ### Victims   ->{}
-### Context   ->{}\n\n'''.format(
+### Context   ->{}\n'''.format(
                 head.get("attackers", "Not found!"),
                 head.get("victims", "Not found!"),
                 head.get("context", "Not found!"))
@@ -703,22 +704,22 @@ def manual_mode_ip(ip_addr: list, verbosity: bool, sha_sum: list = None):
     if ip_addr is None:
         ip = ''
         while True:
-            ip = input('Insert a list of potential malicious ip addresses:')
+            print(iconNone, end='')
+            ip = input(' Insert a list of potential malicious ip addresses:')
             datalist = ip.split(",")
             if check_ip(ip) == []:
-                print("Not valid ip address have been insert, please re-try")
+                print(iconError, end='')
+                print(" Not valid ip address have been insert, please re-try")
                 continue
             else:
                 break
         ip_addr = [item.replace(' ', '') for item in datalist]
         simple_dict = {'attackers': ip_addr}
-        print(simple_dict)
         main.collector(simple_dict, verbosity)
     else:
         # --- Complete manual mode ---
         ip_addr = [item.replace(' ', '') for item in ip_addr]
         simple_dict = {'attackers': ip_addr}
-        print(simple_dict)
         if sha_sum == []:
             return main.collector(simple_dict, verbosity)
         else:
@@ -759,10 +760,11 @@ def printTable(tbl, borderHorizontal='-', borderVertical='|', borderCross='+'):
             # print(f.format(*col))
             string += s + '\n'
             # print(s)
+        return string
     except ValueError:
         pass
     finally:
-        return string
+        return
 
 
 def printTable_row(
@@ -779,12 +781,12 @@ def printTable_row(
         s = borderCross + borderCross.join(
             borderHorizontal * (l+2) for l in lengths) + borderCross
         string += s + '\n'
-        print(s)
+        # print(s)
         for row in tbl:
             string += f.format(*row) + '\n'
-            print(f.format(*row))
+            # print(f.format(*row))
             string += s + '\n'
-            print(s)
+            # print(s)
         return string
     except TypeError:
         pass

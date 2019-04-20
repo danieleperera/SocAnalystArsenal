@@ -202,7 +202,8 @@ def parse_shodan(jdata: dict, query: str, sha_sum: list = None) -> dict:
         # simple_dic = {k: str.encode(v, 'utf-8', 'replace')
         # for k,v in simple_dic.items()}
     except IndexError:
-        print("Index Error")
+        # print("Index Error")
+        pass
     finally:
         return simple_dic
 
@@ -350,7 +351,8 @@ def parse_threatcrowd(jdata: dict, query: str, sha_sum: list = None) -> dict:
     try:
         simple_dic['link'] = jdata.get('permalink', 'n/a')
     except IndexError:
-        print("Index Error")
+        # print("Index Error")
+        pass
     finally:
         return simple_dic
 

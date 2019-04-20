@@ -6,10 +6,14 @@ import tempfile
 import pyperclip
 from win10toast import ToastNotifier
 from __init__ import SRC
-from colorama import Fore
+from colorama import Fore, init
 import argparse
 from selenium.common import exceptions
-
+# icons
+iconOK = (Fore.GREEN + '[ok]')
+iconNone = (Fore.YELLOW + '[*]')
+iconError = (Fore.RED + '[!]')
+init(autoreset=True)
 # python .\__main__.py -m --ip 68.183.65.178 --sha
 # 33f810fd192ee4828b331fcbb11a33a567c53ff2bbf24234c48f4a7d68b73f73 -v
 
@@ -62,7 +66,8 @@ def main():
                     query.verbose_mode(results.bool_vb))
 
             except exceptions.StaleElementReferenceException:
-                print("Error Occured... Entering manual mode")
+                print(iconError, end='')
+                print(" Error Occured... Entering manual mode")
                 query.manual_mode_ip(
                     results.ip,
                     query.verbose_mode(results.bool_vb),
@@ -76,8 +81,9 @@ def main():
         else:
             # Default to webscapper but webscapper isn't in path
             # Enter manual mode
-            print("""It seems you don't have webscapper on path...
-                    Entering manual mode""")
+            print(iconError, end='')
+            print(""" It seems you don't have webscapper on path...
+Entering manual mode""")
             query.manual_mode_ip(
                 results.ip,
                 query.verbose_mode(results.bool_vb),
@@ -85,7 +91,8 @@ def main():
 
     else:
         # User entered option to get manual mode
-        print("Entering manual mode")
+        print(iconOK, end='')
+        print(" Entering manual mode")
         # check if argpase values are null
         query.manual_mode_ip(
             results.ip,
@@ -121,7 +128,7 @@ def collector(info: dict, verbosity_check: bool, sha_sum_list: list = None):
             #  ===================== ************* ===========================
             # ------ IP addresses are getting worked here --------------------
             # ===================== ************* ============================
-            ip_addresses = info['attackers']
+            # ip_addresses = info['attackers']
             tmp.write(query.text_header(info))
             for data, type_data in query.check_domain_or_ip(info['attackers']):
                 for element in data:
@@ -131,7 +138,7 @@ def collector(info: dict, verbosity_check: bool, sha_sum_list: list = None):
                                                             element,
                                                             type_data,
                                                             verbosity_check)
-                        query.progressbar_ip(ip_addresses)
+                        # query.progressbar_ip(ip_addresses)
                         header_whois = (
                             '\nWhois Information ' + element + '\n')
                         tmp.write(header_whois)
@@ -144,7 +151,7 @@ def collector(info: dict, verbosity_check: bool, sha_sum_list: list = None):
                                                     element,
                                                     type_data,
                                                     verbosity_check)
-                        query.progressbar_ip(ip_addresses)
+                        # query.progressbar_ip(ip_addresses)
                         header_spoofed_IPhub = (
                             '\n\nVPN/Proxy/Tor Information IPhub '
                             + element + '\n')
@@ -156,7 +163,7 @@ def collector(info: dict, verbosity_check: bool, sha_sum_list: list = None):
                                                             element,
                                                             type_data,
                                                             verbosity_check)
-                        query.progressbar_ip(ip_addresses)
+                        # query.progressbar_ip(ip_addresses)
                         header_spoofed_getipintel = (
                             '\n\nVPN/Proxy/Tor Information GetIPintel '
                             + element + '\n')
@@ -169,7 +176,7 @@ def collector(info: dict, verbosity_check: bool, sha_sum_list: list = None):
                             type_data,
                             verbosity_check)
 
-                        query.progressbar_ip(ip_addresses)
+                        # query.progressbar_ip(ip_addresses)
                         header_compromised = (
                             '\n\nCompromised Information '
                             + element + '\n')
@@ -183,7 +190,7 @@ def collector(info: dict, verbosity_check: bool, sha_sum_list: list = None):
                             type_data,
                             verbosity_check)
 
-                        query.progressbar_ip(ip_addresses)
+                        # query.progressbar_ip(ip_addresses)
                         header_status = (
                             '\n\nCurrent status information '
                             + element + '\n')
@@ -196,7 +203,7 @@ def collector(info: dict, verbosity_check: bool, sha_sum_list: list = None):
                             type_data,
                             verbosity_check)
 
-                        query.progressbar_ip(ip_addresses)
+                        # query.progressbar_ip(ip_addresses)
                         header_association = (
                             '\n\nAssociation with malware information '
                             + element + '\n')
@@ -209,7 +216,7 @@ def collector(info: dict, verbosity_check: bool, sha_sum_list: list = None):
                             type_data,
                             verbosity_check)
 
-                        query.progressbar_ip(ip_addresses)
+                        # query.progressbar_ip(ip_addresses)
                         header_reputation = (
                             '\n\nReputation and activity through time '
                             + element + '\n')
@@ -221,7 +228,7 @@ def collector(info: dict, verbosity_check: bool, sha_sum_list: list = None):
                             element,
                             type_data,
                             verbosity_check)
-                        query.progressbar_ip(ip_addresses)
+                        # query.progressbar_ip(ip_addresses)
                         header_blacklisted = (
                             '\n\nBlacklisted Data '
                             + element + '\n')
@@ -234,7 +241,7 @@ def collector(info: dict, verbosity_check: bool, sha_sum_list: list = None):
                             type_data,
                             verbosity_check)
 
-                        query.progressbar_ip(ip_addresses)
+                        # query.progressbar_ip(ip_addresses)
                         header_spread = (
                             '\n\nIP address/Domain was used to spread malware '
                             + element + '\n')
@@ -247,7 +254,7 @@ def collector(info: dict, verbosity_check: bool, sha_sum_list: list = None):
                             type_data,
                             verbosity_check)
 
-                        query.progressbar_ip(ip_addresses)
+                        # query.progressbar_ip(ip_addresses)
                         header_info2 = (
                             '\n\nMore information '
                             + element + '\n')
@@ -260,7 +267,7 @@ def collector(info: dict, verbosity_check: bool, sha_sum_list: list = None):
                             type_data,
                             verbosity_check)
 
-                        query.progressbar_ip(ip_addresses)
+                        # query.progressbar_ip(ip_addresses)
                         header_info = (
                             '\n\nMore information '
                             + element + '\n')
@@ -273,11 +280,9 @@ def collector(info: dict, verbosity_check: bool, sha_sum_list: list = None):
             tmp.seek(0)
             content = tmp.read()
             if content == '':
-                iconBAD = (Fore.RED + '[!]')
-                print('\n' + iconBAD + ' No ticket was copied to clipboard')
+                print('\n' + iconError + ' No ticket was copied to clipboard')
                 print("\n\nRemoving tmp files... Please wait")
             else:
-                iconOK = (Fore.GREEN + '[+]')
                 print('\n' + iconOK, end='')
                 print(' Ticket was copied to clipboard successfully')
                 print("\n\nRemoving tmp files... Please wait")
