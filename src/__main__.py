@@ -125,7 +125,7 @@ def collector(info: dict, verbosity_check: bool, sha_sum_list: list = None):
             tmp.write(query.text_header(info))
             for data, type_data in query.check_domain_or_ip(info['attackers']):
                 for element in data:
-                    print('Creating ticket for {}'.format(element))
+                    print('Creating ticket for {}\n\n'.format(element))
                     if sha_sum_list is None:
                         virustotal = query.virustotal_query(
                                                             element,
