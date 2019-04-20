@@ -600,9 +600,9 @@ def get_ip(ip: dict) -> str:
 
 
 def text_header(head):
-    test = '''\n### Attackers -> {}
-### Victims   -> {}
-### Context   -> {}\n\n'''.format(
+    test = '''\n### Attackers ->{}
+### Victims   ->{}
+### Context   ->{}\n\n'''.format(
                 head.get("attackers", "Not found!"),
                 head.get("victims", "Not found!"),
                 head.get("context", "Not found!"))
@@ -670,7 +670,6 @@ def manual_mode_ip(ip_addr: list, verbosity: bool, sha_sum: list = None):
             return main.collector(attackers, verbosity)
         else:
             return main.collector(attackers, verbosity, sha_sum)
-        pass
 
 
 def verbose_mode(verbosity: bool) -> bool:
@@ -728,3 +727,24 @@ def printTable_row(tbl, borderHorizontal = '-', borderVertical = '|', borderCros
         return string
     except TypeError:
         pass
+
+
+def check_domain_or_ip(data: list) -> str:
+    #print(data)
+    ip = []
+    for i in data:
+        regex_ipv4_public = r"^([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])(?<!172\.(16|17|18|19|20|21|22|23|24|25|26|27|28|29|30|31))(?<!127)(?<!^10)(?<!^0)\.([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])(?<!192\.168)(?<!172\.(16|17|18|19|20|21|22|23|24|25|26|27|28|29|30|31))\.([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])(?<!\.255$)$"
+        matches_public = re.finditer(regex_ipv4_public, i, re.MULTILINE)
+        for x in matches_public:
+            ip.append(("{match}".format(match=x.group())))
+
+    yield ip, 'ip'
+    domain = []
+    for z in data:
+        #print(z)
+        regex_domain = r"^([a-z0-9]+(-[a-z0-9]+)*\.)+[a-z]{2,}$"
+        matches_domain = re.finditer(regex_domain, z, re.MULTILINE)
+        for f in matches_domain:
+            domain.append(("{match}".format(match=f.group())))
+    #print(domain)
+    yield domain, 'domain'
