@@ -111,11 +111,9 @@ def collector(info: dict, verbosity_check: bool, sha_sum_list: list = None):
             # ===================== ************* ============================
             ip_addresses = info['attackers']
             tmp.write(query.text_header(info))
-            print(info['attackers'])
             for data, type_data in query.check_domain_or_ip(info['attackers']):
-                print(data)
                 for element in data:
-                    print(element)
+                    print('Creating ticket for {}'.format(element))
                     if sha_sum_list is None:
                         virustotal = query.virustotal_query(element, type_data, verbosity_check)
                         query.progressbar_ip(ip_addresses)

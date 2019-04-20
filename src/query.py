@@ -644,32 +644,25 @@ def manual_mode_ip(ip_addr: list, verbosity: bool, sha_sum: list = None):
         ip = ''
         while True:
             ip = input('Insert a list of potential malicious ip addresses:')
+            datalist = ip.split(",")
             if check_ip(ip) == []:
                 print("Not valid ip address have been insert, please re-try")
                 continue
             else:
                 break
-        # --- Creating a set ---
-        ips = ip.split(",")
-        ipss = set(ips)
-        # --- End set variable ---
-        attackers = {}
-        attackers['attackers'] = ipss
-        #print(attackers)
-        main.collector(attackers, verbosity)
+        ip_addr = [item.replace(' ', '') for item in datalist]
+        simple_dict = {'attackers': ip_addr}
+        print(simple_dict)
+        main.collector(simple_dict, verbosity)
     else:
         # --- Complete manual mode ---
-        #print("Sono qua e sono da solo ")
-        #print(ip_addr)
-        for ip in ip_addr:
-            ipss = set(ip_addr)
-        attackers = {}
-        attackers['attackers'] = ipss
-        #print(attackers)
+        ip_addr = [item.replace(' ', '') for item in ip_addr]
+        simple_dict = {'attackers': ip_addr}
+        print(simple_dict)
         if sha_sum == []:
-            return main.collector(attackers, verbosity)
+            return main.collector(simple_dict, verbosity)
         else:
-            return main.collector(attackers, verbosity, sha_sum)
+            return main.collector(simple_dict, verbosity, sha_sum)
 
 
 def verbose_mode(verbosity: bool) -> bool:
