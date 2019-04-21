@@ -10,12 +10,14 @@ import json_parser
 import time
 import re
 import __main__ as main
-
+import tempfile
+import pyperclip
+from typing import List, Union
 iconOK = (Fore.GREEN + '[ok]')
 iconNone = (Fore.YELLOW + '[*]')
 iconError = (Fore.RED + '[!]')
 init(autoreset=True)
-
+fd_default, path_default = tempfile.mkstemp()
 
 # ===================== ************* ===============================
 # ----------- using this for testing purpose -----------------------
@@ -81,6 +83,9 @@ def virustotal_query(
     dict -- Returns json as a dict.
 
     """
+    # --- Header data ---
+    header_whois = (
+        '\nWhois Information ' + query + '\n')
     # --- API info ---
     data = get_api()
     api = (data['API info']['virustotal']['api'])
@@ -99,9 +104,17 @@ def virustotal_query(
             return
 
         if val:
-            return response.json()
+            return create_tmp_to_clipboard(
+                response.json(),
+                header_whois,
+                val,
+                None)
         else:
-            return json_parser.parse_virustotal(response.json(), query)
+            return create_tmp_to_clipboard(
+                json_parser.parse_virustotal(response.json(), query),
+                header_whois,
+                val,
+                'print_table')
     else:
         print(sha_sum)
         # --- virustotal data ---
@@ -134,6 +147,9 @@ def iphub_query(
         type: str,
         val: bool,
         sha_sum: list = None) -> dict:
+    header_spoofed_IPhub = (
+        '\n\nVPN/Proxy/Tor Information IPhub '
+        + query + '\n')
     data = get_api()
     api = (data['API info']['iphub']['api'])
     colorQuery = (Fore.RED + query)
@@ -150,9 +166,17 @@ def iphub_query(
         response = requests.get(url, headers=headers)
 
         if val:
-            return response.json()
+            return create_tmp_to_clipboard(
+                response.json(),
+                header_spoofed_IPhub,
+                val,
+                None)
         else:
-            return json_parser.parse_iphub(response.json(), query)
+            return create_tmp_to_clipboard(
+                json_parser.parse_iphub(response.json(), query),
+                header_spoofed_IPhub,
+                val,
+                'normal')
 
 
 def getipintel_query(
@@ -160,6 +184,9 @@ def getipintel_query(
         type: str,
         val: bool,
         sha_sum: list = None) -> dict:
+    header_spoofed_getipintel = (
+        'VPN/Proxy/Tor Information GetIPintel '
+        + query + '\n')
     data = get_api()
     email = data['API info']['getipintel']['email']
     colorQuery = (Fore.RED + query)
@@ -174,9 +201,17 @@ def getipintel_query(
         response = requests.get(url)
 
         if val:
-            return response.json()
+            return create_tmp_to_clipboard(
+                response.json(),
+                header_spoofed_getipintel,
+                val,
+                None)
         else:
-            return json_parser.parse_getipintel(response.json(), query)
+            return create_tmp_to_clipboard(
+                json_parser.parse_getipintel(response.json(), query),
+                header_spoofed_getipintel,
+                val,
+                'normal')
 
 
 """
@@ -213,6 +248,9 @@ def threatminer_query(
         val: bool,
         sha_sum: list = None) -> dict:
     data = get_api()
+    header_info2 = (
+        'More information '
+        + query + '\n')
 
     colorQuery = (Fore.RED + query)
     colorString = (Fore.GREEN + 'Threatminer')
@@ -227,7 +265,11 @@ def threatminer_query(
         response = requests.get(url)
 
         if val:
-            return response.json()
+            return create_tmp_to_clipboard(
+                response.json(),
+                header_info2,
+                val,
+                None)
         else:
             return json_parser.parse_threatminer(response.json(), query)
 
@@ -238,7 +280,9 @@ def threatcrowd_query(
         val: bool,
         sha_sum: list = None) -> dict:
     data = get_api()
-
+    header_status = (
+        'Current status information '
+        + query + '\n')
     colorQuery = (Fore.RED + query)
     colorString = (Fore.GREEN + 'Threatcrowd')
     print(iconNone + ' ' + colorString, end='')
@@ -255,7 +299,11 @@ def threatcrowd_query(
         response = requests.get(query_all, params=params)
 
     if val:
-        return response.json()
+        return create_tmp_to_clipboard(
+            response.json(),
+            header_status,
+            val,
+            None)
     else:
         return json_parser.parse_threatcrowd(response.json(), query)
 
@@ -284,6 +332,9 @@ def abuseipdb_query(
     dict -- Returns json as a dict.
 
     """
+    header_blacklisted = (
+        'Blacklisted Data '
+        + query + '\n')
     data = get_api()
     colorQuery = (Fore.RED + query)
     colorString = (Fore.GREEN + 'Abuseipdb')
@@ -303,7 +354,11 @@ def abuseipdb_query(
     try:
         response = requests.get(final_url, timeout=10)
         if val:
-            return response.json()  # this returns only huge dict
+            return create_tmp_to_clipboard(
+                response.json(),
+                header_blacklisted,
+                val,
+                None)
         else:
             return json_parser.parse_abuseipdb(response.json(), query)
     except requests.exceptions.Timeout:
@@ -335,6 +390,9 @@ def urlscan_query(
     dict -- Returns json as a dict.
 
     """
+    header_info = (
+        'More information '
+        + query + '\n')
     data = get_api()
     colorQuery = (Fore.RED + query)
     colorString = (Fore.GREEN + 'URLscan')
@@ -352,7 +410,11 @@ def urlscan_query(
         response = requests.get(requests_url)
 
     if val:
-        return response.json()
+        return create_tmp_to_clipboard(
+            response.json(),
+            header_info,
+            val,
+            None)
     else:
         return json_parser.parse_urlscan(response.json(), query)
 
@@ -381,6 +443,9 @@ def urlhause_query(
     dict -- Returns json as a dict.
 
     """
+    header_spread = (
+        'IP address/Domain was used to spread malware '
+        + query + '\n')
     data = get_api()
     colorQuery = (Fore.RED + query)
     colorString = (Fore.GREEN + 'UrlHause')
@@ -398,7 +463,11 @@ def urlhause_query(
     else:
         pass
     if val:
-        return response.json()
+        return create_tmp_to_clipboard(
+            response.json(),
+            header_spread,
+            val,
+            None)
     else:
         return json_parser.parse_urlhause(response.json(), query)
 
@@ -480,6 +549,9 @@ def shodan_query(
         val: bool,
         sha_sum: list = None) -> dict:
     # --- API info ---
+    header_compromised = (
+        'Compromised Information '
+        + query + '\n')
     data = get_api()
     api_key = data['API info']['shodan']['api']
     # print
@@ -500,7 +572,11 @@ def shodan_query(
         return
 
     if val:
-        return response.json()
+        return create_tmp_to_clipboard(
+            response.json(),
+            header_compromised,
+            val,
+            None)
     else:
         return json_parser.parse_shodan(response.json(), query)
 
@@ -511,6 +587,9 @@ def apility_query(
         val: bool,
         sha_sum: list = None) -> dict:
     # --- API info ---
+    header_reputation = (
+        'Reputation and activity through time '
+        + query + '\n')
     data = get_api()
     api_key = data['API info']['apility']['api']
     # print
@@ -527,7 +606,11 @@ def apility_query(
         response = requests.get(url, headers=headers)
     try:
         if val:
-            return response.json()
+            return create_tmp_to_clipboard(
+                response.json(),
+                header_reputation,
+                val,
+                None)
         else:
             return json_parser.parse_apility(response.json(), query)
     except json.decoder.JSONDecodeError:
@@ -540,6 +623,9 @@ def hybrid_query(
         val: bool,
         sha_sum: list = None) -> dict:
     # --- API info ---
+    header_association = (
+        'Association with malware information '
+        + query + '\n')
     data = get_api()
     api_key = data['API info']['hybrid']['api']
     # printing name
@@ -563,7 +649,11 @@ def hybrid_query(
     else:
         pass
     if val:
-        return response.json()
+        return create_tmp_to_clipboard(
+                response.json(),
+                header_association,
+                val,
+                None)
     else:
         return json_parser.parse_hybrid(response.json(), query)
 
@@ -575,53 +665,11 @@ def hybrid_query(
 
 # ip ='68.183.65.178'
 
-# ip = '188.40.75.132'
+# 
 """
 # print(fofa_query(ip, 'ip', True))
 
-test = virustotal_query(ip, 'ip', False)
-#progressbar_ip(ip)
-print(test)
 
-test1 = iphub_query(ip, 'ip', False)
-#progressbar_ip(ip)
-print(test1)
-
-test2 = getipintel_query(ip, 'ip', False)
-progressbar_ip(ip)
-print(test2)
-
-test3 = shodan_query(ip, 'ip', False)
-progressbar_ip(ip)
-print(test3)
-
-test4 = threatcrowd_query(ip, 'ip', False)
-#progressbar_ip(ip)
-print(test4)
-
-test5 = hybrid_query(ip, 'ip', False)
-#progressbar_ip(ip)
-print(test5)
-
-test6 = apility_query(ip, 'ip', False)
-#progressbar_ip(ip)
-print(test6)
-
-test7 = abuseipdb_query(ip, 'ip', False)
-#progressbar_ip(ip)
-print(test7)
-
-test8 = urlscan_query(ip, 'ip', False)
-#progressbar_ip(ip)
-print(test8)
-
-test9 = urlhause_query(ip, 'domain', False)
-#progressbar_ip(ip)
-print(test9)
-
-test10 = threatminer_query(ip, 'domain', True)
-#progressbar_ip(ip)
-print(test10)
 """
 # table_reputation = printTable_row(test5)
 # table_reputation = printTable_row(test6)
@@ -679,11 +727,12 @@ def text_body(body):
         pass
 
 
-def text_body_table(body):
+def text_body_table(body: dict):
     try:
         for key, val in body.items():
-            yield (('{}, {}').format(key, val))
+            yield [str(key), str(val)]
     except AttributeError:
+        print('attribute error')
         pass
 
 
@@ -735,36 +784,40 @@ def verbose_mode(verbosity: bool) -> bool:
         return True
 
 
-def printTable(tbl, borderHorizontal='-', borderVertical='|', borderCross='+'):
+def printTable(tbl: Union[str, List[Union[str, List[str]]]], borderHorizontal='-', borderVertical='|', borderCross='+'):
+    if isinstance(tbl, str):
+        tbl = tbl.split('\n')
     string = ''
     try:
-        # get the columns split by the values
-        cols = [col.split(', ') for col in tbl]
+        # get the rows split by the values
+        rows = []
+        for row in tbl:
+            if isinstance(row, str):
+                row = row.split(', ')
+            rows.append(row)
 
         # find the longests strings
-        lenghts = [[] for _ in range(len(max(cols, key=len)))]
-        for col in cols:
-            for idx, value in enumerate(col):
+        lenghts = [[] for _ in range(len(max(rows, key=len)))]
+        for row in rows:
+            for idx, value in enumerate(row):
                 lenghts[idx].append(len(value))
         lengths = [max(lenght) for lenght in lenghts]
 
         # create formatting string with the length of the longest elements
-        f = borderVertical + borderVertical.join(
-            ' {:>%d} ' % l for l in lengths) + borderVertical
-        s = borderCross + borderCross.join(
-            borderHorizontal * (l+2) for l in lengths) + borderCross
+        f = borderVertical + borderVertical.join(' {:>%d} ' % l for l in lengths) + borderVertical
+        s = borderCross + borderCross.join(borderHorizontal * (l+2) for l in lengths) + borderCross
         string += s + '\n'
-        # print(s)
-        for col in cols:
-            string += f.format(*col) + '\n'
-            # print(f.format(*col))
+        print(s)
+        for row in rows:
+            string += f.format(*row) + '\n'
+            print(f.format(*row))
             string += s + '\n'
-            # print(s)
+            print(s)
         return string
     except ValueError:
+        print('Value error')
+        create_tmp_to_clipboard(tbl, 'test header', False, 'error')
         pass
-    finally:
-        return
 
 
 def printTable_row(
@@ -810,3 +863,130 @@ def check_domain_or_ip(data: list) -> str:
             domain.append(("{match}".format(match=f.group())))
     # print(domain)
     yield domain, 'domain'
+
+
+# ===================== ************* ===============================
+# ----------Copy information to tmp file and then to clipboard--------------------
+# ===================== ************* ===============================
+def create_tmp_to_clipboard(
+        data: dict,
+        header_data: str,
+        val: bool,
+        print_type: str,
+        path: str = path_default,
+        fd: int = fd_default) -> None:
+    try:
+        with os.fdopen(fd, 'a+', encoding='utf-8', closefd=False) as tmp:
+            if val:
+                tmp.write('\n')
+                tmp.write(header_data)
+                tmp.write('\n')
+                tmp.write(json.dumps(data))
+                tmp.write('\n')
+                pass
+            else:
+                # print with tables and what i think is usefull
+                if print_type == 'print_table':
+                    #print('print_table')
+                    #print(type(data))
+                    tableContent = text_body_table(data)
+                    #print(type(tableContent))
+                    tmp.write('\n')
+                    tmp.write(header_data)
+                    tmp.write('\n')
+                    tmp.write('{}'.format(printTable(tableContent)))
+                    pass
+                elif print_type == 'print_row_table':
+                    tmp.write('\n')
+                    tmp.write(header_data)
+                    tmp.write('\n')                                   
+                    tableContentRow = printTable_row(data)
+                    tmp.write('{}'.format(tableContentRow))
+                    pass
+                elif print_type == 'error':
+                    tmp.write(data)
+                elif print_type == 'normal':
+                    tmp.write('\n')
+                    tmp.write(header_data)
+                    tmp.write('\n')
+                    for i in text_body(data):
+                        tmp.write(i)
+                    tmp.write('\n')
+                else:
+                    tmp.write('\n')
+                    tmp.write(header_data)
+                    tmp.write('\n')
+                    tmp.write(json.dumps(data))
+                    tmp.write('\n')
+                pass
+            #  ===================== ************* ===========================
+            # ------ IP addresses are getting worked here --------------------
+            # ===================== ************* ============================
+            # ip_addresses = info['attackers']
+            # tmp.write(text_header(info))
+            tmp.seek(0)
+            content = tmp.read()
+            pyperclip.copy(content)
+            tmp.close()
+    finally:
+        # print(path)
+        #time.sleep(20)
+        """
+        if content == '':
+            print('\n' + iconError + ' No ticket was copied to clipboard')
+            print("\n\nRemoving tmp files... Please wait")
+        else:
+            print('\n' + iconOK, end='')
+            print(' Ticket was copied to clipboard successfully')
+            print("\n\nRemoving tmp files... Please wait")
+        #os.remove(path)
+        """
+        pass
+
+"""
+test_dic = {'ciao mondo': 25}
+create_tmp_to_clipboard(test_dic, 'test header', False, 'error')
+"""
+ip = '68.183.65.178'
+virustotal_query(ip, 'ip', False)
+#progressbar_ip(ip)
+
+
+iphub_query(ip, 'ip', False)
+#progressbar_ip(ip)
+
+
+getipintel_query(ip, 'ip', False)
+#progressbar_ip(ip)
+"""
+shodan_query(ip, 'ip', True)
+#progressbar_ip(ip)
+
+
+threatcrowd_query(ip, 'ip', True)
+#progressbar_ip(ip)
+
+
+hybrid_query(ip, 'ip', True)
+#progressbar_ip(ip)
+
+
+apility_query(ip, 'ip', True)
+#progressbar_ip(ip)
+
+
+abuseipdb_query(ip, 'ip', True)
+#progressbar_ip(ip)
+
+
+urlscan_query(ip, 'ip', True)
+#progressbar_ip(ip)
+
+
+urlhause_query(ip, 'domain', True)
+#progressbar_ip(ip)
+
+
+threatminer_query(ip, 'domain', True)
+#progressbar_ip(ip)
+"""

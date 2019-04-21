@@ -68,19 +68,21 @@ def parse_virustotal(jdata: dict, query: str, sha_sum: list = None) -> dict:
     dict -- Returns dict of values that i chose.
 
     """
-    if jdata['response_code'] == -1:
-        pass
-        return
-    else:
+    try:
         whois_dict = {}
-        whois_dict['Country'] = jdata.get('country', 'not found')
-        whois_dict['Continent'] = jdata.get('continent', 'not found')
-        whois_dict['Organization'] = jdata.get('as_owner', 'not found')
-        whois_dict['Autonomous System Number'] = jdata.get('asn', 'not found')
-        # --- only sample detected for certain ip or domain
-        # whois_dict = {k: str.encode(v, 'ascii', 'replace')
-        # for k,v in whois_dict.items()}
-        try:
+        if jdata['response_code'] == -1:
+            pass
+            return
+        else:
+
+            whois_dict['Country'] = jdata.get('country', 'not found')
+            whois_dict['Continent'] = jdata.get('continent', 'not found')
+            whois_dict['Organization'] = jdata.get('as_owner', 'not found')
+            whois_dict['Autonomous System Number'] = jdata.get('asn', 'not found')
+            # --- only sample detected for certain ip or domain
+            # whois_dict = {k: str.encode(v, 'ascii', 'replace')
+            # for k,v in whois_dict.items()}
+            
             for index, item in enumerate(
                     jdata['detected_downloaded_samples']):
                 whois_dict["Detected samples "] = (
@@ -92,14 +94,14 @@ def parse_virustotal(jdata: dict, query: str, sha_sum: list = None) -> dict:
                 whois_dict[f"detected_urls_{index}"] = item['url']
                 # simple_dict[f"urls_score_{index}"] =
                 # str(item['positives'])+'/'+str(item['total'])
-            # print(simple_dict)
+            # print(whois_dict)
             # detected_dict = {k: str.encode(v, 'ascii', 'replace')
             # for k,v in detected_dict.items()}
-        except KeyError:
-            # print('key error')
-            pass
-        finally:
-            return whois_dict
+    except KeyError:
+        print('key error')
+        pass
+    finally:
+        return whois_dict
 
 
 def parse_iphub(jdata: dict, query: str, sha_sum: list = None) -> dict:
