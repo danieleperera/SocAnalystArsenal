@@ -163,9 +163,7 @@ def collector(info: dict, verbosity_check: bool, sha_sum_list: list = None):
 
                 # query.progressbar_ip(ip_addresses)
 
-                tmp.write(header_status)
-                for i in query.text_body(threatcrowd):
-                    tmp.write(i)
+
 
                 hybrid = query.hybrid_query(
                     element,
@@ -174,8 +172,6 @@ def collector(info: dict, verbosity_check: bool, sha_sum_list: list = None):
 
                 # query.progressbar_ip(ip_addresses)
 
-                table_association = query.printTable_row(hybrid)
-                tmp.write('{}'.format(table_association))
 
                 apility = query.apility_query(
                     element,

@@ -665,7 +665,12 @@ def hybrid_query(
                 val,
                 None)
     else:
-        return json_parser.parse_hybrid(response.json(), query)
+        return create_tmp_to_clipboard(
+                json_parser.parse_hybrid(response.json(), query),
+                header_association,
+                val,
+                'print_row_table')
+        
 
 # ===================== ************* ===============================
 # -----------Working and testing from here on -----------------------
@@ -977,11 +982,11 @@ shodan_query(ip, 'ip', False)
 threatcrowd_query(ip, 'ip', False)
 #progressbar_ip(ip)
 
-"""
-hybrid_query(ip, 'ip', True)
+
+hybrid_query(ip, 'ip', False)
 #progressbar_ip(ip)
 
-
+"""
 apility_query(ip, 'ip', True)
 #progressbar_ip(ip)
 
