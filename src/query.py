@@ -271,7 +271,12 @@ def threatminer_query(
                 val,
                 None)
         else:
-            return json_parser.parse_threatminer(response.json(), query)
+            return create_tmp_to_clipboard(
+                json_parser.parse_threatminer(response.json(), query),
+                header_info2,
+                val,
+                'normal')
+            
 
 
 def threatcrowd_query(
@@ -426,7 +431,12 @@ def urlscan_query(
             val,
             None)
     else:
-        return json_parser.parse_urlscan(response.json(), query)
+        return create_tmp_to_clipboard(
+                json_parser.parse_abuseipdb(response.json(), query),
+                header_info,
+                val,
+                'normal')
+        json_parser.parse_urlscan(response.json(), query)
 
 
 def urlhause_query(
@@ -479,7 +489,12 @@ def urlhause_query(
             val,
             None)
     else:
-        return json_parser.parse_urlhause(response.json(), query)
+        return create_tmp_to_clipboard(
+            json_parser.parse_urlhause(response.json(), query),
+            header_spread,
+            val,
+            None)
+        
 
 
 def domain_virustotal(
@@ -1015,16 +1030,15 @@ apility_query(ip, 'ip', False)
 
 abuseipdb_query(ip, 'ip', False)
 #progressbar_ip(ip)
-"""
 
-urlscan_query(ip, 'ip', True)
+urlscan_query(ip, 'ip', False)
 #progressbar_ip(ip)
 
 
-urlhause_query(ip, 'domain', True)
+
+urlhause_query(ip, 'domain', False)
 #progressbar_ip(ip)
 
 
 threatminer_query(ip, 'domain', True)
 #progressbar_ip(ip)
-"""

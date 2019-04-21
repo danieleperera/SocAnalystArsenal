@@ -187,9 +187,7 @@ def collector(info: dict, verbosity_check: bool, sha_sum_list: list = None):
                     verbosity_check)
                 # query.progressbar_ip(ip_addresses)
 
-                tmp.write(header_blacklisted)
-                for i in query.text_body(abuseipdb):
-                    tmp.write(i)
+
 
                 urlhause = query.urlhause_query(
                     element,
