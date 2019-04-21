@@ -263,6 +263,9 @@ def threatminer_query(
         query_ip = data['API info']['threatminer']['query_ip']
         url = query_ip.format(query)
         response = requests.get(url)
+        print('i"m here')
+        print(response.status_code)
+        print(response.json())
 
         if val:
             return create_tmp_to_clipboard(
@@ -1036,9 +1039,9 @@ urlscan_query(ip, 'ip', False)
 
 
 
-urlhause_query(ip, 'domain', False)
+urlhause_query(ip, 'ip', False)
 #progressbar_ip(ip)
 
 
-threatminer_query(ip, 'domain', True)
+threatminer_query(ip, 'ip', False)
 #progressbar_ip(ip)
