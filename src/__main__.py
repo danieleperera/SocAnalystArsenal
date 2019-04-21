@@ -180,8 +180,6 @@ def collector(info: dict, verbosity_check: bool, sha_sum_list: list = None):
 
                 # query.progressbar_ip(ip_addresses)
 
-                table_reputation = query.printTable_row(apility)
-                tmp.write('{}'.format(table_reputation))
 
                 abuseipdb = query.abuseipdb_query(
                     element,

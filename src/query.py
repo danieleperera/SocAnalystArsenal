@@ -365,7 +365,12 @@ def abuseipdb_query(
                 val,
                 None)
         else:
-            return json_parser.parse_abuseipdb(response.json(), query)
+            return create_tmp_to_clipboard(
+                json_parser.parse_abuseipdb(response.json(), query),
+                header_blacklisted,
+                val,
+                None)
+            
     except requests.exceptions.Timeout:
         print(Fore.RED + 'Timeout error occurred for AbuseIPdb')
         return
@@ -588,7 +593,6 @@ def shodan_query(
                 header_compromised,
                 val,
                 'print_table')
-        
 
 
 def apility_query(
@@ -614,17 +618,30 @@ def apility_query(
         headers = {'Accept': 'application/json', 'X-Auth-Token': api_key}
         url = get_url_ip+query
         response = requests.get(url, headers=headers)
-    try:
-        if val:
+        print(response.status_code)
+        if response.status_code == 200:
+            if val:
+                return create_tmp_to_clipboard(
+                    response.json(),
+                    header_reputation,
+                    val,
+                    None)
+            else:
+                return create_tmp_to_clipboard(
+                    json_parser.parse_apility(response.json(), query),
+                    header_reputation,
+                    val,
+                    'print_row_table')
+        elif response.status_code == 400:
+            #print('maybe ip clean')
             return create_tmp_to_clipboard(
-                response.json(),
-                header_reputation,
-                val,
-                None)
+                    'not sufficient data is availiable\n',
+                    header_reputation,
+                    val,
+                    'n/a')
         else:
-            return json_parser.parse_apility(response.json(), query)
-    except json.decoder.JSONDecodeError:
-        pass
+            pass
+
 
 
 def hybrid_query(
@@ -656,6 +673,8 @@ def hybrid_query(
         # The request headers
         data = {"host": query}
         response = requests.post(url, headers=headers, data=data)
+        print(response.status_code)
+        print(response.json())
     else:
         pass
     if val:
@@ -678,9 +697,6 @@ def hybrid_query(
 # http://check.getipintel.net/check.php?ip=66.228.119.72&contact=mr.px0r@gmail.com&format=json
 
 
-# ip ='68.183.65.178'
-
-# 
 """
 # print(fofa_query(ip, 'ip', True))
 
@@ -928,6 +944,11 @@ def create_tmp_to_clipboard(
                     for i in text_body(data):
                         tmp.write(i)
                     tmp.write('\n')
+                elif print_type == 'n/a':
+                    tmp.write('\n')
+                    tmp.write(header_data)
+                    tmp.write('\n')
+                    tmp.write(data)
                 else:
                     tmp.write('\n')
                     tmp.write(header_data)
@@ -963,7 +984,8 @@ def create_tmp_to_clipboard(
 test_dic = {'ciao mondo': 25}
 create_tmp_to_clipboard(test_dic, 'test header', False, 'error')
 """
-ip = '188.40.75.132'
+ip ='68.183.65.178'
+#ip = '188.40.75.132'
 virustotal_query(ip, 'ip', False)
 #progressbar_ip(ip)
 
@@ -986,14 +1008,14 @@ threatcrowd_query(ip, 'ip', False)
 hybrid_query(ip, 'ip', False)
 #progressbar_ip(ip)
 
+
+apility_query(ip, 'ip', False)
+#progressbar_ip(ip)
+
+
+abuseipdb_query(ip, 'ip', False)
+#progressbar_ip(ip)
 """
-apility_query(ip, 'ip', True)
-#progressbar_ip(ip)
-
-
-abuseipdb_query(ip, 'ip', True)
-#progressbar_ip(ip)
-
 
 urlscan_query(ip, 'ip', True)
 #progressbar_ip(ip)

@@ -5,6 +5,7 @@
 # ===================== ************* ===============================
 import time
 from colorama import Fore
+#import api_query
 iconNone = (Fore.YELLOW + '[!]')
 
 
@@ -410,8 +411,11 @@ def parse_hybrid(jdata: dict, query: str, sha_sum: list = None) -> dict:
     content_list = []
     try:
         if jdata["count"] == 0:  # If no result was recieved
-            pass
-            return
+            return api_query.create_tmp_to_clipboard(
+                    'not sufficient data is availiable',
+                    'Association with malware information {}'.format(query),
+                    False,
+                    'n/a')
         else:
             c = jdata["count"]
             header_list = [
