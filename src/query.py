@@ -578,7 +578,12 @@ def shodan_query(
             val,
             None)
     else:
-        return json_parser.parse_shodan(response.json(), query)
+        return create_tmp_to_clipboard(
+                json_parser.parse_shodan(response.json(), query),
+                header_compromised,
+                val,
+                'print_table')
+        
 
 
 def apility_query(
@@ -958,11 +963,11 @@ iphub_query(ip, 'ip', False)
 
 getipintel_query(ip, 'ip', False)
 #progressbar_ip(ip)
-"""
+
 shodan_query(ip, 'ip', True)
 #progressbar_ip(ip)
 
-
+"""
 threatcrowd_query(ip, 'ip', True)
 #progressbar_ip(ip)
 

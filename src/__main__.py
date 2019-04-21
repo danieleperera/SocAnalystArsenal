@@ -135,32 +135,18 @@ def collector(info: dict, verbosity_check: bool, sha_sum_list: list = None):
                                                     verbosity_check)
                 # query.progressbar_ip(ip_addresses)
 
-
-                tableContent_virustotal = query.text_body_table(
-                    virustotal)
-                tmp.write('{}'.format(query.printTable(
-                    tableContent_virustotal)))
-
                 iphub = query.iphub_query(
                                             element,
                                             type_data,
                                             verbosity_check)
                 # query.progressbar_ip(ip_addresses)
 
-                for i in query.text_body(iphub):
-                    tmp.write(i)
 
                 getipintel = query.getipintel_query(
                                                     element,
                                                     type_data,
                                                     verbosity_check)
                 # query.progressbar_ip(ip_addresses)
-                header_spoofed_getipintel = (
-                    '\n\nVPN/Proxy/Tor Information GetIPintel '
-                    + element + '\n')
-                tmp.write(header_spoofed_getipintel)
-                for i in query.text_body(getipintel):
-                    tmp.write(i)
 
                 shodan = query.shodan_query(
                     element,
