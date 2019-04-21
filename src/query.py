@@ -305,7 +305,12 @@ def threatcrowd_query(
             val,
             None)
     else:
-        return json_parser.parse_threatcrowd(response.json(), query)
+        return create_tmp_to_clipboard(
+                json_parser.parse_threatcrowd(response.json(), query),
+                header_status,
+                val,
+                'normal')
+        
 
 
 def abuseipdb_query(
@@ -909,7 +914,8 @@ def create_tmp_to_clipboard(
                     tmp.write('{}'.format(tableContentRow))
                     pass
                 elif print_type == 'error':
-                    tmp.write(data)
+                    for i in data:
+                        tmp.write(i)
                 elif print_type == 'normal':
                     tmp.write('\n')
                     tmp.write(header_data)
@@ -952,7 +958,7 @@ def create_tmp_to_clipboard(
 test_dic = {'ciao mondo': 25}
 create_tmp_to_clipboard(test_dic, 'test header', False, 'error')
 """
-ip = '68.183.65.178'
+ip = '188.40.75.132'
 virustotal_query(ip, 'ip', False)
 #progressbar_ip(ip)
 
@@ -964,14 +970,14 @@ iphub_query(ip, 'ip', False)
 getipintel_query(ip, 'ip', False)
 #progressbar_ip(ip)
 
-shodan_query(ip, 'ip', True)
+shodan_query(ip, 'ip', False)
+#progressbar_ip(ip)
+
+
+threatcrowd_query(ip, 'ip', False)
 #progressbar_ip(ip)
 
 """
-threatcrowd_query(ip, 'ip', True)
-#progressbar_ip(ip)
-
-
 hybrid_query(ip, 'ip', True)
 #progressbar_ip(ip)
 

@@ -155,9 +155,6 @@ def collector(info: dict, verbosity_check: bool, sha_sum_list: list = None):
 
                 # query.progressbar_ip(ip_addresses)
 
-                tableContent_shodan = query.text_body_table(shodan)
-                tmp.write('{}'.format(query.printTable(
-                    tableContent_shodan)))
 
                 threatcrowd = query.threatcrowd_query(
                     element,
