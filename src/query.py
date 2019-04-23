@@ -249,13 +249,13 @@ def threatminer_query(
         sha_sum: list = None) -> dict:
     data = get_api()
     header_info2 = (
-        'More information '
+        'Report tagging information/IOCs '
         + query + '\n')
 
     colorQuery = (Fore.RED + query)
     colorString = (Fore.GREEN + 'Threatminer')
     print(iconNone + ' ' + colorString, end='')
-    print(' checking further information ' + colorQuery)
+    print(' Report tagging information/IOCs information ' + colorQuery)
 
     if type == "domain":
         pass
@@ -263,22 +263,23 @@ def threatminer_query(
         query_ip = data['API info']['threatminer']['query_ip']
         url = query_ip.format(query)
         response = requests.get(url)
-        print('i"m here')
-        print(response.status_code)
-        print(response.json())
-
-        if val:
-            return create_tmp_to_clipboard(
-                response.json(),
-                header_info2,
-                val,
-                None)
+        data_json = response.json()
+        if data_json['status_code'] == '200':
+            if val:
+                return create_tmp_to_clipboard(
+                    response.json(),
+                    header_info2,
+                    val,
+                    None)
+            else:
+                return create_tmp_to_clipboard(
+                    json_parser.parse_threatminer(response.json(), query),
+                    header_info2,
+                    val,
+                    'normal')
         else:
-            return create_tmp_to_clipboard(
-                json_parser.parse_threatminer(response.json(), query),
-                header_info2,
-                val,
-                'normal')
+            pass
+
             
 
 
@@ -1008,8 +1009,9 @@ def create_tmp_to_clipboard(
 test_dic = {'ciao mondo': 25}
 create_tmp_to_clipboard(test_dic, 'test header', False, 'error')
 """
-ip = '45.67.14.61'
-"""
+ip = '60.160.182.113'
+
+
 #ip = '188.40.75.132'
 virustotal_query(ip, 'ip', False)
 #progressbar_ip(ip)
@@ -1034,7 +1036,7 @@ hybrid_query(ip, 'ip', False)
 #progressbar_ip(ip)
 
 
-apility_query(ip, 'ip', True)
+apility_query(ip, 'ip', False)
 #progressbar_ip(ip)
 
 abuseipdb_query(ip, 'ip', False)
@@ -1042,11 +1044,10 @@ abuseipdb_query(ip, 'ip', False)
 
 urlscan_query(ip, 'ip', False)
 #progressbar_ip(ip)
-"""
+
 urlhause_query(ip, 'ip', False)
 #progressbar_ip(ip)
-"""
+
 
 threatminer_query(ip, 'ip', False)
 #progressbar_ip(ip)
-"""

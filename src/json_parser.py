@@ -722,11 +722,9 @@ def parse_abuseipdb(jdata: dict, query: str, sha_sum: list = None) -> dict:
 
 def parse_threatminer(jdata: dict, query: str, sha_sum: list = None) -> dict:
     try:
-        pass
-    except TypeError:
-        pass
-    finally:
         return jdata
+    except TypeError:
+        print('type error')
 
 
 def querry_status_virustotal_file(resp_json):
