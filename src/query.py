@@ -13,6 +13,7 @@ import __main__ as main
 import tempfile
 import pyperclip
 from typing import List, Union
+from requests.auth import HTTPDigestAuth
 iconOK = (Fore.GREEN + '[ok]')
 iconNone = (Fore.YELLOW + '[*]')
 iconError = (Fore.RED + '[!]')
@@ -688,18 +689,24 @@ def hybrid_query(
     if type == "domain":
         data = {"domain": query}  # The data to post
     elif type == "ip":
-        url = "https://www.hybrid-analysis.com/api/v2/search/terms"
+        url = data['API info']['hybrid']['query_ip']
+        url_query_ip = url + query
+        print(url_query_ip)
+        print(api_key)
         # The api url
+        api = 'swkoco44gk88gwk4gkosss4cccc40o8sw0gokk0kc04cc8ggk8k40gcokkcc8gok'
+        secret = '3045cf244ca40a3d7140212274c95ab91db25305416fbc0d'
         headers = {
-            "api-key": api_key,
-            "user-agent": "Falcon Sandbox",
-            "accept": "application/json"}
+            "user-agent": "VxApi Connector"}
         # The request headers
-        data = {"host": query}
-        response = requests.post(url, headers=headers, data=data)
+        response = requests.post(
+            url_query_ip,
+            headers=headers,
+            auth=HTTPDigestAuth(api, secret))
         print(response.status_code)
-        print(response.json())
-    else:
+        print(response.content)
+        """
+    else:qqq
         pass
     if val:
         return create_tmp_to_clipboard(
@@ -712,7 +719,7 @@ def hybrid_query(
                 json_parser.parse_hybrid(response.json(), query),
                 header_association,
                 val,
-                'print_row_table')
+                'print_row_table')"""
         
 
 # ===================== ************* ===============================
@@ -1009,8 +1016,8 @@ def create_tmp_to_clipboard(
 test_dic = {'ciao mondo': 25}
 create_tmp_to_clipboard(test_dic, 'test header', False, 'error')
 """
-ip = '60.160.182.113'
-
+#ip = '60.160.182.113'
+"""
 
 #ip = '188.40.75.132'
 virustotal_query(ip, 'ip', False)
@@ -1050,4 +1057,4 @@ urlhause_query(ip, 'ip', False)
 
 
 threatminer_query(ip, 'ip', False)
-#progressbar_ip(ip)
+#progressbar_ip(ip)"""

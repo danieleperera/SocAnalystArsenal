@@ -128,89 +128,62 @@ def collector(info: dict, verbosity_check: bool, sha_sum_list: list = None):
                 '\n ======= Creating ticket for {} =======\n\n'.format(
                     element))
             if sha_sum_list is None:
-
-                virustotal = query.virustotal_query(
-                                                    element,
-                                                    type_data,
-                                                    verbosity_check)
+                query.virustotal_query(
+                    element,
+                    type_data,
+                    verbosity_check)
                 # query.progressbar_ip(ip_addresses)
-
-                iphub = query.iphub_query(
-                                            element,
-                                            type_data,
-                                            verbosity_check)
+                query.iphub_query(
+                    element,
+                    type_data,
+                    verbosity_check)
                 # query.progressbar_ip(ip_addresses)
-
-
-                getipintel = query.getipintel_query(
-                                                    element,
-                                                    type_data,
-                                                    verbosity_check)
+                query.getipintel_query(
+                    element,
+                    type_data,
+                    verbosity_check)
                 # query.progressbar_ip(ip_addresses)
-
-                shodan = query.shodan_query(
+                query.shodan_query(
                     element,
                     type_data,
                     verbosity_check)
 
                 # query.progressbar_ip(ip_addresses)
-
-
-                threatcrowd = query.threatcrowd_query(
+                query.threatcrowd_query(
                     element,
                     type_data,
                     verbosity_check)
 
                 # query.progressbar_ip(ip_addresses)
-
-
-
-                hybrid = query.hybrid_query(
+                query.hybrid_query(
                     element,
                     type_data,
                     verbosity_check)
 
                 # query.progressbar_ip(ip_addresses)
-
-
-                apility = query.apility_query(
+                query.apility_query(
                     element,
                     type_data,
                     verbosity_check)
 
                 # query.progressbar_ip(ip_addresses)
-
-
-                abuseipdb = query.abuseipdb_query(
+                query.abuseipdb_query(
                     element,
                     type_data,
                     verbosity_check)
                 # query.progressbar_ip(ip_addresses)
-
-
-
-                urlhause = query.urlhause_query(
+                query.urlhause_query(
                     element,
                     type_data,
                     verbosity_check)
 
                 # query.progressbar_ip(ip_addresses)
-
-                tmp.write(header_spread)
-                for i in query.text_body(urlhause):
-                    tmp.write(i)
-
-                threatminer = query.threatminer_query(
+                query.threatminer_query(
                     element,
                     type_data,
                     verbosity_check)
 
-                # query.progressbar_ip(ip_addresses)
-
-                for i in query.text_body(threatminer):
-                    tmp.write(i)
-
-                urlscan = query.urlscan_query(
+                query.urlscan_query(
                     element,
                     type_data,
                     verbosity_check)
