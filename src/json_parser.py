@@ -360,7 +360,7 @@ def parse_threatcrowd(jdata: dict, query: str, sha_sum: list = None) -> dict:
         return simple_dic
 
 
-def parse_hybrid(jdata: dict, query: str, sha_sum: list = None) -> dict:
+def parse_hybrid(jdata: dict, query: str, sha_sum: list = None) -> list:
     """
     ```
     jdata = {
@@ -580,11 +580,36 @@ def parse_urlscan(jdata: dict, query: str, sha_sum: list = None) -> list:
     if jdata['total'] == 0:
         return False
     else:
+        content_list = []
         try:
-            results = {"urlscan": jdata['results'][0]['task']['url']}
-            return results
+            c = jdata["total"]
+            header_list = [
+                'visibility',
+                'time',
+                'source',
+                'url',
+                'server',
+                'domain']
+            #print(header_list)
+            body_list = []
+            content_list.append(header_list)
+            for i in range(0, c):
+                #print(i)
+                body_list.extend([
+                    jdata["results"][i]['task']['visibility'],
+                    jdata["results"][i]['task']['time'][0:10],
+                    jdata["results"][i]['task']['source'],
+                    jdata["results"][i]['task']['url'],
+                    jdata["results"][i]['page']['server'],
+                    jdata["results"][i]['page']['domain']])
+                content_list.append(body_list)
+                pass
+            #results = {"urlscan": jdata['results'][0]['task']['url']}
+            return content_list
         except KeyError:
-            pass
+            print('KeyError')
+        finally:
+            return content_list
 
 
 # --- Abuseipdb Category ---
@@ -622,7 +647,7 @@ def retruncategory(test_json):
     return list
 
 
-def parse_abuseipdb(jdata: dict, query: str, sha_sum: list = None) -> list:
+def parse_abuseipdb(jdata: dict, query: str, sha_sum: list = None) -> dict:
     """
     Documentation for querry_status_abuseipdb.
     It gets a json a dictionary,

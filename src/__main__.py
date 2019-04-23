@@ -217,10 +217,6 @@ def collector(info: dict, verbosity_check: bool, sha_sum_list: list = None):
 
                 # query.progressbar_ip(ip_addresses)
 
-                tmp.write(header_info)
-                for i in query.text_body(urlscan):
-                    tmp.write(i)
-
         toaster.show_toast("""Ticket copied to clipboard""", duration=10)
         # ===================== ************* ===============================
         # ---------------------- END IP addresses -----------------------

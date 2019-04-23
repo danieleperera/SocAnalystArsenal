@@ -373,11 +373,12 @@ def abuseipdb_query(
                 val,
                 None)
         else:
+            #print(json_parser.parse_abuseipdb(response.json(), query))
             return create_tmp_to_clipboard(
                 json_parser.parse_abuseipdb(response.json(), query),
                 header_blacklisted,
                 val,
-                None)
+                'normal')
             
     except requests.exceptions.Timeout:
         print(Fore.RED + 'Timeout error occurred for AbuseIPdb')
@@ -409,13 +410,13 @@ def urlscan_query(
 
     """
     header_info = (
-        'More information '
+        'Suspicious connections '
         + query + '\n')
     data = get_api()
     colorQuery = (Fore.RED + query)
     colorString = (Fore.GREEN + 'URLscan')
     print(iconNone + ' ' + colorString, end='')
-    print(' checking further information ' + colorQuery)
+    print(' Suspicious connections ' + colorQuery)
     if type == "domain":
         query_domain = data['API info']['urlscan.io']['query_domain']
         requests_url = query_domain+query
@@ -435,11 +436,10 @@ def urlscan_query(
             None)
     else:
         return create_tmp_to_clipboard(
-                json_parser.parse_abuseipdb(response.json(), query),
+                json_parser.parse_urlscan(response.json(), query),
                 header_info,
                 val,
-                'normal')
-        json_parser.parse_urlscan(response.json(), query)
+                'print_row_table')
 
 
 def urlhause_query(
@@ -496,7 +496,7 @@ def urlhause_query(
             json_parser.parse_urlhause(response.json(), query),
             header_spread,
             val,
-            None)
+            'print_row_table')
         
 
 
@@ -634,9 +634,14 @@ def apility_query(
     elif type == "ip":
         get_url_ip = data['API info']['apility']['url_ip_request']
         headers = {'Accept': 'application/json', 'X-Auth-Token': api_key}
+        #print(headers)
         url = get_url_ip+query
+        #print(url)
         response = requests.get(url, headers=headers)
-        print(response.status_code)
+        #print(response.url)
+        #print(response.status_code)
+        #print(response.content)
+        # --- Always giving 400 status code check why
         if response.status_code == 200:
             if val:
                 return create_tmp_to_clipboard(
@@ -883,14 +888,15 @@ def printTable_row(
         s = borderCross + borderCross.join(
             borderHorizontal * (l+2) for l in lengths) + borderCross
         string += s + '\n'
-        # print(s)
+        print(s)
         for row in tbl:
             string += f.format(*row) + '\n'
-            # print(f.format(*row))
+            print(f.format(*row))
             string += s + '\n'
-            # print(s)
+            print(s)
         return string
     except TypeError:
+        print('TypeError')
         pass
 
 
@@ -1002,7 +1008,8 @@ def create_tmp_to_clipboard(
 test_dic = {'ciao mondo': 25}
 create_tmp_to_clipboard(test_dic, 'test header', False, 'error')
 """
-ip ='68.183.65.178'
+ip = '45.67.14.61'
+"""
 #ip = '188.40.75.132'
 virustotal_query(ip, 'ip', False)
 #progressbar_ip(ip)
@@ -1027,21 +1034,19 @@ hybrid_query(ip, 'ip', False)
 #progressbar_ip(ip)
 
 
-apility_query(ip, 'ip', False)
+apility_query(ip, 'ip', True)
 #progressbar_ip(ip)
-
 
 abuseipdb_query(ip, 'ip', False)
 #progressbar_ip(ip)
 
 urlscan_query(ip, 'ip', False)
 #progressbar_ip(ip)
-
-
-
+"""
 urlhause_query(ip, 'ip', False)
 #progressbar_ip(ip)
-
+"""
 
 threatminer_query(ip, 'ip', False)
 #progressbar_ip(ip)
+"""
