@@ -513,15 +513,31 @@ def parse_urlhause(jdata: dict, query: str, sha_sum: list = None) -> list:
     if jdata['query_status'] != 'ok':
         pass
     else:
+        content_list = []
         try:
-            response_querry_url_information = {
-                "urlhaus_reference": jdata['urls'][0]['urlhaus_reference'],
-                "threat": jdata['urls'][0]['threat'],
-                "url_status": jdata['urls'][0]['url_status'],
-                "tags": jdata['urls'][0]['tags']}
-            return response_querry_url_information
+            c = int(jdata["url_count"])
+            #print(c)
+            header_list = [
+                'status',
+                'date',
+                'threat',
+                'category',
+                'reporter',
+                'url']
+            body_list = []
+            content_list.append(header_list)
+            for i in range(0, c):
+                body_list.extend([
+                    jdata["urls"][i]['url_status'],
+                    jdata["urls"][i]['date_added'][0:10],
+                    jdata["urls"][i]['threat'],
+                    ",".join(str(x) for x in jdata["urls"][i]['tags']),
+                    jdata["urls"][i]['reporter'],
+                    jdata["urls"][i]['url']])
+                content_list.append(body_list)
+            return content_list
         except KeyError:
-            pass
+            print('key error')
 
 
 def parse_urlscan(jdata: dict, query: str, sha_sum: list = None) -> list:
