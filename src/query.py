@@ -698,7 +698,7 @@ def hybrid_query(
         response = requests.post(
             url_query_ip,
             headers=headers,
-            auth=HTTPDigestAuth(api, secret))
+            auth=HTTPDigestAuth(api, 'secret'))
         #print(response.status_code)
         #print(response.content)
         """
