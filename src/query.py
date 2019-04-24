@@ -691,11 +691,7 @@ def hybrid_query(
     elif type == "ip":
         url = data['API info']['hybrid']['query_ip']
         url_query_ip = url + query
-        print(url_query_ip)
-        print(api_key)
         # The api url
-        api = 'swkoco44gk88gwk4gkosss4cccc40o8sw0gokk0kc04cc8ggk8k40gcokkcc8gok'
-        secret = '3045cf244ca40a3d7140212274c95ab91db25305416fbc0d'
         headers = {
             "user-agent": "VxApi Connector"}
         # The request headers
@@ -703,8 +699,8 @@ def hybrid_query(
             url_query_ip,
             headers=headers,
             auth=HTTPDigestAuth(api, secret))
-        print(response.status_code)
-        print(response.content)
+        #print(response.status_code)
+        #print(response.content)
         """
     else:qqq
         pass
