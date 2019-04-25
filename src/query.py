@@ -601,11 +601,21 @@ def shodan_query(
             val,
             None)
     else:
-        return create_tmp_to_clipboard(
-                json_parser.parse_shodan(response.json(), query),
+        status, parsed_Data = json_parser.parse_shodan(
+            response.json(),
+            query)
+        if status == 'ok':
+            return create_tmp_to_clipboard(
+                parsed_Data,
                 header_compromised,
                 val,
                 'print_table')
+        elif status == 'KeyError':
+            return create_tmp_to_clipboard(
+                parsed_Data,
+                header_compromised,
+                val,
+                None)
 
 
 def apility_query(
@@ -893,6 +903,7 @@ def printTable_row(
         return string
     except TypeError:
         print('TypeError')
+        #create_tmp_to_clipboard(tbl, 'test header', False, 'error1')
         pass
 
 
@@ -975,6 +986,8 @@ def create_tmp_to_clipboard(
                 elif print_type == 'error':
                     for i in data:
                         tmp.write(i)
+                elif print_type == 'error1':
+                    tmp.write(data)
                 elif print_type == 'normal':
                     tmp.write('\n')
                     tmp.write(header_data)

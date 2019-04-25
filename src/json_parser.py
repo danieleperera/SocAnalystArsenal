@@ -206,11 +206,16 @@ def parse_shodan(jdata: dict, query: str, sha_sum: list = None) -> dict:
                 hd.splitlines()[1])
         # simple_dic = {k: str.encode(v, 'utf-8', 'replace')
         # for k,v in simple_dic.items()}
+        status = 'ok'
+        return status, simple_dic
     except IndexError:
-        # print("Index Error")
-        pass
-    finally:
-        return simple_dic
+        print("Index Error")
+        status = 'IndexError'
+        return status, jdata
+    except KeyError:
+        status = 'KeyError'
+        print('\nkey error occurred\n')
+        return status, jdata
 
 
 def parse_threatcrowd(jdata: dict, query: str, sha_sum: list = None) -> dict:
@@ -715,8 +720,10 @@ def parse_abuseipdb(jdata: dict, query: str, sha_sum: list = None) -> dict:
                 "abuseConfidenceScore":
                 result_with_correct_category['abuseConfidenceScore']}
     except KeyError:
+        print('key error')
         pass
     except TypeError:
+        print('type error')
         pass
     finally:
         return data_from_abuseipdb
