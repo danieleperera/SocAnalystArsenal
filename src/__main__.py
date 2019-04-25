@@ -123,7 +123,6 @@ def collector(info: dict, verbosity_check: bool, sha_sum_list: list = None):
     # --- Clipboard / tmp file ---
     
     for query_string, type_query in query.check_query_type(info['attackers']):
-        print(query_string, type_query)
         print(
             '\n ======= Creating ticket for {} =======\n\n'.format(
                     query_string))
@@ -187,15 +186,14 @@ def collector(info: dict, verbosity_check: bool, sha_sum_list: list = None):
             type_query,
             verbosity_check)
 
-                # query.progressbar_ip(ip_addresses)
+        #query.progressbar_ip(ip_addresses)
 
         toaster.show_toast("""Ticket copied to clipboard""", duration=10)
 
 
 if __name__ == '__main__':
     try:
-        #main()
-        collector(True)
+        main()
     except KeyboardInterrupt:
         print('deleting tmp files')
         print(iconOK, end='')
