@@ -361,6 +361,7 @@ def abuseipdb_query(
         pass
     try:
         response = requests.get(final_url, timeout=10)
+        print(response)
         if val:
             return create_tmp_to_clipboard(
                 response.json(),
@@ -368,13 +369,21 @@ def abuseipdb_query(
                 val,
                 None)
         else:
-            #print(json_parser.parse_abuseipdb(response.json(), query))
+            status, parsed_Data = json_parser.parse_abuseipdb(
+                response.json(),
+                query)
+        if status == 'ok':
             return create_tmp_to_clipboard(
-                json_parser.parse_abuseipdb(response.json(), query),
+                parsed_Data,
                 header_blacklisted,
                 val,
                 'normal')
-            
+        elif status == 'KeyError':
+            return create_tmp_to_clipboard(
+                parsed_Data,
+                header_blacklisted,
+                val,
+                None)     
     except requests.exceptions.Timeout:
         print(Fore.RED + 'Timeout error occurred for AbuseIPdb')
         return
@@ -422,19 +431,33 @@ def urlscan_query(
         query_ip = data['API info']['urlscan.io']['query_ip']
         requests_url = query_ip+query
         response = requests.get(requests_url)
-
-    if val:
-        return create_tmp_to_clipboard(
-            response.json(),
-            header_info,
-            val,
-            None)
+    
+    jdata = response.json()
+    if jdata['total'] == 0:
+        print('no info')
     else:
-        return create_tmp_to_clipboard(
-                json_parser.parse_urlscan(response.json(), query),
+        if val:
+            return create_tmp_to_clipboard(
+                response.json(),
                 header_info,
                 val,
-                'print_row_table')
+                None)
+        else:
+            status, parsed_Data = json_parser.parse_urlscan(
+                response.json(),
+                query)
+            if status == 'ok':
+                return create_tmp_to_clipboard(
+                    parsed_Data,
+                    header_info,
+                    val,
+                    'print_row_table')
+            elif status == 'KeyError':
+                return create_tmp_to_clipboard(
+                    parsed_Data,
+                    header_info,
+                    val,
+                    None)
 
 
 def urlhause_query(
@@ -480,19 +503,32 @@ def urlhause_query(
         data = {"host": query}
     else:
         pass
-    if val:
-        return create_tmp_to_clipboard(
-            response.json(),
-            header_spread,
-            val,
-            None)
-    else:
-        return create_tmp_to_clipboard(
-            json_parser.parse_urlhause(response.json(), query),
-            header_spread,
-            val,
-            'print_row_table')
-        
+    jdata = response.json()
+    if jdata['query_status'] != 'ok':
+        print('no info')
+    else:   
+        if val:
+            return create_tmp_to_clipboard(
+                response.json(),
+                header_spread,
+                val,
+                None)
+        else:
+            status, parsed_Data = json_parser.parse_urlhause(
+                response.json(),
+                query)
+            if status == 'ok':
+                return create_tmp_to_clipboard(
+                    parsed_Data,
+                    header_spread,
+                    val,
+                    'print_row_table')
+            elif status == 'KeyError':
+                return create_tmp_to_clipboard(
+                    parsed_Data,
+                    header_spread,
+                    val,
+                    None)
 
 
 def domain_virustotal(

@@ -165,10 +165,11 @@ def collector(info: dict, verbosity_check: bool, sha_sum_list: list = None):
             verbosity_check)
 
         # query.progressbar_ip(ip_addresses)
+        """
         query.abuseipdb_query(
             query_string,
             type_query,
-            verbosity_check)
+            verbosity_check)"""
         # query.progressbar_ip(ip_addresses)
         query.urlhause_query(
             query_string,
@@ -199,4 +200,3 @@ if __name__ == '__main__':
         print(iconOK, end='')
         print(" Exit")
         sys.exit()
-    # collector(False)
