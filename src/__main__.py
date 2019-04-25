@@ -48,10 +48,10 @@ def main():
                         dest='bool_vb',
                         help='Use this flag to get full data from APIs')
 
-    results = parser.parse_args()
+    options = parser.parse_args()
 
     # Default to webscapper
-    if results.boolean_switch_mode:
+    if options.boolean_switch_mode:
         # check if file webscapper exsist to get data from it
         Webscapperpath = os.path.join(SRC, "webscapper_1.py")
         exists = os.path.isfile(Webscapperpath)
@@ -62,15 +62,15 @@ def main():
                 # if error occured jump to manual mode
                 collector(
                     webscapper.get_info(),
-                    query.verbose_mode(results.bool_vb))
+                    query.verbose_mode(options.bool_vb))
 
             except exceptions.StaleElementReferenceException:
                 print(iconError, end='')
                 print(" Error Occured... Entering manual mode")
                 query.manual_mode_ip(
-                    results.ip,
-                    query.verbose_mode(results.bool_vb),
-                    results.sha_sum)
+                    options.ip,
+                    query.verbose_mode(options.bool_vb),
+                    options.sha_sum)
             # Testing purposes
             # info = {'attackers': {'124.164.251.179',
             #                       '179.251.164.124.adsl-pool.sx.cn'},
@@ -84,9 +84,9 @@ def main():
             print(""" It seems you don't have webscapper on path...
 Entering manual mode""")
             query.manual_mode_ip(
-                results.ip,
-                query.verbose_mode(results.bool_vb),
-                results.sha_sum)
+                options.ip,
+                query.verbose_mode(options.bool_vb),
+                options.sha_sum)
 
     else:
         # User entered option to get manual mode
@@ -94,9 +94,9 @@ Entering manual mode""")
         print(" Entering manual mode")
         # check if argpase values are null
         query.manual_mode_ip(
-            results.ip,
-            query.verbose_mode(results.bool_vb),
-            results.sha_sum)
+            options.ip,
+            query.verbose_mode(options.bool_vb),
+            options.sha_sum)
 
 
 def collector(info: dict, verbosity_check: bool, sha_sum_list: list = None):
@@ -122,87 +122,80 @@ def collector(info: dict, verbosity_check: bool, sha_sum_list: list = None):
     toaster = ToastNotifier()
     # --- Clipboard / tmp file ---
     
-    for data, type_data in query.check_domain_or_ip(info['attackers']):
-        for element in data:
-            print(
-                '\n ======= Creating ticket for {} =======\n\n'.format(
-                    element))
-            if sha_sum_list is None:
-                query.virustotal_query(
-                    element,
-                    type_data,
-                    verbosity_check)
-                # query.progressbar_ip(ip_addresses)
-                query.iphub_query(
-                    element,
-                    type_data,
-                    verbosity_check)
-                # query.progressbar_ip(ip_addresses)
-                query.getipintel_query(
-                    element,
-                    type_data,
-                    verbosity_check)
-                # query.progressbar_ip(ip_addresses)
-                query.shodan_query(
-                    element,
-                    type_data,
-                    verbosity_check)
+    for query_string, type_query in query.check_query_type(info['attackers']):
+        print(query_string, type_query)
+        print(
+            '\n ======= Creating ticket for {} =======\n\n'.format(
+                    query_string))
+        query.virustotal_query(
+            query_string,
+            type_query,
+            verbosity_check)
+        # query.progressbar_ip(ip_addresses)
+        query.iphub_query(
+            query_string,
+            type_query,
+            verbosity_check)
+        # query.progressbar_ip(ip_addresses)
+        query.getipintel_query(
+            query_string,
+            type_query,
+            verbosity_check)
+        # query.progressbar_ip(ip_addresses)
+        query.shodan_query(
+            query_string,
+            type_query,
+            verbosity_check)
 
-                # query.progressbar_ip(ip_addresses)
-                query.threatcrowd_query(
-                    element,
-                    type_data,
-                    verbosity_check)
+        # query.progressbar_ip(ip_addresses)
+        query.threatcrowd_query(
+            query_string,
+            type_query,
+            verbosity_check)
 
-                # query.progressbar_ip(ip_addresses)
-                query.hybrid_query(
-                    element,
-                    type_data,
-                    verbosity_check)
+        # query.progressbar_ip(ip_addresses)
+        query.hybrid_query(
+            query_string,
+            type_query,
+            verbosity_check)
 
-                # query.progressbar_ip(ip_addresses)
-                query.apility_query(
-                    element,
-                    type_data,
-                    verbosity_check)
+        # query.progressbar_ip(ip_addresses)
+        query.apility_query(
+            query_string,
+            type_query,
+            verbosity_check)
 
-                # query.progressbar_ip(ip_addresses)
-                query.abuseipdb_query(
-                    element,
-                    type_data,
-                    verbosity_check)
-                # query.progressbar_ip(ip_addresses)
-                query.urlhause_query(
-                    element,
-                    type_data,
-                    verbosity_check)
+        # query.progressbar_ip(ip_addresses)
+        query.abuseipdb_query(
+            query_string,
+            type_query,
+            verbosity_check)
+        # query.progressbar_ip(ip_addresses)
+        query.urlhause_query(
+            query_string,
+            type_query,
+            verbosity_check)
 
-                # query.progressbar_ip(ip_addresses)
-                query.threatminer_query(
-                    element,
-                    type_data,
-                    verbosity_check)
+        # query.progressbar_ip(ip_addresses)
+        query.threatminer_query(
+            query_string,
+            type_query,
+            verbosity_check)
 
-                query.urlscan_query(
-                    element,
-                    type_data,
-                    verbosity_check)
+        query.urlscan_query(
+            query_string,
+            type_query,
+            verbosity_check)
 
                 # query.progressbar_ip(ip_addresses)
 
         toaster.show_toast("""Ticket copied to clipboard""", duration=10)
-        # ===================== ************* ===============================
-        # ---------------------- END IP addresses -----------------------
-        # ===================== ************* ===============================
-
-# ======================= ************* ===============================
-# -------------- Validating information purposes ----------------------
-# ======================== ************* ==============================
 
 
 if __name__ == '__main__':
     try:
-        main()
+        #main()
+        collector(True)
     except KeyboardInterrupt:
         print('deleting tmp files')
         print(iconOK, end='')

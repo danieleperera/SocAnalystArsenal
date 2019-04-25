@@ -62,7 +62,7 @@ def progressbar_ip(ip_addresses):
 
 def virustotal_query(
         query: str,
-        type: str,
+        query_type: str,
         val: bool,
         sha_sum: list = None) -> dict:
     """
@@ -90,57 +90,50 @@ def virustotal_query(
     # --- API info ---
     data = get_api()
     api = (data['API info']['virustotal']['api'])
+    # --- Color printing ---
     colorQuery = (Fore.RED + query)
     colorString = (Fore.GREEN + 'VirusTotal')
+    # --- Status ---
     print(iconNone + ' ' + colorString, end='')
     print(' checking WhoIs Information for ' + colorQuery)
-    if sha_sum is None:
-        if type == "domain":
-            data = {"domain": query}  # The data to post
-        elif type == "ip":
-            query_ip = (data['API info']['virustotal']['query_ip'])
-            params = {'apikey': api, 'ip': query}
-            response = requests.get(query_ip, params=params)
-        else:
-            return
+    if query_type == "domain":
+        query_domain = data['API info']['virustotal']['query_domain']
+        # The data to post
+        params = {'apikey': api, 'domain': query}
+        response = requests.get(query_domain, params=params)
+    elif query_type == "ip":
+        query_ip = (data['API info']['virustotal']['query_ip'])
+        params = {'apikey': api, 'ip': query}
+        response = requests.get(query_ip, params=params)
+    elif query_type == 'sha':
+        query_sha = (data['API info']['virustotal']['file_url'])
+        params = {'apikey': api, 'resource': query}
+        response = requests.get(query_sha, params=params)
+    else:
+        return
 
-        if val:
+    if val:
+        return create_tmp_to_clipboard(
+            response.json(),
+            header_whois,
+            val,
+            None)
+    else:
+        status, parsed_Data = json_parser.parse_virustotal(
+            response.json(),
+            query)
+        if status == 'ok':
             return create_tmp_to_clipboard(
-                response.json(),
-                header_whois,
-                val,
-                None)
-        else:
-            return create_tmp_to_clipboard(
-                json_parser.parse_virustotal(response.json(), query),
+                parsed_Data,
                 header_whois,
                 val,
                 'print_table')
-    else:
-        print(sha_sum)
-        # --- virustotal data ---
-        data = get_api()
-        api = (data['API info']['virustotal']['api'])
-        ip_address_url = (data['API info']['virustotal']['ip_address_url'])
-        file_address_url = (data['API info']['virustotal']['file_url'])
-
-        # https://developers.virustotal.com/v2.0/reference#comments-get
-
-        params_ip = {'apikey': api, 'ip': query}
-        params_file = {'apikey': api, 'resource': sha_sum}
-        response_ip = requests.get(ip_address_url, params=params_ip)
-        response_file = requests.get(file_address_url, params=params_file)
-
-        if val:
-            return response_ip.json(), response_file.json()
-        else:
-            return
-    """
-        for x in context:
-        params = {'apikey': api, 'resource': x}
-        response = requests.get(scan_url, params=params)
-        print(response.json())
-    """
+        elif status == 'KeyError':
+            return create_tmp_to_clipboard(
+                parsed_Data,
+                header_whois,
+                val,
+                None)
 
 
 def iphub_query(
@@ -668,7 +661,6 @@ def apility_query(
             pass
 
 
-
 def hybrid_query(
         query: str,
         type: str,
@@ -924,6 +916,24 @@ def check_domain_or_ip(data: list) -> str:
     yield domain, 'domain'
 
 
+def check_query_type(data: list) -> str:
+    for string in data:
+        ipv4_pattern = (r"""^([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])(?<!172\.(16|17|18|19|20|21|22|23|24|25|26|27|28|29|30|31))(?<!127)(?<!^10)(?<!^0)\.([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])(?<!192\.168)(?<!172\.(16|17|18|19|20|21|22|23|24|25|26|27|28|29|30|31))\.([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])(?<!\.255$)$""")
+        matches_public = re.search(ipv4_pattern, string)
+        if matches_public:
+            yield matches_public.group(0), 'ip' # or i instead of matches_public.group(0)
+
+        domain_pattern = r"^([a-z0-9]+(-[a-z0-9]+)*\.)+[a-z]{2,}$"
+        matches_domain = re.search(domain_pattern, string)
+        if matches_domain:
+            yield matches_domain.group(0), 'domain'
+
+        hash_pattern = (r"[a-f0-9]{32,128}")
+        match_hash = re.search(hash_pattern, string, re.IGNORECASE)
+        if match_hash:
+            yield match_hash.group(0), 'hash'
+
+
 # ===================== ************* ===============================
 # ----------Copy information to tmp file and then to clipboard--------------------
 # ===================== ************* ===============================
@@ -1012,13 +1022,14 @@ def create_tmp_to_clipboard(
 test_dic = {'ciao mondo': 25}
 create_tmp_to_clipboard(test_dic, 'test header', False, 'error')
 """
-#ip = '60.160.182.113'
 """
 
-#ip = '188.40.75.132'
+ip = '60.160.182.113'
+
+
+domain = 'atracktr.info'
 virustotal_query(ip, 'ip', False)
 #progressbar_ip(ip)
-
 
 iphub_query(ip, 'ip', False)
 #progressbar_ip(ip)

@@ -98,11 +98,13 @@ def parse_virustotal(jdata: dict, query: str, sha_sum: list = None) -> dict:
             # print(whois_dict)
             # detected_dict = {k: str.encode(v, 'ascii', 'replace')
             # for k,v in detected_dict.items()}
+        status = 'ok'
+        return status, whois_dict
     except KeyError:
-        print('key error')
+        print('\nkey error occurred\n')
+        status = 'KeyError'
+        return status, jdata
         pass
-    finally:
-        return whois_dict
 
 
 def parse_iphub(jdata: dict, query: str, sha_sum: list = None) -> dict:
