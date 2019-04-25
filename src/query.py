@@ -361,29 +361,32 @@ def abuseipdb_query(
         pass
     try:
         response = requests.get(final_url, timeout=10)
-        print(response)
-        if val:
-            return create_tmp_to_clipboard(
-                response.json(),
-                header_blacklisted,
-                val,
-                None)
+        jdata = response.json()
+        if jdata == []:
+            print("no data")
         else:
-            status, parsed_Data = json_parser.parse_abuseipdb(
-                response.json(),
-                query)
-        if status == 'ok':
-            return create_tmp_to_clipboard(
-                parsed_Data,
-                header_blacklisted,
-                val,
-                'normal')
-        elif status == 'KeyError':
-            return create_tmp_to_clipboard(
-                parsed_Data,
-                header_blacklisted,
-                val,
-                None)     
+            if val:
+                return create_tmp_to_clipboard(
+                    response.json(),
+                    header_blacklisted,
+                    val,
+                    None)
+            else:
+                status, parsed_Data = json_parser.parse_abuseipdb(
+                    response.json(),
+                    query)
+            if status == 'ok':
+                return create_tmp_to_clipboard(
+                    parsed_Data,
+                    header_blacklisted,
+                    val,
+                    'normal')
+            elif status == 'KeyError':
+                return create_tmp_to_clipboard(
+                    parsed_Data,
+                    header_blacklisted,
+                    val,
+                    None)     
     except requests.exceptions.Timeout:
         print(Fore.RED + 'Timeout error occurred for AbuseIPdb')
         return

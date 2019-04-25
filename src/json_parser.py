@@ -702,23 +702,20 @@ def parse_abuseipdb(jdata: dict, query: str) -> dict:
     """
     data_from_abuseipdb = {}
     try:
-        if jdata == []:
-            return False
-        else:
-            result_with_correct_category = (
-                max(
-                    jdata,
-                    key=lambda x:
-                    (len(x['ip']), len(x['category']))))
-            data_from_abuseipdb = {
-                "attacker": result_with_correct_category['ip'],
-                "category":
-                retruncategory(result_with_correct_category['category']),
-                "country": result_with_correct_category['country'],
-                "abuseConfidenceScore":
-                result_with_correct_category['abuseConfidenceScore']}
-            status = 'ok'
-            return status, data_from_abuseipdb
+        result_with_correct_category = (
+            max(
+                jdata,
+                key=lambda x:
+                (len(x['ip']), len(x['category']))))
+        data_from_abuseipdb = {
+            "attacker": result_with_correct_category['ip'],
+            "category":
+            retruncategory(result_with_correct_category['category']),
+            "country": result_with_correct_category['country'],
+            "abuseConfidenceScore":
+            result_with_correct_category['abuseConfidenceScore']}
+        status = 'ok'
+        return status, data_from_abuseipdb
     except KeyError:
         print('\nkey error occurred\n')
         status = 'KeyError'
