@@ -11,9 +11,7 @@ flake8 = "*"
 
 [packages]
 requests = "*"
-beautifulsoup4 = "*"
 selenium = "*"
-lxml = "*"
 tqdm = "*"
 colorama = "*"
 pyperclip = "*"
