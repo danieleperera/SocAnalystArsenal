@@ -121,8 +121,8 @@ def collector(info: dict, verbosity_check: bool, sha_sum_list: list = None):
     # --- Notification ---
     toaster = ToastNotifier()
     # --- Clipboard / tmp file ---
-    
-    for query_string, type_query in query.check_query_type(info['attackers']):
+    data = info['attackers']
+    for query_string, type_query in query.check_query_type(data):
         print(
             '\n ======= Creating ticket for {} =======\n\n'.format(
                     query_string))
@@ -130,64 +130,62 @@ def collector(info: dict, verbosity_check: bool, sha_sum_list: list = None):
             query_string,
             type_query,
             verbosity_check)
-        # query.progressbar_ip(ip_addresses)
+        #query.progressbar_ip(data)
         query.iphub_query(
             query_string,
             type_query,
             verbosity_check)
-        # query.progressbar_ip(ip_addresses)
+        #query.progressbar_ip(data)
         query.getipintel_query(
             query_string,
             type_query,
             verbosity_check)
-        # query.progressbar_ip(ip_addresses)
+        #query.progressbar_ip(data)
         query.shodan_query(
             query_string,
             type_query,
             verbosity_check)
 
-        # query.progressbar_ip(ip_addresses)
+        #query.progressbar_ip(data)
         query.threatcrowd_query(
             query_string,
             type_query,
             verbosity_check)
 
-        # query.progressbar_ip(ip_addresses)
+        #query.progressbar_ip(data)
         query.hybrid_query(
             query_string,
             type_query,
             verbosity_check)
 
-        # query.progressbar_ip(ip_addresses)
+        #query.progressbar_ip(data)
         query.apility_query(
             query_string,
             type_query,
             verbosity_check)
 
-        # query.progressbar_ip(ip_addresses)
+        #query.progressbar_ip(data)
         
         query.abuseipdb_query(
             query_string,
             type_query,
             verbosity_check)
-        # query.progressbar_ip(ip_addresses)
+        #query.progressbar_ip(data)
         query.urlhause_query(
             query_string,
             type_query,
             verbosity_check)
 
-        # query.progressbar_ip(ip_addresses)
+        #query.progressbar_ip(data)
         query.threatminer_query(
             query_string,
             type_query,
             verbosity_check)
-
+        #query.progressbar_ip(data)
         query.urlscan_query(
             query_string,
             type_query,
             verbosity_check)
-
-        #query.progressbar_ip(ip_addresses)
 
         toaster.show_toast("""Ticket copied to clipboard""", duration=10)
 
@@ -195,6 +193,13 @@ def collector(info: dict, verbosity_check: bool, sha_sum_list: list = None):
 if __name__ == '__main__':
     try:
         main()
+        #172.217.16.142
+        #124.164.251.179
+        #178.128.78.235
+        #167.99.81.228
+        #188.40.75.132
+        #51.75.143.169
+        #91.80.37.231
     except KeyboardInterrupt:
         print('deleting tmp files')
         print(iconOK, end='')

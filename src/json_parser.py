@@ -101,7 +101,7 @@ def parse_virustotal(jdata: dict, query: str) -> dict:
         status = 'ok'
         return status, whois_dict
     except KeyError:
-        print('\nkey error occurred\n')
+        #print('\nkey error occurred\n')
         status = 'KeyError'
         return status, jdata
         pass
@@ -214,7 +214,7 @@ def parse_shodan(jdata: dict, query: str) -> dict:
         return status, jdata
     except KeyError:
         status = 'KeyError'
-        print('\nkey error occurred\n')
+        #print('\nkey error occurred\n')
         return status, jdata
 
 
@@ -534,7 +534,7 @@ def parse_urlhause(jdata: dict, query: str) -> list:
         status = 'ok'
         return status, content_list
     except KeyError:
-        print('\nkey error occurred\n')
+        #print('\nkey error occurred\n')
         status = 'KeyError'
         return status, jdata
 
@@ -620,7 +620,7 @@ def parse_urlscan(jdata: dict, query: str) -> list:
         status = 'ok'
         return status, content_list
     except KeyError:
-        print('\nkey error occurred\n')
+        #print('\nkey error occurred\n')
         status = 'KeyError'
         return status, jdata
 
@@ -709,7 +709,7 @@ def parse_abuseipdb(jdata: dict, query: str) -> dict:
         status = 'ok'
         return status, data_from_abuseipdb
     except KeyError:
-        print('\nkey error occurred\n')
+        #print('\nkey error occurred\n')
         status = 'KeyError'
         return status, jdata
     except TypeError:
