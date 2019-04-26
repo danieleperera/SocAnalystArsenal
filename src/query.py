@@ -274,8 +274,6 @@ def threatminer_query(
         else:
             pass
 
-            
-
 
 def threatcrowd_query(
         query: str,
@@ -742,9 +740,9 @@ def hybrid_query(
             auth=HTTPDigestAuth(api, 'secret'))
         #print(response.status_code)
         #print(response.content)
-        """
-    else:qqq
+    else:
         pass
+
     if val:
         return create_tmp_to_clipboard(
                 response.json(),
@@ -756,22 +754,7 @@ def hybrid_query(
                 json_parser.parse_hybrid(response.json(), query),
                 header_association,
                 val,
-                'print_row_table')"""
-        
-
-# ===================== ************* ===============================
-# -----------Working and testing from here on -----------------------
-# ===================== ************* ===============================
-# http://check.getipintel.net/check.php?ip=66.228.119.72&contact=mr.px0r@gmail.com&format=json
-
-
-"""
-# print(fofa_query(ip, 'ip', True))
-
-
-"""
-# table_reputation = printTable_row(test5)
-# table_reputation = printTable_row(test6)
+                'print_row_table')
 
 # ===================== ************* ===============================
 # ---------- Various Checks and printing ticket --------------------
