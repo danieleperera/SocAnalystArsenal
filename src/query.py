@@ -119,22 +119,20 @@ def virustotal_query(
             None)
     else:
         for i in json_parser.parse_virustotal(response.json(), query):
-            print(i)
-        
-            if i == 'ok':
-                continue
-                return create_tmp_to_clipboard(
+            if type(i) is dict:
+                #print(i)
+                create_tmp_to_clipboard(
                     i,
                     header_whois,
                     val,
-                    'print_table')
-            elif i == 'KeyError':
-                continue
-                return create_tmp_to_clipboard(
+                    'normal')
+            elif type(i) is list:
+                header = "Other information {}".format(query)
+                create_tmp_to_clipboard(
                     i,
-                    header_whois,
+                    header,
                     val,
-                    None)
+                    'print_row_table')
 
 
 def iphub_query(

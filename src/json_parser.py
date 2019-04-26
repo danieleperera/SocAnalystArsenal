@@ -84,7 +84,7 @@ def parse_virustotal(jdata: dict, query: str) -> dict:
         #print(count_communicating)
         header_list = [
             'date',
-            'sha256',
+            'malicious sha256',
             'threat_score']
         body_list = []
         #communicating_list.append(header_list)
@@ -114,7 +114,7 @@ def parse_virustotal(jdata: dict, query: str) -> dict:
         resolutions = list(resolutions_list for resolutions_list, _ in itertools.groupby(resolutions_list))
         resolutions.insert(0, header_list_resolutions)
         status = 'ok'
-        return status, communication, resolutions
+        return whois_dict, communication, resolutions
     except KeyError:
         #print('\nkey error occurred\n')
         status = 'KeyError'
