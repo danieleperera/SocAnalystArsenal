@@ -187,19 +187,19 @@ def collector(info: dict, verbosity_check: bool, sha_sum_list: list = None):
             type_query,
             verbosity_check)
 
-        toaster.show_toast("""Ticket copied to clipboard""", duration=10)
+        toaster.show_toast("""Ticket copied to clipboard""", duration=5)
 
 
 if __name__ == '__main__':
     try:
         main()
         #172.217.16.142
-        #124.164.251.179
+        #124.164.251.179 gives ++ on virustotal
         #178.128.78.235
-        #167.99.81.228
-        #188.40.75.132
-        #51.75.143.169
-        #91.80.37.231
+        #167.99.81.228 this one is cool
+        #188.40.75.132 this one is cool gives no data , no info , no info on abseipdb, urlhause, urlscan
+        #51.75.143.169 gives ++ on virustotal no info, no info urlscan urlhause
+        #91.80.37.231 gives ++ on virustotal no info, no info urlscan urlhause
     except KeyboardInterrupt:
         print('deleting tmp files')
         print(iconOK, end='')

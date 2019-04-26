@@ -1066,7 +1066,7 @@ def create_tmp_to_clipboard(
 """
 test_dic = {'ciao mondo': 25}
 create_tmp_to_clipboard(test_dic, 'test header', False, 'error')
-"""
+
 
 ip = '172.217.16.142'
 
@@ -1074,7 +1074,7 @@ ip = '172.217.16.142'
 domain = 'atracktr.info'
 virustotal_query(ip, 'ip', False)
 #progressbar_ip(ip)
-"""
+
 iphub_query(ip, 'ip', False)
 #progressbar_ip(ip)
 
