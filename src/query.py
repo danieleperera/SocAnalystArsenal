@@ -13,7 +13,6 @@ import __main__ as main
 import tempfile
 import pyperclip
 from typing import List, Union
-from requests.auth import HTTPDigestAuth
 iconOK = (Fore.GREEN + '[ok]')
 iconNone = (Fore.YELLOW + '[*]')
 iconError = (Fore.RED + '[!]')
@@ -926,12 +925,15 @@ def printTable_row(
         s = borderCross + borderCross.join(
             borderHorizontal * (l+2) for l in lengths) + borderCross
         string += s + '\n'
-        print(s)
+        if len(s) < 100:
+            print(s)
         for row in tbl:
             string += f.format(*row) + '\n'
-            print(f.format(*row))
+            if len(s) < 100:
+                print(f.format(*row))
             string += s + '\n'
-            print(s)
+            if len(s) < 100:
+                print(s)
         return string
     except TypeError:
         print('TypeError')
@@ -1034,7 +1036,7 @@ def create_tmp_to_clipboard(
                     tmp.write('\n')
                     tmp.write(header_data)
                     tmp.write('\n')
-                    tmp.write(json.dumps(data))
+                    tmp.write(json.dumps(data, indent=2, sort_keys=True))
                     tmp.write('\n')
                 pass
             #  ===================== ************* ===========================
@@ -1066,7 +1068,7 @@ test_dic = {'ciao mondo': 25}
 create_tmp_to_clipboard(test_dic, 'test header', False, 'error')
 """
 
-ip = '172.217.16.142'
+#ip = '172.217.16.142'
 
 """
 domain = 'atracktr.info'
@@ -1086,12 +1088,12 @@ shodan_query(ip, 'ip', False)
 
 threatcrowd_query(ip, 'ip', False)
 #progressbar_ip(ip)
-"""
+
 
 hybrid_query(ip, 'ip', False)
 #progressbar_ip(ip)
 
-"""
+
 apility_query(ip, 'ip', False)
 #progressbar_ip(ip)
 
