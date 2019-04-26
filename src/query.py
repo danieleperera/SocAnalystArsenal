@@ -118,21 +118,23 @@ def virustotal_query(
             val,
             None)
     else:
-        status, parsed_Data = json_parser.parse_virustotal(
-            response.json(),
-            query)
-        if status == 'ok':
-            return create_tmp_to_clipboard(
-                parsed_Data,
-                header_whois,
-                val,
-                'print_table')
-        elif status == 'KeyError':
-            return create_tmp_to_clipboard(
-                parsed_Data,
-                header_whois,
-                val,
-                None)
+        for i in json_parser.parse_virustotal(response.json(), query):
+            print(i)
+        
+            if i == 'ok':
+                continue
+                return create_tmp_to_clipboard(
+                    i,
+                    header_whois,
+                    val,
+                    'print_table')
+            elif i == 'KeyError':
+                continue
+                return create_tmp_to_clipboard(
+                    i,
+                    header_whois,
+                    val,
+                    None)
 
 
 def iphub_query(
@@ -1068,13 +1070,13 @@ test_dic = {'ciao mondo': 25}
 create_tmp_to_clipboard(test_dic, 'test header', False, 'error')
 """
 
-#ip = '172.217.16.142'
+ip = '172.217.16.142'
 
-"""
+
 domain = 'atracktr.info'
 virustotal_query(ip, 'ip', False)
 #progressbar_ip(ip)
-
+"""
 iphub_query(ip, 'ip', False)
 #progressbar_ip(ip)
 

@@ -3,6 +3,7 @@
 # ===================== ************* ===============================
 # ------------------- parse JSON INFOMATION -----------------------
 # ===================== ************* ===============================
+import itertools
 import time
 from colorama import Fore
 #import api_query
@@ -69,42 +70,55 @@ def parse_virustotal(jdata: dict, query: str) -> dict:
     dict -- Returns dict of values that i chose.
 
     """
+    whois_dict = {}
+    communication = []
+    resolutions = []
     try:
-        whois_dict = {}
-        if jdata['response_code'] == -1:
-            pass
-            return
-        else:
+        whois_dict['Country'] = jdata.get('country', 'not found')
+        whois_dict['Continent'] = jdata.get('continent', 'not found')
+        whois_dict['Organization'] = jdata.get('as_owner', 'not found')
+        whois_dict['Autonomous System Number'] = jdata.get('asn', 'not found')
 
-            whois_dict['Country'] = jdata.get('country', 'not found')
-            whois_dict['Continent'] = jdata.get('continent', 'not found')
-            whois_dict['Organization'] = jdata.get('as_owner', 'not found')
-            whois_dict['Autonomous System Number'] = jdata.get('asn', 'not found')
-            # --- only sample detected for certain ip or domain
-            # whois_dict = {k: str.encode(v, 'ascii', 'replace')
-            # for k,v in whois_dict.items()}
-            
-            for index, item in enumerate(
-                    jdata['detected_downloaded_samples']):
-                whois_dict["Detected samples "] = (
-                    'that communicate this ip address -> {}'.format(query))
-                whois_dict[f"detected samples_{index}"] = item['sha256']
-                # simple_dict[f"file_score_{index}"] =
-                # str(item['positives'])+'/'+str(item['total'])
-            for index, item in enumerate(jdata['detected_urls']):
-                whois_dict[f"detected_urls_{index}"] = item['url']
-                # simple_dict[f"urls_score_{index}"] =
-                # str(item['positives'])+'/'+str(item['total'])
-            # print(whois_dict)
-            # detected_dict = {k: str.encode(v, 'ascii', 'replace')
-            # for k,v in detected_dict.items()}
+        communicating_list = []
+        count_communicating = len(jdata['detected_communicating_samples'])
+        #print(count_communicating)
+        header_list = [
+            'date',
+            'sha256',
+            'threat_score']
+        body_list = []
+        #communicating_list.append(header_list)
+        for i in range(0, count_communicating):
+            body_list.extend([
+                jdata["detected_communicating_samples"][i]['date'],
+                jdata["detected_communicating_samples"][i]['sha256'],
+                jdata["detected_communicating_samples"][i]['positives']])
+            communicating_list.append(body_list)
+        communicating_list.sort()
+        communication = list(communicating_list for communicating_list, _ in itertools.groupby(communicating_list))
+        communication.insert(0, header_list)
+        resolutions_list = []
+        count_resolutions = len(jdata['resolutions'])
+        #print(count_resolutions)
+        header_list_resolutions = [
+            'hostname',
+            'last_resolved']
+        body_list_resolutions = []
+        #resolutions_list.append(header_list)
+        for i in range(0, count_resolutions):
+            body_list_resolutions.extend([
+                jdata["resolutions"][i]['hostname'],
+                jdata["resolutions"][i]['last_resolved']])
+            resolutions_list.append(body_list_resolutions)
+        resolutions_list.sort()
+        resolutions = list(resolutions_list for resolutions_list, _ in itertools.groupby(resolutions_list))
+        resolutions.insert(0, header_list_resolutions)
         status = 'ok'
-        return status, whois_dict
+        return status, communication, resolutions
     except KeyError:
         #print('\nkey error occurred\n')
         status = 'KeyError'
-        return status, jdata
-        pass
+        return status, whois_dict, communication, resolutions
 
 
 def parse_iphub(jdata: dict, query: str) -> dict:
