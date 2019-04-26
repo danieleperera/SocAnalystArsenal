@@ -800,13 +800,13 @@ def get_ip(ip: dict) -> str:
 
 
 def text_header(head):
-    test = '''### Attackers ->{}
-### Victims   ->{}
-### Context   ->{}\n'''.format(
+    test = '''### Attackers -> {}
+### Victims   -> {}
+### Context   -> {}\n'''.format(
                 head.get("attackers", "Not found!"),
                 head.get("victims", "Not found!"),
                 head.get("context", "Not found!"))
-    print(test)
+    #print(test)
     return test
 
 
@@ -1009,7 +1009,6 @@ def create_tmp_to_clipboard(
                     tmp.write(header_data)
                     tmp.write('\n')
                     tmp.write('{}'.format(printTable(tableContent)))
-                    pass
                 elif print_type == 'print_row_table':
                     tmp.write('\n')
                     tmp.write(header_data)
@@ -1025,6 +1024,13 @@ def create_tmp_to_clipboard(
                     tmp.write(header_data)
                     tmp.write('\n')
                     for i in text_body(data):
+                        tmp.write(i)
+                    tmp.write('\n')
+                elif print_type == 'ticket_header':
+                    tmp.write('\n')
+                    header = text_header(data)
+                    #print(header)
+                    for i in header:
                         tmp.write(i)
                     tmp.write('\n')
                 elif print_type == 'n/a':

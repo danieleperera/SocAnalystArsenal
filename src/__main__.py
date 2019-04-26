@@ -118,6 +118,7 @@ def collector(info: dict, verbosity_check: bool, sha_sum_list: list = None):
             'context': 'http GET 46.20.95.185'}
     ```
     """
+    query.create_tmp_to_clipboard(info, 'header', False, 'ticket_header')
     # --- Notification ---
     toaster = ToastNotifier()
     # --- Clipboard / tmp file ---
