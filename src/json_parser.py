@@ -417,36 +417,28 @@ def parse_hybrid(jdata: dict, query: str) -> list:
     """
     content_list = []
     try:
-        if jdata["count"] == 0:  # If no result was recieved
-            return api_query.create_tmp_to_clipboard(
-                    'not sufficient data is availiable',
-                    'Association with malware information {}'.format(query),
-                    False,
-                    'n/a')
-        else:
-            c = jdata["count"]
-            header_list = [
-                'verdict',
-                'av_detect',
-                'threat_score',
-                'sha256',
-                'submit_name',
-                'analysis_start_time']
-            body_list = []
-            content_list.append(header_list)
-            for i in range(0, c):
-                body_list.extend([
-                    jdata["result"][i]['verdict'],
-                    jdata["result"][i]['av_detect'],
-                    jdata["result"][i]['threat_score'],
-                    jdata["result"][i]['sha256'],
-                    jdata["result"][i]['submit_name'],
-                    jdata["result"][i]['analysis_start_time']])
-                content_list.append(body_list)
-    except IndexError:
-        pass
-    finally:
+        c = jdata["count"]
+        header_list = [
+            'verdict',
+            'av_detect',
+            'threat_score',
+            'sha256',
+            'submit_name',
+            'analysis_start_time']
+        body_list = []
+        content_list.append(header_list)
+        for i in range(0, c):
+            body_list.extend([
+                jdata["result"][i]['verdict'],
+                jdata["result"][i]['av_detect'],
+                jdata["result"][i]['threat_score'],
+                jdata["result"][i]['sha256'],
+                jdata["result"][i]['submit_name'],
+                jdata["result"][i]['analysis_start_time']])
+            content_list.append(body_list)
         return content_list
+    except IndexError:
+        print("index Error")
 
 
 def parse_apility(jdata: dict, query: str) -> list:

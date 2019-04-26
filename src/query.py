@@ -729,32 +729,42 @@ def hybrid_query(
         data = {"domain": query}  # The data to post
     elif type == "ip":
         url = data['API info']['hybrid']['query_ip']
-        url_query_ip = url + query
         # The api url
+        data = {'host': query}
         headers = {
-            "user-agent": "VxApi Connector"}
+            'accept': 'application/json',
+            'user-agent': 'Falcon Sandbox',
+            'Content-Type': 'application/x-www-form-urlencoded',
+            'api-key': api_key}
         # The request headers
         response = requests.post(
-            url_query_ip,
+            url,
             headers=headers,
-            auth=HTTPDigestAuth(api, 'secret'))
+            data=data)
         #print(response.status_code)
         #print(response.content)
     else:
         pass
-
-    if val:
+    jdata = response.json()
+    if jdata["count"] == 0:
         return create_tmp_to_clipboard(
-                response.json(),
-                header_association,
-                val,
-                None)
+            'not sufficient data is availiable',
+            'Association with malware information {}'.format(query),
+            False,
+            'n/a')
     else:
-        return create_tmp_to_clipboard(
-                json_parser.parse_hybrid(response.json(), query),
-                header_association,
-                val,
-                'print_row_table')
+        if val:
+            return create_tmp_to_clipboard(
+                    response.json(),
+                    header_association,
+                    val,
+                    None)
+        else:
+            return create_tmp_to_clipboard(
+                    json_parser.parse_hybrid(response.json(), query),
+                    header_association,
+                    val,
+                    'print_row_table')
 
 # ===================== ************* ===============================
 # ---------- Various Checks and printing ticket --------------------
@@ -1008,8 +1018,6 @@ def create_tmp_to_clipboard(
                 elif print_type == 'error':
                     for i in data:
                         tmp.write(i)
-                elif print_type == 'error1':
-                    tmp.write(data)
                 elif print_type == 'normal':
                     tmp.write('\n')
                     tmp.write(header_data)
@@ -1057,11 +1065,10 @@ def create_tmp_to_clipboard(
 test_dic = {'ciao mondo': 25}
 create_tmp_to_clipboard(test_dic, 'test header', False, 'error')
 """
+
+ip = '172.217.16.142'
+
 """
-
-ip = '60.160.182.113'
-
-
 domain = 'atracktr.info'
 virustotal_query(ip, 'ip', False)
 #progressbar_ip(ip)
@@ -1079,12 +1086,12 @@ shodan_query(ip, 'ip', False)
 
 threatcrowd_query(ip, 'ip', False)
 #progressbar_ip(ip)
-
+"""
 
 hybrid_query(ip, 'ip', False)
 #progressbar_ip(ip)
 
-
+"""
 apility_query(ip, 'ip', False)
 #progressbar_ip(ip)
 

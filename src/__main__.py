@@ -112,7 +112,7 @@ def collector(info: dict, verbosity_check: bool, sha_sum_list: list = None):
     example::
 
     ```
-     info = {'attackers': {'124.164.251.179',
+     info = {'attackers': {'124.164.251.179', '172.217.16.142',
                            '179.251.164.124.adsl-pool.sx.cn'},
             'victims': '10.10.2.140',
             'context': 'http GET 46.20.95.185'}
