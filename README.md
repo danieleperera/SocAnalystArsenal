@@ -41,7 +41,13 @@ optional arguments:
   --sha SHA_SUM      Add SHA values to a list
   -v, --verbose      Use this flag to get full data from APIs
 ```
-  
+## Overview
+
+These instructions will get you a copy of the project up and running on your local machine for development and testing purposes. See deployment for notes on how to deploy the project on a live system.
+
+![Annotazioneanaistarsenal png](https://user-images.githubusercontent.com/45230107/56796380-b791da80-6812-11e9-9618-e8818df9ea99.jpg)
+
+
 ## Getting Started
 
 These instructions will get you a copy of the project up and running on your local machine for development and testing purposes. See deployment for notes on how to deploy the project on a live system.
