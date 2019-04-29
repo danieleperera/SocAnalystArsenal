@@ -1067,6 +1067,7 @@ def create_tmp_to_clipboard(
             print(' Ticket was copied to clipboard successfully')
             print("\n\nRemoving tmp files... Please wait")
         os.remove(path)
+        https://stackoverflow.com/questions/24984887/closing-a-file-descriptor-ive-used-with-fdopen
         """
         
         pass
