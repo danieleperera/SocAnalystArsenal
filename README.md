@@ -20,6 +20,7 @@ This tool is used to give a quick structure to a SOC level 1 ticket. I used Sele
   - ~~timeout option for abuseipdb and other requests~~
   - do more testing with siem
   - do more testing in manual mode
+  - add keywords function and check google for mitigations... also open tabs regarding those mitigations
   - ~~try to integrate semi-manual mode~~
   - ~~if no results found don't notify~~
 
