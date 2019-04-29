@@ -8,6 +8,7 @@ from colorama import Fore, init
 import argparse
 from selenium.common import exceptions
 import sys
+from ctypes import windll
 # icons
 iconOK = (Fore.GREEN + '[ok]')
 iconNone = (Fore.YELLOW + '[*]')
@@ -166,7 +167,7 @@ def collector(info: dict, verbosity_check: bool, sha_sum_list: list = None):
             verbosity_check)
 
         #query.progressbar_ip(data)
-        
+
         query.abuseipdb_query(
             query_string,
             type_query,
@@ -189,6 +190,9 @@ def collector(info: dict, verbosity_check: bool, sha_sum_list: list = None):
             verbosity_check)
 
         toaster.show_toast("""Ticket copied to clipboard""", duration=5)
+        if windll.user32.OpenClipboard(None):
+            windll.user32.EmptyClipboard()
+            windll.user32.CloseClipboard()
 
 
 if __name__ == '__main__':

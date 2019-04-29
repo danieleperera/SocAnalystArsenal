@@ -1054,6 +1054,7 @@ def create_tmp_to_clipboard(
             content = tmp.read()
             pyperclip.copy(content)
             tmp.close()
+            
     finally:
         # print(path)
         #time.sleep(20)
@@ -1065,8 +1066,9 @@ def create_tmp_to_clipboard(
             print('\n' + iconOK, end='')
             print(' Ticket was copied to clipboard successfully')
             print("\n\nRemoving tmp files... Please wait")
-        #os.remove(path)
+        os.remove(path)
         """
+        
         pass
 
 """
