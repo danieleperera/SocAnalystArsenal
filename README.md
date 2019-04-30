@@ -53,20 +53,20 @@ These instructions will get you a copy of the project up and running on your loc
 
 These instructions will get you a copy of the project up and running on your local machine for development and testing purposes. See deployment for notes on how to deploy the project on a live system.
 
-| Api         | Description                                                | Auth    |
-|-------------|------------------------------------------------------------|---------|
-| virustotal  | Check Whois information for IP address/Domain              | `apikey`|
-| getipintel  | Check check if the IP is a proxy or spoofed                | `email` |
-| iphub       | Check check if the IP is a proxy or spoofed                | `apikey`|
-| shodan      | Check information about host and see if it was compromised | `apikey`|
-| apility.io  | Check reputation and activity through time                 | `apikey`|
-| hybrid      | Check association with malware                             | `apikey`|
-| malshare    | Check IP address/Domain was used to spread malware         | `apikey`|
-| urlhause    | Check IP address/Domain was used to spread malware         | none    |
-| threatcrowd | Check Current status                                       | none    |
-| abuseipdb   | Check if it's blacklisted                                  | `apikey`|
-| urlscan.io  | Check further more information                             | none    |
-| threatminer | Check further more information                             | none    |
+| Api         | Description                                                | Auth    | Link    |
+|-------------|------------------------------------------------------------|---------|---------|
+| virustotal  | Check Whois information for IP address/Domain              | `apikey`|[Link](https://www.virustotal.com/gui/sign-in)|
+| getipintel  | Check check if the IP is a proxy or spoofed                | `email` |[Link](https://github.com/danieleperera)|
+| iphub       | Check check if the IP is a proxy or spoofed                | `apikey`|[Link](https://github.com/danieleperera)|
+| shodan      | Check information about host and see if it was compromised | `apikey`|[Link](https://github.com/danieleperera)|
+| apility.io  | Check reputation and activity through time                 | `apikey`|[Link](https://github.com/danieleperera)|
+| hybrid      | Check association with malware                             | `apikey`|[Link](https://github.com/danieleperera)|
+| malshare    | Check IP address/Domain was used to spread malware         | `apikey`|[Link](https://github.com/danieleperera)|
+| urlhause    | Check IP address/Domain was used to spread malware         | none    |[Link](https://github.com/danieleperera)|
+| threatcrowd | Check Current status                                       | none    |[Link](https://github.com/danieleperera)|
+| abuseipdb   | Check if it's blacklisted                                  | `apikey`|[Link](https://github.com/danieleperera)|
+| urlscan.io  | Check further more information                             | none    |[Link](https://github.com/danieleperera)|
+| threatminer | Check further more information                             | none    |[Link](https://github.com/danieleperera)|
 
 ### Prerequisites
 
