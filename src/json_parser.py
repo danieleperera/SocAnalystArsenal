@@ -6,7 +6,6 @@
 import itertools
 import time
 from colorama import Fore
-#import api_query
 iconNone = (Fore.YELLOW + '[!]')
 
 
