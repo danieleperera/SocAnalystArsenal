@@ -7,7 +7,7 @@ setuptools.setup(
     name="socanalystarsenal",
     version="1.0.0",
     author="Daniele Perera",
-    author_email="daniele.perera@gmail.com",
+    author_email="daniele.storage1@gmail.com",
     description="Quick threat intel tool",
     long_description=long_description,
     long_description_content_type="text/markdown",
