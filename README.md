@@ -44,14 +44,15 @@ optional arguments:
 ```
 ## Overview
 
-These instructions will get you a copy of the project up and running on your local machine for development and testing purposes. See deployment for notes on how to deploy the project on a live system.
+This code will use API to gather information regarding the data that you are giving it.
 
 ![Annotazioneanaistarsenal png](https://user-images.githubusercontent.com/45230107/56796380-b791da80-6812-11e9-9618-e8818df9ea99.jpg)
 
 
 ## Getting Started
 
-These instructions will get you a copy of the project up and running on your local machine for development and testing purposes. See deployment for notes on how to deploy the project on a live system.
+Before you start using this tool, you should register and login to these website and get your API keys. 
+Please NOTE DOWN the API keys, some websites will show you the API keys only once.
 
 | Api         | Description                                                | Auth    | Link    |
 |-------------|------------------------------------------------------------|---------|---------|
@@ -75,24 +76,33 @@ You need python version > 3.7
 ```
  python --version
 ```
+After you checked that you have the correct version of python
+```
+ git clone https://github.com/danieleperera/SocAnalystArsenal/
+```
+to clone this repo on your pc. 
 
+Then add your API keys to the api1.json
+it is inside /res/api/
+and rename the api1.json to api.json
+```
+mv api1.json api.json
+```
 ### Installing
 
-Additional details are coming soon.
-
-Additional details are coming soon.
+To install the required packages please use this metod
 
 ```
-Give the example
+python setup.py install
 ```
 
-Additional details are coming soon.
+Then run
 
 ```
-until finished
+pipenv sync
 ```
 
-Additional details are coming soon.
+You should be ready to go.
 
 ## Running the tests
 
