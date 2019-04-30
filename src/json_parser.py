@@ -440,7 +440,7 @@ def parse_hybrid(jdata: dict, query: str) -> list:
             'submit_name',
             'analysis_start_time']
         body_list = []
-        content_list.append(header_list)
+        #content_list.append(header_list)
         for i in range(0, c):
             body_list.extend([
                 jdata["result"][i]['verdict'],
@@ -450,7 +450,10 @@ def parse_hybrid(jdata: dict, query: str) -> list:
                 jdata["result"][i]['submit_name'],
                 jdata["result"][i]['analysis_start_time']])
             content_list.append(body_list)
-        return content_list
+        content_list.sort()
+        hybrid_list = list(content_list for content_list, _ in itertools.groupby(content_list))
+        hybrid_list.insert(0, header_list)
+        return hybrid_list
     except IndexError:
         print("index Error")
 
@@ -618,7 +621,7 @@ def parse_urlscan(jdata: dict, query: str) -> list:
             'domain']
         #print(header_list)
         body_list = []
-        content_list.append(header_list)
+        #content_list.append(header_list)
         for i in range(0, c):
             #print(i)
             body_list.extend([
@@ -629,10 +632,12 @@ def parse_urlscan(jdata: dict, query: str) -> list:
                 jdata["results"][i]['page']['server'],
                 jdata["results"][i]['page']['domain']])
             content_list.append(body_list)
-            pass
+        content_list.sort()
+        urlscan_list = list(content_list for content_list, _ in itertools.groupby(content_list))
+        urlscan_list.insert(0, header_list)            
         #results = {"urlscan": jdata['results'][0]['task']['url']}
         status = 'ok'
-        return status, content_list
+        return status, urlscan_list
     except KeyError:
         #print('\nkey error occurred\n')
         status = 'KeyError'
