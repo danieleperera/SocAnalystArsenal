@@ -128,13 +128,13 @@ Please read [CONTRIBUTING.md](https://gist.github.com/) for details on our code 
 
 ## Versioning
 
-We use [SemVer](http://semver.org/) for versioning. For the versions available, see the [tags on this repository](https://github.com/danieleperera/clean_breach/tags). 
+We use [SemVer](http://semver.org/) for versioning. For the versions available, see the [tags on this repository](https://github.com/danieleperera/SocAnalystArsenal/tags). 
 
 ## Author
 
 * **Daniele Perera** - [Mr. Px0r](https://github.com/danieleperera)
 
-See also the list of [contributors](https://github.com/danieleperera/clean_breach/graphs/contributors) who participated in this project.
+See also the list of [contributors](https://github.com/danieleperera/SocAnalystArsenal/graphs/contributors) who participated in this project.
 
 ## License
 
