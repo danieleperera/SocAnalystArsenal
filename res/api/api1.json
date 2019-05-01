@@ -25,10 +25,6 @@
         "scan_url": "https://www.virustotal.com/vtapi/v2/url/scan",
         "comments_url": "https://www.virustotal.com/vtapi/v2/comments/get"
     },
-    "threatminer":{
-        "query_domain": "https://api.threatminer.org/v2/domain.php?q={}&rt=1",
-        "query_ip": "https://api.threatminer.org/v2/host.php?q={}&rt=6"
-    },
     "shodan":{
         "api":"Your API key here",
         "query_ip": "https://api.shodan.io/shodan/host/{}?key={}"
@@ -42,10 +38,6 @@
         "api":"Your API key here",
         "query_ip":"https://www.hybrid-analysis.com/api/v2/search/terms"
     },
-    "getipintel":{
-        "query_ip": "http://check.getipintel.net/check.php?ip={}&contact={}&format=json",
-        "email":"Your Email Here"
-    },
     "iphub":{
         "api": "Your API key here",
         "query_ip": "http://v2.api.iphub.info/ip/"
@@ -54,6 +46,14 @@
         "api": "Your API key here",
         "query_all": "https://fofa.so/api/v1/search/all",
         "email": "Your Email Here"
+    },
+    "getipintel":{
+        "query_ip": "http://check.getipintel.net/check.php?ip={}&contact={}&format=json",
+        "email":"Your Email Here"
+    },
+    "threatminer":{
+        "query_domain": "https://api.threatminer.org/v2/domain.php?q={}&rt=1",
+        "query_ip": "https://api.threatminer.org/v2/host.php?q={}&rt=6"
     },
     "threatcrowd":{
         "query_ip": "https://www.threatcrowd.org/searchApi/v2/ip/report/",
