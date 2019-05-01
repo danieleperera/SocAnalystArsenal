@@ -1,12 +1,3 @@
-"""
-main
-install
-    install using pip
-uninstall
-    delete api.json
-create_api_json
-
-"""
 import os
 import json
 from pathlib import Path
@@ -125,4 +116,4 @@ def main():
 
 #uninstall()
 #install()
-print(os.environ['PATH'])
+#print(os.environ['PATH'])
