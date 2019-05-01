@@ -425,7 +425,6 @@ def parse_urlhause(jdata: dict, query: str) -> list:
             'reporter',
             'url']
         body_list = []
-        content_list.append(header_list)
         for i in range(0, c):
             body_list.extend([
                 jdata["urls"][i]['url_status'],
@@ -435,8 +434,11 @@ def parse_urlhause(jdata: dict, query: str) -> list:
                 jdata["urls"][i]['reporter'],
                 jdata["urls"][i]['url']])
             content_list.append(body_list)
+        content_list.sort()
+        urlhause_list = list(content_list for content_list, _ in itertools.groupby(content_list))
+        urlhause_list.insert(0, header_list)                 
         status = 'ok'
-        return status, content_list
+        return status, urlhause_list
     except KeyError:
         #print('\nkey error occurred\n')
         status = 'KeyError'

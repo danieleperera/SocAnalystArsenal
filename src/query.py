@@ -295,7 +295,7 @@ def threatcrowd_query(
     colorQuery = (Fore.RED + query)
     colorString = (Fore.GREEN + 'Threatcrowd')
     print(iconNone + ' ' + colorString, end='')
-    print(' checking current status' + colorQuery)
+    print(' checking current status ' + colorQuery)
 
     if type == "domain":
         pass
@@ -428,7 +428,7 @@ def urlscan_query(
     """
     header_info = (
         'Suspicious connections '
-        + query + '\n')
+        + query)
     data = get_api()
     colorQuery = (Fore.RED + query)
     colorString = (Fore.GREEN + 'URLscan')
@@ -500,7 +500,7 @@ def urlhause_query(
     """
     header_spread = (
         'IP address/Domain was used to spread malware '
-        + query + '\n')
+        + query)
     data = get_api()
     colorQuery = (Fore.RED + query)
     colorString = (Fore.GREEN + 'UrlHause')
@@ -940,7 +940,7 @@ def printTable_row(
             ' {:>%d} ' % l for l in lengths) + borderVertical
         s = borderCross + borderCross.join(
             borderHorizontal * (l+2) for l in lengths) + borderCross
-        string += s + '\n'
+        string += '\n' + s + '\n'
         if len(s) < 100:
             print(s)
         for row in tbl:
