@@ -7,6 +7,7 @@ uninstall
 create_api_json
 
 """
+import os
 import json
 from pathlib import Path
 from argparse import ArgumentParser
@@ -80,6 +81,34 @@ api_info = """
 program_data = Path('c:/') / 'ProgramData' / 'api.json'
 
 
+def install():
+    data = json.loads(api_info)
+    api_urlscan = input("please insert api key for urlscan.io: ")
+    data['API info']['urlscan.io']['api'] = api_urlscan
+    api_abuseipdb = input("please insert api key for abuseipdb: ")
+    data['API info']['abuseipdb']['api'] = api_abuseipdb
+    api_urlhaus = input("please insert api key for urlhaus: ")
+    data['API info']['urlhaus']['api'] = api_urlhaus
+    api_virustotal = input("please insert api key for virustotal: ")
+    data['API info']['virustotal']['api'] = api_virustotal
+    api_threatminer = input("please insert api key for threatminer: ")
+    data['API info']['threatminer']['api'] = api_threatminer
+    api_apility = input("please insert api key for apility: ")
+    data['API info']['apility']['api'] = api_apility
+    api_hybrid = input("please insert api key for hybrid: ")
+    data['API info']['hybrid']['api'] = api_hybrid
+    api_getipintel = input("please insert api key for getipintel: ")
+    data['API info']['getipintel']['email'] = api_getipintel
+
+    with open(str(program_data), 'w') as api_file:
+        json.dump(data, api_file)
+
+
+def uninstall():
+    print("Uninstalling...")
+    os.remove(str(program_data))
+
+
 def main():
     parser = ArgumentParser()
     parser.add_argument(
@@ -94,27 +123,6 @@ def main():
         install()
 
 
-print(program_data)
-data = json.loads(api_info)
-"""
-print(data['API info']['urlscan.io']['api'])
-api_urlscan = input("please insert api key for urlscan.io: ")
-data['API info']['urlscan.io']['api'] = api_urlscan
-api_abuseipdb = input("please insert api key for abuseipdb: ")
-data['API info']['abuseipdb']['api'] = api_abuseipdb
-api_urlhaus = input("please insert api key for urlhaus: ")
-data['API info']['urlhaus']['api'] = api_urlhaus
-api_virustotal = input("please insert api key for virustotal: ")
-data['API info']['virustotal']['api'] = api_virustotal
-api_threatminer = input("please insert api key for threatminer: ")
-data['API info']['threatminer']['api'] = api_threatminer
-api_apility = input("please insert api key for apility: ")
-data['API info']['apility']['api'] = api_apility
-api_hybrid = input("please insert api key for hybrid: ")
-data['API info']['hybrid']['api'] = api_hybrid
-api_getipintel = input("please insert api key for getipintel: ")
-data['API info']['getipintel']['email'] = api_getipintel
-
-Path()
-print(data)
-"""
+#uninstall()
+#install()
+print(os.environ['PATH'])
