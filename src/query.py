@@ -85,7 +85,7 @@ def virustotal_query(
     """
     # --- Header data ---
     header_whois = (
-        '\nWhois Information ' + query + '\n')
+        '\nWhois Information ' + query)
     # --- API info ---
     data = get_api()
     api = (data['API info']['virustotal']['api'])
@@ -95,9 +95,9 @@ def virustotal_query(
     # --- Status ---
     print(iconNone + ' ' + colorString, end='')
     print(' checking WhoIs Information for ' + colorQuery)
+    # --- Check query type ---
     if query_type == "domain":
         query_domain = data['API info']['virustotal']['query_domain']
-        # The data to post
         params = {'apikey': api, 'domain': query}
         response = requests.get(query_domain, params=params)
     elif query_type == "ip":
@@ -111,28 +111,37 @@ def virustotal_query(
     else:
         return
 
-    if val:
-        return create_tmp_to_clipboard(
-            response.json(),
+    jdata = response.json()
+
+    if jdata['response_code'] == 0:
+        Nodata = 'No data found on virustotal'
+        create_tmp_to_clipboard(
+            Nodata,
             header_whois,
             val,
             None)
     else:
-        for i in json_parser.parse_virustotal(response.json(), query):
-            if type(i) is dict:
-                #print(i)
-                create_tmp_to_clipboard(
-                    i,
-                    header_whois,
-                    val,
-                    'normal')
-            elif type(i) is list:
-                header = "Other information {}".format(query)
-                create_tmp_to_clipboard(
-                    i,
-                    header,
-                    val,
-                    'print_row_table')
+        if val:
+            return create_tmp_to_clipboard(
+                jdata,
+                header_whois,
+                val,
+                None)
+        else:
+            for i in json_parser.parse_virustotal(response.json(), query):
+                if type(i) is dict:
+                    create_tmp_to_clipboard(
+                        i,
+                        header_whois,
+                        val,
+                        'normal')
+                elif type(i) is list:
+                    header = "associated hash file for {}".format(query)
+                    create_tmp_to_clipboard(
+                        i,
+                        header,
+                        val,
+                        'print_row_table')
 
 
 def iphub_query(
@@ -141,8 +150,8 @@ def iphub_query(
         val: bool,
         sha_sum: list = None) -> dict:
     header_spoofed_IPhub = (
-        '\n\nVPN/Proxy/Tor Information IPhub '
-        + query + '\n')
+        'VPN/Proxy/Tor Information IPhub '
+        + query)
     data = get_api()
     api = (data['API info']['iphub']['api'])
     colorQuery = (Fore.RED + query)
@@ -179,7 +188,7 @@ def getipintel_query(
         sha_sum: list = None) -> dict:
     header_spoofed_getipintel = (
         'VPN/Proxy/Tor Information GetIPintel '
-        + query + '\n')
+        + query)
     data = get_api()
     email = data['API info']['getipintel']['email']
     colorQuery = (Fore.RED + query)
@@ -282,7 +291,7 @@ def threatcrowd_query(
     data = get_api()
     header_status = (
         'Current status information '
-        + query + '\n')
+        + query)
     colorQuery = (Fore.RED + query)
     colorString = (Fore.GREEN + 'Threatcrowd')
     print(iconNone + ' ' + colorString, end='')
@@ -297,19 +306,23 @@ def threatcrowd_query(
         }
 
         response = requests.get(query_all, params=params)
-
-    if val:
-        return create_tmp_to_clipboard(
-            response.json(),
-            header_status,
-            val,
-            None)
+    jdata = response.json()
+    #print(jdata)
+    if jdata['response_code'] == '0':
+        pass
     else:
-        return create_tmp_to_clipboard(
-                json_parser.parse_threatcrowd(response.json(), query),
+        if val:
+            return create_tmp_to_clipboard(
+                jdata,
                 header_status,
                 val,
-                'normal')
+                None)
+        else:
+            return create_tmp_to_clipboard(
+                    json_parser.parse_threatcrowd(jdata, query),
+                    header_status,
+                    val,
+                    'normal')
 
 
 def abuseipdb_query(
@@ -338,7 +351,7 @@ def abuseipdb_query(
     """
     header_blacklisted = (
         'Blacklisted Data '
-        + query + '\n')
+        + query)
     data = get_api()
     colorQuery = (Fore.RED + query)
     colorString = (Fore.GREEN + 'Abuseipdb')
@@ -359,7 +372,8 @@ def abuseipdb_query(
         response = requests.get(final_url, timeout=10)
         jdata = response.json()
         if jdata == []:
-            print("no data")
+            #print("no data")
+            pass
         else:
             if val:
                 return create_tmp_to_clipboard(
@@ -433,7 +447,8 @@ def urlscan_query(
 
     jdata = response.json()
     if jdata['total'] == 0:
-        print('no info')
+        #print('no info')
+        pass
     else:
         if val:
             return create_tmp_to_clipboard(
@@ -504,7 +519,8 @@ def urlhause_query(
         pass
     jdata = response.json()
     if jdata['query_status'] != 'ok':
-        print('no info')
+        #print('no info')
+        pass
     else:   
         if val:
             return create_tmp_to_clipboard(
@@ -692,12 +708,15 @@ def apility_query(
                     val,
                     'print_row_table')
         elif response.status_code == 400:
-            #print('maybe ip clean')
+            # print('maybe ip clean')
+            """
             return create_tmp_to_clipboard(
-                    'not sufficient data is availiable\n',
+                    'not sufficient data is availiable',
                     header_reputation,
                     val,
-                    'n/a')
+                    'n/a')"""
+            pass
+
         else:
             pass
 
@@ -741,11 +760,13 @@ def hybrid_query(
         pass
     jdata = response.json()
     if jdata["count"] == 0:
+        """
         return create_tmp_to_clipboard(
             'not sufficient data is availiable',
-            'Association with malware information {}'.format(query),
-            False,
-            'n/a')
+            'Association with malware information {}\n'.format(query),
+            val,
+            'n/a')"""
+        pass
     else:
         if val:
             return create_tmp_to_clipboard(
@@ -797,7 +818,7 @@ def get_ip(ip: dict) -> str:
 def text_header(head):
     test = '''### Attackers -> {}
 ### Victims   -> {}
-### Context   -> {}\n'''.format(
+### Context   -> {}'''.format(
                 head.get("attackers", "Not found!"),
                 head.get("victims", "Not found!"),
                 head.get("context", "Not found!"))
@@ -989,7 +1010,6 @@ def create_tmp_to_clipboard(
             if val:
                 tmp.write('\n')
                 tmp.write(header_data)
-                tmp.write('\n')
                 tmp.write(json.dumps(data))
                 tmp.write('\n')
                 pass
@@ -1002,12 +1022,10 @@ def create_tmp_to_clipboard(
                     #print(type(tableContent))
                     tmp.write('\n')
                     tmp.write(header_data)
-                    tmp.write('\n')
                     tmp.write('{}'.format(printTable(tableContent)))
                 elif print_type == 'print_row_table':
                     tmp.write('\n')
-                    tmp.write(header_data)
-                    tmp.write('\n')                                   
+                    tmp.write(header_data)                          
                     tableContentRow = printTable_row(data)
                     tmp.write('{}'.format(tableContentRow))
                     pass
@@ -1017,7 +1035,6 @@ def create_tmp_to_clipboard(
                 elif print_type == 'normal':
                     tmp.write('\n')
                     tmp.write(header_data)
-                    tmp.write('\n')
                     for i in text_body(data):
                         tmp.write(i)
                     tmp.write('\n')
@@ -1031,12 +1048,11 @@ def create_tmp_to_clipboard(
                 elif print_type == 'n/a':
                     tmp.write('\n')
                     tmp.write(header_data)
-                    tmp.write('\n')
                     tmp.write(data)
+                    tmp.write('\n')
                 else:
                     tmp.write('\n')
                     tmp.write(header_data)
-                    tmp.write('\n')
                     tmp.write(json.dumps(data, indent=2, sort_keys=True))
                     tmp.write('\n')
                 pass
@@ -1067,12 +1083,13 @@ def create_tmp_to_clipboard(
         
         pass
 
+
 """
 test_dic = {'ciao mondo': 25}
 create_tmp_to_clipboard(test_dic, 'test header', False, 'error')
 
 
-ip = '172.217.16.142'
+ip = '91.80.37.231'
 
 
 domain = 'atracktr.info'

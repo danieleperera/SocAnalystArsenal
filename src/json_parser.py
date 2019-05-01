@@ -121,7 +121,7 @@ def parse_virustotal(jdata: dict, query: str) -> dict:
     except KeyError:
         #print('\nkey error occurred\n')
         status = 'KeyError'
-        return status, whois_dict, communication, resolutions
+        return status, whois_dict
 
 
 def parse_iphub(jdata: dict, query: str) -> dict:
@@ -615,7 +615,7 @@ def parse_abuseipdb(jdata: dict, query: str) -> dict:
         status = 'ok'
         return status, data_from_abuseipdb
     except KeyError:
-        #print('\nkey error occurred\n')
+        print('\nkey error occurred\n')
         status = 'KeyError'
         return status, jdata
     except TypeError:
