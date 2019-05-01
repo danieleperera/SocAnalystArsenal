@@ -310,7 +310,6 @@ def threatcrowd_query(
                 header_status,
                 val,
                 'normal')
-        
 
 
 def abuseipdb_query(
@@ -431,7 +430,7 @@ def urlscan_query(
         query_ip = data['API info']['urlscan.io']['query_ip']
         requests_url = query_ip+query
         response = requests.get(requests_url)
-    
+
     jdata = response.json()
     if jdata['total'] == 0:
         print('no info')
@@ -679,10 +678,6 @@ def apility_query(
         url = get_url_ip+query
         #print(url)
         response = requests.get(url, headers=headers)
-        #print(response.url)
-        #print(response.status_code)
-        #print(response.content)
-        # --- Always giving 400 status code check why
         if response.status_code == 200:
             if val:
                 return create_tmp_to_clipboard(

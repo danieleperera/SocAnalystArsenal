@@ -94,7 +94,9 @@ def parse_virustotal(jdata: dict, query: str) -> dict:
                 jdata["detected_communicating_samples"][i]['positives']])
             communicating_list.append(body_list)
         communicating_list.sort()
-        communication = list(communicating_list for communicating_list, _ in itertools.groupby(communicating_list))
+        communication = list(
+            communicating_list for communicating_list, _ in itertools.groupby(
+                communicating_list))
         communication.insert(0, header_list)
         resolutions_list = []
         count_resolutions = len(jdata['resolutions'])
@@ -110,7 +112,9 @@ def parse_virustotal(jdata: dict, query: str) -> dict:
                 jdata["resolutions"][i]['last_resolved']])
             resolutions_list.append(body_list_resolutions)
         resolutions_list.sort()
-        resolutions = list(resolutions_list for resolutions_list, _ in itertools.groupby(resolutions_list))
+        resolutions = list(
+            resolutions_list for resolutions_list, _ in itertools.groupby(
+                resolutions_list))
         resolutions.insert(0, header_list_resolutions)
         status = 'ok'
         return whois_dict, communication, resolutions
@@ -241,128 +245,12 @@ def parse_threatcrowd(jdata: dict, query: str) -> dict:
       "last_resolved": "2015-02-17",
       "domain": "tvgate.rocks"
     },
-    {
-      "last_resolved": "2015-02-17",
-      "domain": "nice-mobiles.com"
-    },
-    {
-      "last_resolved": "2015-02-17",
-      "domain": "nauss-lab.com"
-    },
-    {
-      "last_resolved": "2015-02-17",
-      "domain": "iwork-sys.com"
-    },
-    {
-      "last_resolved": "2015-02-17",
-      "domain": "linkedim.in"
-    },
-    {
-      "last_resolved": "2015-02-17",
-      "domain": "fpupdate.info"
-    },
-    {
-      "last_resolved": "2015-02-17",
-      "domain": "ineltdriver.com"
-    },
-    {
-      "last_resolved": "2015-02-17",
-      "domain": "flushupdate.com"
-    },
-    {
-      "last_resolved": "2015-02-17",
-      "domain": "flushupate.com"
-    },
-    {
-      "last_resolved": "2015-02-17",
-      "domain": "ahmedfaiez.info"
-    },
-    {
-      "last_resolved": "2014-02-14",
-      "domain": "advtravel.info"
-    },
-    {
-      "last_resolved": "2014-05-27",
-      "domain": "nartu.de"
-    },
-    {
-      "last_resolved": "2015-02-19",
-      "domain": "www.fpupdate.info"
-    },
-    {
-      "last_resolved": "2014-03-22",
-      "domain": "advtravel.info\r"
-    },
-    {
-      "last_resolved": "2014-06-08",
-      "domain": "ahmedfaiez.info\r"
-    },
-    {
-      "last_resolved": "2014-08-22",
-      "domain": "flushupate.com\r"
-    },
-    {
-      "last_resolved": "2014-11-07",
-      "domain": "ineltdriver.com\r"
-    },
-    {
-      "last_resolved": "2015-09-21",
-      "domain": "gbartu.de"
-    },
-    {
-      "last_resolved": "2015-09-28",
-      "domain": "vartu.de"
-    },
-    {
-      "last_resolved": "2019-04-10",
-      "domain": "NS2.ATYAFHOSTING.INFO"
-    },
-    {
-      "last_resolved": "2019-04-11",
-      "domain": "ns1.atyafhosting.info"
-    },
-    {
-      "last_resolved": "2019-04-15",
-      "domain": "188.40.75.132"
-    }
   ],
   "hashes": [
     "003f0ed24b5f70ddc7c6e80f9c4dac73",
     "027fc90c13f6d87e1f68d25b0d0ec4a7",
     "088420b7e56c73d3d495230d42e0cb95",
     "1e52a293838464e4cd6c1c6d94a55793",
-    "2219f3941603262dc3478c60df3b02f6",
-    "238b48338c14c8ea87ff7ccab4544252",
-    "2607abe604832363514eb58c33a682fc",
-    "2986d9af413cd09d9ffdb40040e5c180",
-    "2b3baed817a79109824d3a8a94f6c317",
-    "2bce2ccd484a063e5e432a6f651782d9",
-    "4377b17d7984838993b998c4bab97925",
-    "4907a68a3ff0f010ed74214f957746c0",
-    "63c480b1cc601b02b4acb30309b007e6",
-    "686779709226c6727bd9ebc4b1ff21b1",
-    "6b4248a01a26ff07a85b5316702a2f5f",
-    "7075c9a874ab5b0c27942714394f3885",
-    "73c46bacc471db08a6c0e31caef3f9e8",
-    "74d8b882efae9fea1787f1558589fecb",
-    "76f74b24480bc1a42998c9440ddc2fad",
-    "7ac102b740b299824e34394f334b5508",
-    "7ed79032a1ad8535242428e69507ca0a",
-    "8a9b52ff90bbd585907694e68551b991",
-    "8bbad466f2257e05f66ece621ccf2056",
-    "9469ff12c582cf7943582dd28a1920cc",
-    "a0b76ea08917a9dd785a0a1a6ae6eebe",
-    "a4a390f90be49b2bb51194d0844fed7f",
-    "a59399c7608d140dc9cb5dffcb46f1d9",
-    "aefea9d795624da16d878dc9bb81bf87",
-    "b08a67892d2198aeb2826b398f8c6c74",
-    "bd54d70d473d45b75cc8bf1fbe6fa022",
-    "d048a6a8377a865f07cbc2429ffaa3e7",
-    "dff746868a1559de9d25037e73c06c52",
-    "e1d2543aba350a83c968872fbe957d85",
-    "f3d6bb7addc88ad45f79c5199f8db2e0",
-    "f78fcd4eaf3d9cd95116b6e6212ad327",
-    "fa6fbd1dd2d58885772bd0b37633d5d7"
   ],
   "references": [],
   "votes": -1,
@@ -740,75 +628,3 @@ def parse_threatminer(jdata: dict, query: str) -> dict:
         return jdata
     except TypeError:
         print('type error')
-
-
-def querry_status_virustotal_file(resp_json):
-    if resp_json['response_code'] == 0:
-        print('[!] Invalid sha')
-        return False
-    else:
-        detected_dict = {}
-        for index, av_name in enumerate(resp_json['scans']):
-            # For each Anti-virus name, find the detected value.
-            detected = resp_json['scans'][av_name]['detected']
-            # if the above value is true.
-            detected_dict["found_positives"] = ("{} / {}".format(
-                resp_json['positives'],
-                resp_json['total']))
-            # detected_dict["permalink"] = resp_json["permalink"]
-            if detected is True:
-                # Print Engines which detect malware.
-                # print(f'{av_name} detected Malware!')
-                # Add detected engine name and it's result to the
-                # detected_dict.
-                detected_dict[av_name] = resp_json['scans'][av_name]['result']
-    return detected_dict
-
-
-def querry_status_virustotal_domain(
-        positions: dict,
-        domain_to_view: str) -> dict:
-    if positions['response_code'] == -1:
-        print('[!] No result on virustotal')
-        return False, False
-    else:
-        try:
-            whois_dict = {}
-            whois_dict = dict(
-                pair.split(": ") for pair in positions["whois"].split("\n"))
-            # whois_dict = {k: str.encode(v, 'ascii', 'replace')
-            # for k,v in whois_dict.items()}
-            # --- only sample detected for certain ip or domain
-
-        except AttributeError:
-            print('No whois data found')
-        category_from_virustotal = {}
-        category_from_virustotal['Opera domain info'] = positions.get(
-            'Opera domain info',
-            'Not found')
-        category_from_virustotal['BitDefender domain info'] = positions.get(
-            'BitDefender domain info',
-            'Not found')
-        category_from_virustotal['Dr.Web category'] = positions.get(
-            'Dr.Web category',
-            'Not found')
-        category_from_virustotal['Malwarebytes Hosts info'] = positions.get(
-            'Malwarebytes hpHosts info',
-            'Not found')
-        # category_from_virustotal = {k: str.encode(v, 'ascii', 'replace')
-        # for k,v in category_from_virustotal.items()}
-        return whois_dict, category_from_virustotal
-
-
-"""
-#hybrid_query('checkip.dyndns.org')
-ip = '91.80.37.231'
-
-print(virustotal_query(ip, 'ip', True))
-print(shodan_query(ip, 'ip', True))
-print(hybrid_query(ip, 'ip', True))
-print(apility_query(ip, 'ip', True))
-print(abuseipdb_query(ip, 'ip', True))
-print(urlscan_query(ip, 'ip', True))
-print(urlhause_query(ip, 'domain', True))
-"""
