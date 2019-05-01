@@ -30,10 +30,10 @@ fd_default, path_default = tempfile.mkstemp()
 def print_banner():
     banner = """
           _______
-         /      /, 	;___________________;
-        /      //  	; Soc-L1-Automation ;
-       /______//	;-------------------;
-      (______(/	            danieleperera
+         /      /, 	;_____________________;
+        /      //  	; soc-analyst-arsenal ;
+       /______//	;---------------------;
+      (______(/	              danieleperera
       """
     return banner
 
