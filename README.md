@@ -21,6 +21,8 @@ This tool is used to give a quick structure to a SOC level 1 ticket. I used Sele
   - do more testing with siem
   - do more testing in manual mode
   - add keywords function and check google for mitigations... also open tabs regarding those mitigations
+  - maybe create a basic database of tickets that are been created
+  - do some research on victim domain/IP
   - ~~try to integrate semi-manual mode~~
   - ~~if no results found don't notify~~
 
