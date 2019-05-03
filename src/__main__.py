@@ -53,7 +53,7 @@ def main():
     # Default to webscapper
     if options.boolean_switch_mode:
         # check if file webscapper exsist to get data from it
-        Webscapperpath = os.path.join(SRC, "webscapper_1.py")
+        Webscapperpath = os.path.join(SRC, "webscapper.py")
         exists = os.path.isfile(Webscapperpath)
         if exists:
             import webscapper
@@ -201,6 +201,7 @@ if __name__ == '__main__':
         #188.40.75.132 this one is cool gives no data , no info , no info on abseipdb, urlhause, urlscan
         #51.75.143.169 gives ++ on virustotal no info, no info urlscan urlhause
         #91.80.37.231 gives ++ on virustotal no info, no info urlscan urlhause
+        #93.157.63.185 ticket completo con tutte le informazioni
     except KeyboardInterrupt:
         print('deleting tmp files')
         print(iconOK, end='')

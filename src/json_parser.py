@@ -501,33 +501,65 @@ def parse_urlscan(jdata: dict, query: str) -> list:
     content_list = []
     try:
         c = jdata["total"]
-        header_list = [
-            'visibility',
-            'time',
-            'source',
-            'url',
-            'server',
-            'domain']
-        #print(header_list)
-        body_list = []
-        #content_list.append(header_list)
-        for i in range(0, c):
-            #print(i)
-            body_list.extend([
-                jdata["results"][i]['task']['visibility'],
-                jdata["results"][i]['task']['time'][0:10],
-                jdata["results"][i]['task']['source'],
-                jdata["results"][i]['task']['url'],
-                jdata["results"][i]['page']['server'],
-                jdata["results"][i]['page']['domain']])
-            content_list.append(body_list)
-        content_list.sort()
-        urlscan_list = list(content_list for content_list, _ in itertools.groupby(content_list))
-        urlscan_list.insert(0, header_list)            
-        #results = {"urlscan": jdata['results'][0]['task']['url']}
-        status = 'ok'
+        c2 = len(jdata["results"])
+        if c == c2:
+            header_list = [
+                'visibility',
+                'time',
+                'source',
+                'url',
+                'server',
+                'domain']
+            #print(header_list)
+            body_list = []
+            #content_list.append(header_list)
+            for i in range(0, c):
+                #print(i)
+                body_list.extend([
+                    jdata["results"][i]['task']['visibility'],
+                    jdata["results"][i]['task']['time'][0:10],
+                    jdata["results"][i]['task']['source'],
+                    jdata["results"][i]['task']['url'],
+                    jdata["results"][i]['page']['server'],
+                    jdata["results"][i]['page']['domain']])
+                content_list.append(body_list)
+            content_list.sort()
+            urlscan_list = list(content_list for content_list, _ in itertools.groupby(content_list))
+            urlscan_list.insert(0, header_list)            
+            #results = {"urlscan": jdata['results'][0]['task']['url']}
+            status = 'ok'
+        else:
+            header_list = [
+                'visibility',
+                'time',
+                'source',
+                'url',
+                'server',
+                'domain']
+            #print(header_list)
+            body_list = []
+            #content_list.append(header_list)
+            for i in range(0, c2):
+                #print(i)
+                body_list.extend([
+                    jdata["results"][i]['task']['visibility'],
+                    jdata["results"][i]['task']['time'][0:10],
+                    jdata["results"][i]['task']['source'],
+                    jdata["results"][i]['task']['url'],
+                    jdata["results"][i]['page']['server'],
+                    jdata["results"][i]['page']['domain']])
+                content_list.append(body_list)
+            content_list.sort()
+            urlscan_list = list(content_list for content_list, _ in itertools.groupby(content_list))
+            urlscan_list.insert(0, header_list)            
+            #results = {"urlscan": jdata['results'][0]['task']['url']}
+            status = 'ok'            
         return status, urlscan_list
     except KeyError:
+        #print('\nkey error occurred\n')
+        status = 'KeyError'
+        return status, jdata
+    except IndexError:
         #print('\nkey error occurred\n')
         status = 'KeyError'
         return status, jdata
