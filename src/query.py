@@ -830,7 +830,7 @@ def socket_connection_query(
             print("Can't estabish connection to {}".format(query))
     elif query_type == "ip":
         try:
-            hostName = socket.gethostbyaddr(query)
+            hostName = socket.gethostbyaddr(query)[0]
             print(hostName)
         except socket.herror:
             print("Can't estabish connection to {}".format(query))
@@ -1190,8 +1190,8 @@ def create_tmp_to_clipboard(
         pass
 
 
-domain = 'gov.lk'
-socket_connection_query(domain, 'domain', False)
+ip = '43.224.127.40'
+socket_connection_query(ip, 'ip', False)
 
 """
 test_dic = {'ciao mondo': 25}
