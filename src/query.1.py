@@ -95,49 +95,27 @@ def socket_connection_query(
         try:
             ipAddr = socket.gethostbyname(query)
             print(ipAddr)
+            addrInfo = check_ip(socket.getaddrinfo(query, 80)[0][4][0])
+            print(addrInfo)
+            if ipAddr == addrInfo:
+                url_http = 'http://www.' + query
+                print(url_http)
+                url_https = 'https://www.' + query
+                print(url_https)                
+            else:
+                pass
         except socket.gaierror:
             print("Can't estabish connection to {}".format(query))
     elif query_type == "ip":
         try:
-            hostName = socket.gethostbyaddr(query)[0]
+            hostName = socket.gethostbyaddr(query)
             print(hostName)
         except socket.herror:
             print("Can't estabish connection to {}".format(query))
-"""
-    if jdata['response_code'] == 0:
-        Nodata = 'No data found on virustotal'
-        create_tmp_to_clipboard(
-            Nodata,
-            header_whois,
-            val,
-            None)
-    else:
-        if val:
-            return create_tmp_to_clipboard(
-                jdata,
-                header_whois,
-                val,
-                None)
-        else:
-            for i in json_parser.parse_virustotal(response.json(), query):
-                if type(i) is dict:
-                    create_tmp_to_clipboard(
-                        i,
-                        header_whois,
-                        val,
-                        'normal')
-                elif type(i) is list:
-                    header = "associated hash file for {}".format(query)
-                    create_tmp_to_clipboard(
-                        i,
-                        header,
-                        val,
-                        'print_row_table')"""
 
 
 def wapperlazer_query(
         query: str,
-        query_type: str,
         val: bool) -> dict:
     """
     Documentation for ip_urlhaus.
@@ -163,59 +141,38 @@ def wapperlazer_query(
     api = (data['API info']['wappalyzer']['api'])
     # --- Status ---
     colorQuery = (Fore.RED + query)
-    colorString = (Fore.GREEN + 'Check connection')
+    colorString = (Fore.GREEN + 'Check Wrapperlazer')
     print(iconNone + ' ' + colorString, end='')
     print(' for ' + colorQuery)
+    # --- query ---
+    headers = {
+        'X-Api-Key': api}
+
+    params = {
+        'url', query}
+
+    response = requests.get(
+        'https://api.wappalyzer.com/lookup/v1/',
+        headers=headers,
+        params=params)
+
+    print(response.json())
 
 # ===================== ************* ===============================
 # ---------- Various Checks and printing ticket --------------------
 # ===================== ************* ===============================
 
-ip = '43.224.127.40'
-socket_connection_query(ip, 'ip', False)
-"""
-test_dic = {'ciao mondo': 25}
-create_tmp_to_clipboard(test_dic, 'test header', False, 'error')
+
+def check_ip(ipv4_address):
+    ipv4_pattern = (r"""^([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])(?<!172\.(16|17|18|19|20|21|22|23|24|25|26|27|28|29|30|31))(?<!127)(?<!^10)(?<!^0)\.([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])(?<!192\.168)(?<!172\.(16|17|18|19|20|21|22|23|24|25|26|27|28|29|30|31))\.([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])(?<!\.255$)$""")
+    matches_public = re.search(ipv4_pattern, ipv4_address)
+    if matches_public:
+        return matches_public.group(0)
+
 
 domain = 'gov.lk'
-ip = '91.80.37.231'
+socket_connection_query(domain, 'domain', False)
 
-
-domain = 'atracktr.info'
-virustotal_query(ip, 'ip', False)
-#progressbar_ip(ip)
-
-iphub_query(ip, 'ip', False)
-#progressbar_ip(ip)
-
-
-getipintel_query(ip, 'ip', False)
-#progressbar_ip(ip)
-
-shodan_query(ip, 'ip', False)
-#progressbar_ip(ip)
-
-
-threatcrowd_query(ip, 'ip', False)
-#progressbar_ip(ip)
-
-
-hybrid_query(ip, 'ip', False)
-#progressbar_ip(ip)
-
-
-apility_query(ip, 'ip', False)
-#progressbar_ip(ip)
-
-abuseipdb_query(ip, 'ip', False)
-#progressbar_ip(ip)
-
-urlscan_query(ip, 'ip', False)
-#progressbar_ip(ip)
-
-urlhause_query(ip, 'ip', False)
-#progressbar_ip(ip)
-
-
-threatminer_query(ip, 'ip', False)
-#progressbar_ip(ip)"""
+"""
+test = requests.get("http://api.hackertarget.com/nmap/?q=43.224.127.40")
+print(test.text)"""

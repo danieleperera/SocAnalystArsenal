@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# -*- style: PEP8 -*-
+# -*- style: PEP8 ✔ ✘ -*-
 import json
 import os
 from __init__ import api
