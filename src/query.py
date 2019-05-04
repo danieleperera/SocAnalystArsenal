@@ -13,6 +13,7 @@ import __main__ as main
 import tempfile
 import pyperclip
 from typing import List, Union
+import socket
 iconOK = (Fore.GREEN + '[ok]')
 iconNone = (Fore.YELLOW + '[*]')
 iconError = (Fore.RED + '[!]')
@@ -781,6 +782,7 @@ def hybrid_query(
                     val,
                     'print_row_table')
 
+
 def socket_connection_query(
         query: str,
         query_type: str,
@@ -873,6 +875,7 @@ def wapperlazer_query(
     response = requests.get(url, headers=headers)
 
     parsed_Data = response.json()
+    #print(parsed_Data)
     if val:
         return create_tmp_to_clipboard(
                 parsed_Data,
@@ -880,6 +883,9 @@ def wapperlazer_query(
                 val,
                 None)
     else:
+        status, parsed_Data = json_parser.parse_wrapperlazer(
+                response.json(),
+                query)
         return create_tmp_to_clipboard(
             parsed_Data,
             header_wrapper,
@@ -949,15 +955,10 @@ def text_body_table(body: dict):
 
 
 def check_ip(ipv4_address):
-    test = []
-    for i in ipv4_address.split(","):
-        # print(i)
-        regex_ipv4_public = (r"""^([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])(?<!172\.(16|17|18|19|20|21|22|23|24|25|26|27|28|29|30|31))(?<!127)(?<!^10)(?<!^0)\.([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])(?<!192\.168)(?<!172\.(16|17|18|19|20|21|22|23|24|25|26|27|28|29|30|31))\.([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])(?<!\.255$)$""")
-        matches_public = re.finditer(regex_ipv4_public, i, re.MULTILINE)
-
-        for x in matches_public:
-            test.append(("{match}".format(match=x.group())))
-    return test
+    ipv4_pattern = (r"""^([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])(?<!172\.(16|17|18|19|20|21|22|23|24|25|26|27|28|29|30|31))(?<!127)(?<!^10)(?<!^0)\.([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])(?<!192\.168)(?<!172\.(16|17|18|19|20|21|22|23|24|25|26|27|28|29|30|31))\.([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])(?<!\.255$)$""")
+    matches_public = re.search(ipv4_pattern, ipv4_address)
+    if matches_public:
+        return matches_public.group(0)
 
 
 def manual_mode_ip(ip_addr: list, verbosity: bool, sha_sum: list = None):
@@ -1188,6 +1189,9 @@ def create_tmp_to_clipboard(
         
         pass
 
+
+domain = 'gov.lk'
+socket_connection_query(domain, 'domain', False)
 
 """
 test_dic = {'ciao mondo': 25}

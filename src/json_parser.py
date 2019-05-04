@@ -667,6 +667,7 @@ def parse_wrapperlazer(jdata: dict, query: str) -> list:
         wrapperlazer_list = list(body_list for body_list, _ in itertools.groupby(body_list))
         wrapperlazer_list.insert(0, header_list)               
         status = 'ok'
+        print(wrapperlazer_list)
         return status, wrapperlazer_list
     except KeyError:
         #print('\nkey error occurred\n')
