@@ -101,7 +101,8 @@ def socket_connection_query(
                 url_http = 'http://www.' + query
                 print(url_http)
                 url_https = 'https://www.' + query
-                print(url_https)                
+                print(url_https)
+                wapperlazer_query(url_http, False)                
             else:
                 pass
         except socket.gaierror:
@@ -147,20 +148,47 @@ def wapperlazer_query(
     # --- query ---
     headers = {
         'X-Api-Key': api}
-
-    params = {
-        'url', query}
-
-    response = requests.get(
-        'https://api.wappalyzer.com/lookup/v1/',
-        headers=headers,
-        params=params)
+    url = "https://api.wappalyzer.com/lookup/v1/?url=" + query
+    response = requests.get(url, headers=headers)
 
     print(response.json())
 
 # ===================== ************* ===============================
 # ---------- Various Checks and printing ticket --------------------
 # ===================== ************* ===============================
+
+
+def parse_wrapperlazer(jdata: dict, query: str) -> list:
+    content_list = []
+    try:
+        c = int(jdata["url_count"])
+        #print(c)
+        header_list = [
+            'applications',
+            'category',
+            'versions',
+            'category',
+            'reporter',
+            'url']
+        body_list = []
+        for i in range(0, c):
+            body_list.extend([
+                jdata["urls"][i]['url_status'],
+                jdata["urls"][i]['date_added'][0:10],
+                jdata["urls"][i]['threat'],
+                ",".join(str(x) for x in jdata["urls"][i]['tags']),
+                jdata["urls"][i]['reporter'],
+                jdata["urls"][i]['url']])
+            content_list.append(body_list)
+        content_list.sort()
+        urlhause_list = list(content_list for content_list, _ in itertools.groupby(content_list))
+        urlhause_list.insert(0, header_list)                 
+        status = 'ok'
+        return status, urlhause_list
+    except KeyError:
+        #print('\nkey error occurred\n')
+        status = 'KeyError'
+        return status, jdata
 
 
 def check_ip(ipv4_address):
