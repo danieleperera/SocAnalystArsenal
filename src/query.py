@@ -781,6 +781,111 @@ def hybrid_query(
                     val,
                     'print_row_table')
 
+def socket_connection_query(
+        query: str,
+        query_type: str,
+        val: bool) -> dict:
+    """
+    Documentation for ip_urlhaus.
+    It gets one ip addresse at a time as a string,
+    uses request to do a get request to ip_urlhaus,
+    gets json as text.
+
+    param
+        ip: str -- This is a string variable.
+
+    example::
+
+    ```
+     ip = '124.164.251.179'
+    ```
+
+    return
+    dict -- Returns json as a dict.
+
+    """
+    # --- Status ---
+    colorQuery = (Fore.RED + query)
+    colorString = (Fore.GREEN + 'Check connection')
+    print(iconNone + ' ' + colorString, end='')
+    print(' for ' + colorQuery)
+    # --- Check query type ---
+    if query_type == "domain":
+        try:
+            ipAddr = socket.gethostbyname(query)
+            print(ipAddr)
+            addrInfo = check_ip(socket.getaddrinfo(query, 80)[0][4][0])
+            print(addrInfo)
+            if ipAddr == addrInfo:
+                url_http = 'http://www.' + query
+                print(url_http)
+                url_https = 'https://www.' + query
+                print(url_https)
+                wapperlazer_query(url_http, False)                
+            else:
+                pass
+        except socket.gaierror:
+            print("Can't estabish connection to {}".format(query))
+    elif query_type == "ip":
+        try:
+            hostName = socket.gethostbyaddr(query)
+            print(hostName)
+        except socket.herror:
+            print("Can't estabish connection to {}".format(query))
+
+
+def wapperlazer_query(
+        query: str,
+        val: bool) -> dict:
+    """
+    Documentation for ip_urlhaus.
+    It gets one ip addresse at a time as a string,
+    uses request to do a get request to ip_urlhaus,
+    gets json as text.
+
+    param
+        ip: str -- This is a string variable.
+
+    example::
+
+    ```
+     ip = '124.164.251.179'
+    ```
+
+    return
+    dict -- Returns json as a dict.
+
+    """
+    header_wrapper = (
+        '\nVarious technology scanned with wrapperlazer ' + query)    
+    # --- API ---
+    data = get_api()
+    api = (data['API info']['wappalyzer']['api'])
+    # --- Status ---
+    colorQuery = (Fore.RED + query)
+    colorString = (Fore.GREEN + 'Check Wrapperlazer')
+    print(iconNone + ' ' + colorString, end='')
+    print(' for ' + colorQuery)
+    # --- query ---
+    headers = {
+        'X-Api-Key': api}
+    url = "https://api.wappalyzer.com/lookup/v1/?url=" + query
+    response = requests.get(url, headers=headers)
+
+    parsed_Data = response.json()
+    if val:
+        return create_tmp_to_clipboard(
+                parsed_Data,
+                header_wrapper,
+                val,
+                None)
+    else:
+        return create_tmp_to_clipboard(
+            parsed_Data,
+            header_wrapper,
+            val,
+            'print_row_table')
+
 # ===================== ************* ===============================
 # ---------- Various Checks and printing ticket --------------------
 # ===================== ************* ===============================

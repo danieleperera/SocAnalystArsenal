@@ -642,3 +642,33 @@ def parse_threatminer(jdata: dict, query: str) -> dict:
         return jdata
     except TypeError:
         print('type error')
+
+
+def parse_wrapperlazer(jdata: dict, query: str) -> list:
+    try:
+        count = len(jdata)
+        body_list = []
+        header_list = [
+            'Applications',
+            'Category',
+            'Versions']
+        for i in range(0, count):
+            count2 = len(jdata[i]['applications'])
+            #print(count2)
+            for ok in range(0, count2):
+                nada = jdata[i]['applications'][ok]['name']
+                test = ", ".join(str(x) for x in jdata[i]['applications'][ok]['categories'])
+                test2 = ", ".join(str(x) for x in jdata[i]['applications'][ok]['versions'])
+                #print('{} , {}, {}'.format(nada, test, test2))
+                ok = [nada, test, test2]
+                #print(ok)
+                body_list.append(ok)
+        body_list.sort()
+        wrapperlazer_list = list(body_list for body_list, _ in itertools.groupby(body_list))
+        wrapperlazer_list.insert(0, header_list)               
+        status = 'ok'
+        return status, wrapperlazer_list
+    except KeyError:
+        #print('\nkey error occurred\n')
+        status = 'KeyError'
+        return status, jdata

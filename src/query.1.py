@@ -21,6 +21,9 @@ iconError = (Fore.RED + '[!]')
 init(autoreset=True)
 fd_default, path_default = tempfile.mkstemp()
 
+#to be deleted
+import itertools
+
 
 # ===================== ************* ===============================
 # ----------- using this for testing purpose -----------------------
@@ -137,6 +140,8 @@ def wapperlazer_query(
     dict -- Returns json as a dict.
 
     """
+    header_whois = (
+        '\nVarious technology scanned with wrapperlazer ' + query)    
     # --- API ---
     data = get_api()
     api = (data['API info']['wappalyzer']['api'])
@@ -151,7 +156,21 @@ def wapperlazer_query(
     url = "https://api.wappalyzer.com/lookup/v1/?url=" + query
     response = requests.get(url, headers=headers)
 
-    print(response.json())
+    jdata = response.json()
+    print(parse_wrapperlazer(jdata, query))
+    if val:
+        return create_tmp_to_clipboard(
+                jdata,
+                header_whois,
+                val,
+                None)
+    else:
+        return create_tmp_to_clipboard(
+                parsed_Data,
+                header_info,
+                val,
+                'print_row_table')
+
 
 # ===================== ************* ===============================
 # ---------- Various Checks and printing ticket --------------------
@@ -159,32 +178,29 @@ def wapperlazer_query(
 
 
 def parse_wrapperlazer(jdata: dict, query: str) -> list:
-    content_list = []
     try:
-        c = int(jdata["url_count"])
-        #print(c)
-        header_list = [
-            'applications',
-            'category',
-            'versions',
-            'category',
-            'reporter',
-            'url']
+        count = len(jdata)
         body_list = []
-        for i in range(0, c):
-            body_list.extend([
-                jdata["urls"][i]['url_status'],
-                jdata["urls"][i]['date_added'][0:10],
-                jdata["urls"][i]['threat'],
-                ",".join(str(x) for x in jdata["urls"][i]['tags']),
-                jdata["urls"][i]['reporter'],
-                jdata["urls"][i]['url']])
-            content_list.append(body_list)
-        content_list.sort()
-        urlhause_list = list(content_list for content_list, _ in itertools.groupby(content_list))
-        urlhause_list.insert(0, header_list)                 
+        header_list = [
+            'Applications',
+            'Category',
+            'Versions']
+        for i in range(0, count):
+            count2 = len(jdata[i]['applications'])
+            #print(count2)
+            for ok in range(0, count2):
+                nada = jdata[i]['applications'][ok]['name']
+                test = ", ".join(str(x) for x in jdata[i]['applications'][ok]['categories'])
+                test2 = ", ".join(str(x) for x in jdata[i]['applications'][ok]['versions'])
+                #print('{} , {}, {}'.format(nada, test, test2))
+                ok = [nada, test, test2]
+                #print(ok)
+                body_list.append(ok)
+        body_list.sort()
+        wrapperlazer_list = list(body_list for body_list, _ in itertools.groupby(body_list))
+        wrapperlazer_list.insert(0, header_list)               
         status = 'ok'
-        return status, urlhause_list
+        return status, wrapperlazer_list
     except KeyError:
         #print('\nkey error occurred\n')
         status = 'KeyError'
