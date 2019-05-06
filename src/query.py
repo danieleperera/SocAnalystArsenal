@@ -1044,16 +1044,18 @@ def manual_mode(attacker: list, victim: list, verbosity: bool, sha_sum: list = N
                     continue
             else:
                 continue
-        final_attacker = [item.replace(' ', '') for item in attacker]
-        simple_dict = {'attackers': final_attacker}
-        final_victim = [item.replace(' ', '') for item in victim]
-        simple_dict = {'attackers': final_attacker}
-        simple_dict.update({'victim': final_victim})
+        attacker_list = [item.replace(' ', '') for item in attacker]
+        simple_dict = {'attackers': attacker_list}
+        victim_list = [item.replace(' ', '') for item in victim]
+        simple_dict = {'attackers': victim_list}
+        simple_dict.update({'victim': victim_list})
         main.collector(simple_dict, verbosity)
     else:
         # --- Complete manual mode ---
-        attacker = [item.replace(' ', '') for item in attacker]
-        simple_dict = {'attackers': attacker}
+        attacker_list = [item.replace(' ', '') for item in attacker]
+        simple_dict = {'attackers': attacker_list}
+        victim_list = [item.replace(' ', '') for item in victim]
+        simple_dict.update({'victim': victim_list})    
         if sha_sum == []:
             return main.collector(simple_dict, verbosity)
         else:

@@ -71,7 +71,8 @@ def main():
                 print(iconError, end='')
                 print(" Error Occured... Entering manual mode")
                 query.manual_mode_ip(
-                    options.ip,
+                    options.att,
+                    options.vic,
                     query.verbose_mode(options.bool_vb),
                     options.sha_sum)
             # Testing purposes
@@ -87,7 +88,8 @@ def main():
             print(""" It seems you don't have webscapper on path...
 Entering manual mode""")
             query.manual_mode(
-                options.ip,
+                options.att,
+                options.vic,
                 query.verbose_mode(options.bool_vb),
                 options.sha_sum)
 
@@ -97,7 +99,8 @@ Entering manual mode""")
         print(" Entering manual mode")
         # check if argpase values are null
         query.manual_mode(
-            options.ip,
+            options.att,
+            options.vic,
             query.verbose_mode(options.bool_vb),
             options.sha_sum)
 
@@ -206,6 +209,8 @@ if __name__ == '__main__':
         #51.75.143.169 gives ++ on virustotal no info, no info urlscan urlhause
         #91.80.37.231 gives ++ on virustotal no info, no info urlscan urlhause
         #93.157.63.185 ticket completo con tutte le informazioni
+        #104.239.98.134 gives ++  Apility checking reputation and activity through time 104.239.98.134
+        #python .\src -m --attacker 124.164.251.179 --victim 124.164.251.179 works fine
     except KeyboardInterrupt:
         print('deleting tmp files')
         print(iconOK, end='')
