@@ -125,6 +125,7 @@ def collector(info: dict, verbosity_check: bool, sha_sum_list: list = None):
     ```
     """
     print(info)
+    
     query.create_tmp_to_clipboard(info, 'header', False, 'ticket_header')
     # --- Notification ---
     toaster = ToastNotifier()
@@ -194,8 +195,14 @@ def collector(info: dict, verbosity_check: bool, sha_sum_list: list = None):
             query_string,
             type_query,
             verbosity_check)
+    data_victim = info['victim']
+    for query_string, type_query in query.check_query_type(data_victim):
+        query.socket_connection_query(
+            query_string,
+            type_query,
+            verbosity_check)
 
-        toaster.show_toast("""Ticket copied to clipboard""", duration=5)
+    toaster.show_toast("""Ticket copied to clipboard""", duration=5)
 
 
 if __name__ == '__main__':

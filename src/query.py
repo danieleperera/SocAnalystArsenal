@@ -16,7 +16,7 @@ from typing import List, Union
 import socket
 import threading
 iconOK = (Fore.GREEN + '[ok]')
-iconNone = (Fore.YELLOW + '[*]')
+iconNone = (Fore.YELLOW + '[✔]')
 iconError = (Fore.RED + '[!]')
 init(autoreset=True)
 fd_default, path_default = tempfile.mkstemp()
@@ -1039,13 +1039,12 @@ def manual_mode(
         while True:
             attacker = input("attacker data (ip or domain): ").split(', ')
             if list(check_query_type(attacker)):
-                print(attacker)
+                #print(attacker)
                 break
             else:
                 continue
         attacker_list = [item.replace(' ', '') for item in attacker]
         simple_dict = {'attackers': attacker_list}
-        #main.collector(simple_dict, verbosity)
     else:
         # --- Complete manual mode ---
         attacker_list = [item.replace(' ', '') for item in attacker]
@@ -1054,7 +1053,9 @@ def manual_mode(
         while True:
             victim = input("victim data (ip or domain): ").split(', ')
             if list(check_query_type(victim)):
-                print(victim)
+                victim_list = [item.replace(' ', '') for item in victim]
+                simple_dict.update({'victim': victim_list})
+                #print(victim)
                 break
             else:
                 continue
