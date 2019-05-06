@@ -816,9 +816,9 @@ def socket_connection_query(
     if query_type == "domain":
         try:
             ipAddr = socket.gethostbyname(query)
-            print(ipAddr)
+            #print(ipAddr)
             addrInfo = check_ip(socket.getaddrinfo(query, 80)[0][4][0])
-            print(addrInfo)
+            #print(addrInfo)
             if ipAddr == addrInfo:
                 url_http = 'http://www.' + query
                 print(url_http)
@@ -940,9 +940,11 @@ def try_port(ip, port, delay, open_ports):
 def scan_ports(ip, delay):
     # --- Status ---
     colorQuery = (Fore.RED + ip)
-    colorString = (Fore.GREEN + 'Check Open Ports')
+    colorString = (Fore.GREEN + 'Check Top 100 Open Ports')
     print(iconNone + ' ' + colorString, end='')
     print(' for ' + colorQuery)
+    # --- Header ---
+    header_wrapper = "Port scanner for " + ip
     for port in top_100_ports:
         thread = threading.Thread(
             target=try_port,
@@ -954,12 +956,25 @@ def scan_ports(ip, delay):
 
     for i in range(0, 100):
         threads[i].join()
-
+    ok = []
+    header_list = [
+        'Victim IP',
+        'OpenPort']
     for i in top_100_ports:
         if open_ports[i] == 'open':
-            print('port number ' + str(i) + ' is open')
+            #print('port number ' + str(i) + ' is open')
+            ok.append([ip, i])
         if i == 617:
-            print('\nscan complete!')
+            pass
+            #print('\nscan complete!')
+    ok.insert(0, header_list)
+    parsed_data = ok
+    create_tmp_to_clipboard(
+            parsed_data,
+            header_wrapper,
+            False,
+            'print_row_table')
+    #print(parsed_data)
 # ===================== ************* ===============================
 # ---------- Various Checks and printing ticket --------------------
 # ===================== ************* ===============================
@@ -1278,9 +1293,9 @@ def create_tmp_to_clipboard(
         
         pass
 
-
-
 """
+scan_ports("43.224.127.40", 5)
+
 ip = 'cybaze.it'
 socket_connection_query(ip, 'domain', False)
 
