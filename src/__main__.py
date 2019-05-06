@@ -72,8 +72,8 @@ def main():
                 print(" Error Occured... Entering manual mode")
                 query.manual_mode_ip(
                     options.att,
-                    options.vic,
                     query.verbose_mode(options.bool_vb),
+                    options.vic,
                     options.sha_sum)
             # Testing purposes
             # info = {'attackers': {'124.164.251.179',
@@ -89,8 +89,8 @@ def main():
 Entering manual mode""")
             query.manual_mode(
                 options.att,
-                options.vic,
                 query.verbose_mode(options.bool_vb),
+                options.vic,
                 options.sha_sum)
 
     else:
@@ -100,8 +100,8 @@ Entering manual mode""")
         # check if argpase values are null
         query.manual_mode(
             options.att,
-            options.vic,
             query.verbose_mode(options.bool_vb),
+            options.vic,
             options.sha_sum)
 
 
@@ -211,6 +211,7 @@ if __name__ == '__main__':
         #93.157.63.185 ticket completo con tutte le informazioni
         #104.239.98.134 gives ++  Apility checking reputation and activity through time 104.239.98.134
         #python .\src -m --attacker 124.164.251.179 --victim 124.164.251.179 works fine
+        #
     except KeyboardInterrupt:
         print('deleting tmp files')
         print(iconOK, end='')

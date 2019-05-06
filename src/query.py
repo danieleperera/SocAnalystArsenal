@@ -1029,37 +1029,43 @@ def check_ip(ipv4_address):
         return matches_public.group(0)
 
 
-def manual_mode(attacker: list, victim: list, verbosity: bool, sha_sum: list = None):
+def manual_mode(
+        attacker: list,
+        verbosity: bool,
+        victim: list = None,
+        sha_sum: list = None):
     # check if argpase values are null
     if attacker is None:
         while True:
             attacker = input("attacker data (ip or domain): ").split(', ')
             if list(check_query_type(attacker)):
                 print(attacker)
-                victim = input("victim data (ip or domain): ").split(', ')
-                if list(check_query_type(victim)):
-                    print(victim)
-                    break
-                else:
-                    continue
+                break
             else:
                 continue
         attacker_list = [item.replace(' ', '') for item in attacker]
         simple_dict = {'attackers': attacker_list}
-        victim_list = [item.replace(' ', '') for item in victim]
-        simple_dict = {'attackers': victim_list}
-        simple_dict.update({'victim': victim_list})
-        main.collector(simple_dict, verbosity)
+        #main.collector(simple_dict, verbosity)
     else:
         # --- Complete manual mode ---
         attacker_list = [item.replace(' ', '') for item in attacker]
-        simple_dict = {'attackers': attacker_list}
+        simple_dict = {'attackers': attacker_list}  
+    if victim is None:
+        while True:
+            victim = input("victim data (ip or domain): ").split(', ')
+            if list(check_query_type(victim)):
+                print(victim)
+                break
+            else:
+                continue
+    else:
         victim_list = [item.replace(' ', '') for item in victim]
-        simple_dict.update({'victim': victim_list})    
-        if sha_sum == []:
-            return main.collector(simple_dict, verbosity)
-        else:
-            return main.collector(simple_dict, verbosity, sha_sum)
+        simple_dict.update({'victim': victim_list})
+
+    if sha_sum == []:
+        return main.collector(simple_dict, verbosity)
+    else:
+        return main.collector(simple_dict, verbosity, sha_sum)
 
 
 def verbose_mode(verbosity: bool) -> bool:
