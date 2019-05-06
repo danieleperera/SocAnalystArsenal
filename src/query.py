@@ -13,7 +13,8 @@ import __main__ as main
 import tempfile
 import pyperclip
 from typing import List, Union
-import socket, threading
+import socket
+import threading
 iconOK = (Fore.GREEN + '[ok]')
 iconNone = (Fore.YELLOW + '[*]')
 iconError = (Fore.RED + '[!]')
@@ -995,10 +996,10 @@ def get_ip(ip: dict) -> str:
 
 def text_header(head):
     test = '''### Attackers -> {}
-### Victims   -> {}
+### Victim   -> {}
 ### Context   -> {}'''.format(
                 head.get("attackers", "Not found!"),
-                head.get("victims", "Not found!"),
+                head.get("victim", "Not found!"),
                 head.get("context", "Not found!"))
     #print(test)
     return test
@@ -1031,19 +1032,23 @@ def check_ip(ipv4_address):
 def manual_mode_ip(ip_addr: list, verbosity: bool, sha_sum: list = None):
     # check if argpase values are null
     if ip_addr is None:
-        ip = ''
         while True:
-            print(iconNone, end='')
-            ip = input(' Insert a list of potential malicious ip addresses:')
-            datalist = ip.split(",")
-            if check_ip(ip) == []:
-                print(iconError, end='')
-                print(" Not valid ip address have been insert, please re-try")
-                continue
+            attacker = input("attacker data (ip or domain): ").split(', ')
+            if list(check_query_type(attacker)):
+                print(attacker)
+                victim = input("victim data (ip or domain): ").split(', ')
+                if list(check_query_type(victim)):
+                    print(victim)
+                    break
+                else:
+                    continue
             else:
-                break
-        ip_addr = [item.replace(' ', '') for item in datalist]
-        simple_dict = {'attackers': ip_addr}
+                continue
+        final_attacker = [item.replace(' ', '') for item in attacker]
+        simple_dict = {'attackers': final_attacker}
+        final_victim = [item.replace(' ', '') for item in victim]
+        simple_dict = {'attackers': final_attacker}
+        simple_dict.update({'victim': final_victim})
         main.collector(simple_dict, verbosity)
     else:
         # --- Complete manual mode ---
@@ -1151,21 +1156,29 @@ def check_domain_or_ip(data: list) -> str:
 
 
 def check_query_type(data: list) -> str:
+    result = []
     for string in data:
         ipv4_pattern = (r"""^([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])(?<!172\.(16|17|18|19|20|21|22|23|24|25|26|27|28|29|30|31))(?<!127)(?<!^10)(?<!^0)\.([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])(?<!192\.168)(?<!172\.(16|17|18|19|20|21|22|23|24|25|26|27|28|29|30|31))\.([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])(?<!\.255$)$""")
         matches_public = re.search(ipv4_pattern, string)
         if matches_public:
-            yield matches_public.group(0), 'ip' # or i instead of matches_public.group(0)
+            result.append((matches_public.group(0), 'ip')) # or i instead of matches_public.group(0)
+        else:
+            pass
 
         domain_pattern = r"^([a-z0-9]+(-[a-z0-9]+)*\.)+[a-z]{2,}$"
         matches_domain = re.search(domain_pattern, string)
         if matches_domain:
-            yield matches_domain.group(0), 'domain'
+            result.append((matches_domain.group(0), 'domain'))
+        else:
+            pass
 
         hash_pattern = (r"[a-f0-9]{32,128}")
         match_hash = re.search(hash_pattern, string, re.IGNORECASE)
         if match_hash:
-            yield match_hash.group(0), 'hash'
+            result.append((match_hash.group(0), 'hash'))
+        else:
+            pass
+    return result
 
 
 # ===================== ************* ===============================
@@ -1258,11 +1271,11 @@ def create_tmp_to_clipboard(
 
 
 
-
+"""
 ip = 'cybaze.it'
 socket_connection_query(ip, 'domain', False)
 
-"""
+
 test_dic = {'ciao mondo': 25}
 create_tmp_to_clipboard(test_dic, 'test header', False, 'error')
 

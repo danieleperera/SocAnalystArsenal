@@ -53,7 +53,7 @@ def main():
     # Default to webscapper
     if options.boolean_switch_mode:
         # check if file webscapper exsist to get data from it
-        Webscapperpath = os.path.join(SRC, "webscapper.py")
+        Webscapperpath = os.path.join(SRC, "webscapper_.py")
         exists = os.path.isfile(Webscapperpath)
         if exists:
             import webscapper
@@ -118,12 +118,13 @@ def collector(info: dict, verbosity_check: bool, sha_sum_list: list = None):
             'context': 'http GET 46.20.95.185'}
     ```
     """
+    print(info)
     query.create_tmp_to_clipboard(info, 'header', False, 'ticket_header')
     # --- Notification ---
     toaster = ToastNotifier()
     # --- Clipboard / tmp file ---
-    data = info['attackers']
-    for query_string, type_query in query.check_query_type(data):
+    data_attacker = info['attackers']
+    for query_string, type_query in query.check_query_type(data_attacker):
         print(
             '\n ======= Creating ticket for {} =======\n\n'.format(
                     query_string))
