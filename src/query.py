@@ -1029,9 +1029,9 @@ def check_ip(ipv4_address):
         return matches_public.group(0)
 
 
-def manual_mode_ip(ip_addr: list, verbosity: bool, sha_sum: list = None):
+def manual_mode(attacker: list, victim: list, verbosity: bool, sha_sum: list = None):
     # check if argpase values are null
-    if ip_addr is None:
+    if attacker is None:
         while True:
             attacker = input("attacker data (ip or domain): ").split(', ')
             if list(check_query_type(attacker)):
@@ -1052,8 +1052,8 @@ def manual_mode_ip(ip_addr: list, verbosity: bool, sha_sum: list = None):
         main.collector(simple_dict, verbosity)
     else:
         # --- Complete manual mode ---
-        ip_addr = [item.replace(' ', '') for item in ip_addr]
-        simple_dict = {'attackers': ip_addr}
+        attacker = [item.replace(' ', '') for item in attacker]
+        simple_dict = {'attackers': attacker}
         if sha_sum == []:
             return main.collector(simple_dict, verbosity)
         else:

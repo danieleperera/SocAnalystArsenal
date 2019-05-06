@@ -36,7 +36,10 @@ def main():
     parser.add_argument('--version', action='version',
                         version='%(prog)s 1.0.0')
 
-    parser.add_argument('--ip', nargs='+', dest='ip',
+    parser.add_argument('--attacker', nargs='+', dest='att',
+                        help='give a list of potential malicious ip addresses')
+
+    parser.add_argument('--victim', nargs='+', dest='vic',
                         help='give a list of potential malicious ip addresses')
 
     parser.add_argument('--sha', action='append', dest='sha_sum',
@@ -83,7 +86,7 @@ def main():
             print(iconError, end='')
             print(""" It seems you don't have webscapper on path...
 Entering manual mode""")
-            query.manual_mode_ip(
+            query.manual_mode(
                 options.ip,
                 query.verbose_mode(options.bool_vb),
                 options.sha_sum)
@@ -93,7 +96,7 @@ Entering manual mode""")
         print(iconOK, end='')
         print(" Entering manual mode")
         # check if argpase values are null
-        query.manual_mode_ip(
+        query.manual_mode(
             options.ip,
             query.verbose_mode(options.bool_vb),
             options.sha_sum)
