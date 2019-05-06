@@ -912,6 +912,16 @@ def wapperlazer_query(
 threads = []
 open_ports = {}
 
+top_100_ports = [
+    1, 3, 4, 6, 7, 9, 13, 17, 19, 20, 21, 22, 23, 24, 25, 26, 30,
+    32, 33, 37, 42, 43, 49, 53, 70, 79, 80, 81, 82, 83, 84, 85,
+    88, 89, 90, 99, 100, 106, 109, 110, 111, 113, 119, 125, 135,
+    139, 143, 144, 146, 161, 163, 179, 199, 211, 212, 222, 254, 255,
+    256, 259, 264, 280, 301, 306, 311, 340, 366, 389, 406, 407, 416,
+    417, 425, 427, 443, 444, 445, 458, 464, 465, 481, 497, 500, 512,
+    513, 514, 515, 524, 541, 543, 544, 545, 548, 554, 555, 563, 587,
+    593, 616, 617]
+
 
 def try_port(ip, port, delay, open_ports):
     sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM) #socket.AF_INET, socket.SOCK_STREAM
@@ -927,21 +937,27 @@ def try_port(ip, port, delay, open_ports):
 
 
 def scan_ports(ip, delay):
-
-    for port in range(0, 1023):
-        thread = threading.Thread(target=try_port, args=(ip, port, delay, open_ports))
+    # --- Status ---
+    colorQuery = (Fore.RED + ip)
+    colorString = (Fore.GREEN + 'Check Open Ports')
+    print(iconNone + ' ' + colorString, end='')
+    print(' for ' + colorQuery)
+    for port in top_100_ports:
+        thread = threading.Thread(
+            target=try_port,
+            args=(ip, port, delay, open_ports))
         threads.append(thread)
 
-    for i in range(0, 1023):
+    for i in range(0, 100):
         threads[i].start()
 
-    for i in range(0, 1023):
+    for i in range(0, 100):
         threads[i].join()
 
-    for i in range(0, 1023):
+    for i in top_100_ports:
         if open_ports[i] == 'open':
-            print('\nport number' + str(i) + ' is open')
-        if i == 1022:
+            print('port number ' + str(i) + ' is open')
+        if i == 617:
             print('\nscan complete!')
 # ===================== ************* ===============================
 # ---------- Various Checks and printing ticket --------------------
@@ -1153,7 +1169,7 @@ def check_query_type(data: list) -> str:
 
 
 # ===================== ************* ===============================
-# ----------Copy information to tmp file and then to clipboard--------------------
+# ----------Copy information to tmp file and then to clipboard-------
 # ===================== ************* ===============================
 def create_tmp_to_clipboard(
         data: dict,
@@ -1241,12 +1257,12 @@ def create_tmp_to_clipboard(
         pass
 
 
-scan_ports("136.243.123.85", 5)
-"""
+
+
 ip = 'cybaze.it'
 socket_connection_query(ip, 'domain', False)
 
-
+"""
 test_dic = {'ciao mondo': 25}
 create_tmp_to_clipboard(test_dic, 'test header', False, 'error')
 
