@@ -13,7 +13,7 @@ import __main__ as main
 import tempfile
 import pyperclip
 from typing import List, Union
-import socket
+import socket, threading
 iconOK = (Fore.GREEN + '[ok]')
 iconNone = (Fore.YELLOW + '[*]')
 iconError = (Fore.RED + '[!]')
@@ -823,13 +823,15 @@ def socket_connection_query(
                 print(url_http)
                 url_https = 'https://www.' + query
                 print(url_https)
-                wapperlazer_query(url_http, False)                
+                wapperlazer_query(url_http, False)
+                scan_ports(ipAddr, 10)             
             else:
                 url_http = 'http://www.' + query
                 print(url_http)
                 url_https = 'https://www.' + query
                 print(url_https)
-                wapperlazer_query(url_http, False) 
+                wapperlazer_query(url_http, False)
+                scan_ports(ipAddr, 10)
         except socket.gaierror:
             print("Can't estabish connection to {}".format(query))
     elif query_type == "ip":
@@ -845,6 +847,7 @@ def socket_connection_query(
             elif check == 'no':
                 url_http = input("insert the correct domain for this ip: ")
                 wapperlazer_query(url_http, False)
+            scan_ports(query, 10)
         except socket.herror:
             print("Can't estabish connection to {}".format(query))
 
@@ -905,6 +908,41 @@ def wapperlazer_query(
             val,
             'print_row_table')
 
+
+threads = []
+open_ports = {}
+
+
+def try_port(ip, port, delay, open_ports):
+    sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM) #socket.AF_INET, socket.SOCK_STREAM
+    sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+    sock.settimeout(delay)
+    result = sock.connect_ex((ip, port))
+    if result == 0:
+        open_ports[port] = 'open'
+        return True
+    else:
+        open_ports[port] = 'closed'
+        return None
+
+
+def scan_ports(ip, delay):
+
+    for port in range(0, 1023):
+        thread = threading.Thread(target=try_port, args=(ip, port, delay, open_ports))
+        threads.append(thread)
+
+    for i in range(0, 1023):
+        threads[i].start()
+
+    for i in range(0, 1023):
+        threads[i].join()
+
+    for i in range(0, 1023):
+        if open_ports[i] == 'open':
+            print('\nport number' + str(i) + ' is open')
+        if i == 1022:
+            print('\nscan complete!')
 # ===================== ************* ===============================
 # ---------- Various Checks and printing ticket --------------------
 # ===================== ************* ===============================
@@ -1203,10 +1241,12 @@ def create_tmp_to_clipboard(
         pass
 
 
-ip = '62.149.128.72'
-socket_connection_query(ip, 'ip', False)
-
+scan_ports("136.243.123.85", 5)
 """
+ip = 'cybaze.it'
+socket_connection_query(ip, 'domain', False)
+
+
 test_dic = {'ciao mondo': 25}
 create_tmp_to_clipboard(test_dic, 'test header', False, 'error')
 
