@@ -825,13 +825,26 @@ def socket_connection_query(
                 print(url_https)
                 wapperlazer_query(url_http, False)                
             else:
-                pass
+                url_http = 'http://www.' + query
+                print(url_http)
+                url_https = 'https://www.' + query
+                print(url_https)
+                wapperlazer_query(url_http, False) 
         except socket.gaierror:
             print("Can't estabish connection to {}".format(query))
     elif query_type == "ip":
         try:
             hostName = socket.gethostbyaddr(query)[0]
+            #print(hostName)
+            hostName = '.'.join(hostName.split('.')[1:])
             print(hostName)
+            input("[✔]")
+            check = input("is this the correct domain for this ip ?")
+            if check == 'yes':
+                wapperlazer_query(hostName, False)
+            elif check == 'no':
+                url_http = input("insert the correct domain for this ip: ")
+                wapperlazer_query(url_http, False)
         except socket.herror:
             print("Can't estabish connection to {}".format(query))
 
@@ -1190,7 +1203,7 @@ def create_tmp_to_clipboard(
         pass
 
 
-ip = '43.224.127.40'
+ip = '62.149.128.72'
 socket_connection_query(ip, 'ip', False)
 
 """
