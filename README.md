@@ -25,6 +25,7 @@ This tool is used to give a quick structure to a SOC level 1 ticket. I used Sele
   - do some research on victim domain/IP
   - ~~try to integrate semi-manual mode~~
   - ~~if no results found don't notify~~
+  - check certificate and find other domains/website created by the same user using censys
 
 ## Usage
 ```
