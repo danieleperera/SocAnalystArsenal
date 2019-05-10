@@ -890,7 +890,7 @@ def wapperlazer_query(
         'X-Api-Key': api}
     url = "https://api.wappalyzer.com/lookup/v1/?url=" + query
     response = requests.get(url, headers=headers)
-
+    #print(url)
     parsed_Data = response.json()
     #print(parsed_Data)
     if val:
@@ -925,16 +925,25 @@ top_100_ports = [
 
 
 def try_port(ip, port, delay, open_ports):
-    sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM) #socket.AF_INET, socket.SOCK_STREAM
-    sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-    sock.settimeout(delay)
-    result = sock.connect_ex((ip, port))
-    if result == 0:
-        open_ports[port] = 'open'
-        return True
-    else:
-        open_ports[port] = 'closed'
-        return None
+    try:
+        sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        # socket.AF_INET, socket.SOCK_STREAM
+        sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+        sock.settimeout(delay)
+        result = sock.connect_ex((ip, port))
+        send_obj = b'WhoAreYou\r\n'
+        sock.send(send_obj)
+        banner = sock.recv(100).decode()
+        print(banner, "\n")
+        if result == 0:
+            open_ports[port] = 'open'
+            return True
+        else:
+            open_ports[port] = 'closed'
+            return None
+    except:
+        pass
+        #print("Cannot connect to port ", port)
 
 
 def scan_ports(ip, delay):
@@ -1293,11 +1302,16 @@ def create_tmp_to_clipboard(
         
         pass
 
-"""
-scan_ports("43.224.127.40", 5)
 
-ip = 'cybaze.it'
-socket_connection_query(ip, 'domain', False)
+wapperlazer_query("http://195.35.99.78", True)
+"""
+ip='43.224.127.40'
+#scan_ports(ip, 10)
+shodan_query(ip, 'ip', True)
+
+
+ip = '43.224.127.40'
+socket_connection_query(ip, 'ip', False)
 
 
 test_dic = {'ciao mondo': 25}
