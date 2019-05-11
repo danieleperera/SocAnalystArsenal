@@ -1303,8 +1303,11 @@ def create_tmp_to_clipboard(
         pass
 
 
-wapperlazer_query("http://195.35.99.78", True)
+domain = "wb0rur.com"
+virustotal_query(domain, "domain", True)
 """
+wapperlazer_query("http://195.35.99.78", True)
+
 ip='43.224.127.40'
 #scan_ports(ip, 10)
 shodan_query(ip, 'ip', True)

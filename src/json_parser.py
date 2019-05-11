@@ -9,7 +9,7 @@ from colorama import Fore
 iconNone = (Fore.YELLOW + '[!]')
 
 
-def parse_virustotal(jdata: dict, query: str) -> dict:
+def parse_virustotal(jdata: dict, query: str, type_query: str) -> dict:
     """
     Documentation for querry_status_abuseipdb.
     It gets a json a dictionary,
@@ -68,60 +68,128 @@ def parse_virustotal(jdata: dict, query: str) -> dict:
     return
     dict -- Returns dict of values that i chose.
 
-    """
-    whois_dict = {}
-    communication = []
-    resolutions = []
-    try:
-        whois_dict['Country'] = jdata.get('country', 'not found')
-        whois_dict['Continent'] = jdata.get('continent', 'not found')
-        whois_dict['Organization'] = jdata.get('as_owner', 'not found')
-        whois_dict['Autonomous System Number'] = jdata.get('asn', 'not found')
+    """    
+    if type_query == "domain":
+        #counters hash
+        count_sample_sha = len(jdata['undetected_referrer_samples'])
+        count_detected_downloaded_samples = len(jdata['detected_downloaded_samples'])
+        count_detected_referrer = len(jdata['detected_referrer_samples'])
+        count_undetected = len(jdata['undetected_downloaded_samples'])
 
-        communicating_list = []
-        count_communicating = len(jdata['detected_communicating_samples'])
-        #print(count_communicating)
-        header_list = [
-            'date',
-            'malicious sha256',
-            'threat_score']
-        body_list = []
-        #communicating_list.append(header_list)
-        for i in range(0, count_communicating):
-            body_list.extend([
-                jdata["detected_communicating_samples"][i]['date'],
-                jdata["detected_communicating_samples"][i]['sha256'],
-                jdata["detected_communicating_samples"][i]['positives']])
-            communicating_list.append(body_list)
-        communicating_list.sort()
-        communication = list(
-            communicating_list for communicating_list, _ in itertools.groupby(
-                communicating_list))
-        communication.insert(0, header_list)
-        resolutions_list = []
-        count_resolutions = len(jdata['resolutions'])
-        #print(count_resolutions)
-        header_list_resolutions = [
-            'hostname',
-            'last_resolved']
-        body_list_resolutions = []
-        #resolutions_list.append(header_list)
-        for i in range(0, count_resolutions):
-            body_list_resolutions.extend([
-                jdata["resolutions"][i]['hostname'],
-                jdata["resolutions"][i]['last_resolved']])
-            resolutions_list.append(body_list_resolutions)
-        resolutions_list.sort()
-        resolutions = list(
-            resolutions_list for resolutions_list, _ in itertools.groupby(
-                resolutions_list))
-        resolutions.insert(0, header_list_resolutions)
-        status = 'ok'
-        return whois_dict, communication, resolutions
-    except KeyError:
-        #print('\nkey error occurred\n')
-        status = 'KeyError'
-        return status, whois_dict
+        files = []
+        header_files = [
+            '       malicious file sha256                         ',
+            'threat score']
+        for elem in range(count_sample_sha):
+            files.append([
+                jdata['undetected_referrer_samples'][elem]['sha256'],
+                jdata['undetected_referrer_samples'][elem]['positives']
+                ])
+        #print(files)
+        for elem in range(count_detected_downloaded_samples):
+            files.append([
+                jdata['detected_downloaded_samples'][elem]['sha256'],
+                jdata['detected_downloaded_samples'][elem]['positives']
+                ])
+        #print(files)
+        for elem in range(count_detected_referrer):
+            files.append([
+                jdata['detected_downloaded_samples'][elem]['sha256'],
+                jdata['detected_downloaded_samples'][elem]['positives']
+                ])
+        #print(files)
+        for elem in range(count_undetected):
+            files.append([
+                jdata['detected_downloaded_samples'][elem]['sha256'],
+                jdata['detected_downloaded_samples'][elem]['positives']
+                ])
+        #print(files)
+
+        files.sort()
+        files_downloaded = list(
+            files for files, _ in itertools.groupby(
+                files))
+        files_downloaded.insert(0, header_files)
+
+        #category
+        category_malwarebytes = jdata['Malwarebytes hpHosts info']
+        category_forcepoint = jdata['Forcepoint ThreatSeeker category']
+        category_bitDefender = jdata['BitDefender domain info']
+        category_dr_web = jdata['Dr.Web category']
+        category_opera = jdata['Opera domain info']
+
+        category_list = []
+        category_header = [
+            'Malwarebytes',
+            'Forcepoint',
+            'BitDefender',
+            'Dr.Web',
+            'Opera']
+        category_list.extend((
+            [category_malwarebytes],
+            [category_forcepoint],
+            [category_bitDefender],
+            [category_dr_web],
+            [category_opera]))
+        category_list.insert(0, category_header)
+        print(category_list)
+        return files_downloaded, category_list
+    elif type_query == 'ip':
+        whois_dict = {}
+        communication = []
+        resolutions = []
+        try:
+            whois_dict['Country'] = jdata.get('country', 'not found')
+            whois_dict['Continent'] = jdata.get('continent', 'not found')
+            whois_dict['Organization'] = jdata.get('as_owner', 'not found')
+            whois_dict['Autonomous System Number'] = jdata.get('asn', 'not found')
+
+            communicating_list = []
+            count_communicating = len(jdata['detected_communicating_samples'])
+            #print(count_communicating)
+            header_list = [
+                'date',
+                'malicious sha256',
+                'threat_score']
+            body_list = []
+            #communicating_list.append(header_list)
+            for i in range(0, count_communicating):
+                body_list.extend([
+                    jdata["detected_communicating_samples"][i]['date'],
+                    jdata["detected_communicating_samples"][i]['sha256'],
+                    jdata["detected_communicating_samples"][i]['positives']])
+                communicating_list.append(body_list)
+            communicating_list.sort()
+            communication = list(
+                communicating_list for communicating_list, _ in itertools.groupby(
+                    communicating_list))
+            communication.insert(0, header_list)
+            resolutions_list = []
+            count_resolutions = len(jdata['resolutions'])
+            #print(count_resolutions)
+            header_list_resolutions = [
+                'hostname',
+                'last_resolved']
+            body_list_resolutions = []
+            #resolutions_list.append(header_list)
+            for i in range(0, count_resolutions):
+                body_list_resolutions.extend([
+                    jdata["resolutions"][i]['hostname'],
+                    jdata["resolutions"][i]['last_resolved']])
+                resolutions_list.append(body_list_resolutions)
+            resolutions_list.sort()
+            resolutions = list(
+                resolutions_list for resolutions_list, _ in itertools.groupby(
+                    resolutions_list))
+            resolutions.insert(0, header_list_resolutions)
+            status = 'ok'
+            return whois_dict, communication, resolutions
+        except KeyError:
+            #print('\nkey error occurred\n')
+            status = 'KeyError'
+            return status, whois_dict
+    elif type_query == "sha":
+        pass
 
 
 def parse_iphub(jdata: dict, query: str) -> dict:
