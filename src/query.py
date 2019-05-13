@@ -206,8 +206,15 @@ def view_query(
         # request
         count_domain = len(data['API info']['viewdns']['requests_domain'])
         for request in range(count_domain):
-            print(data['API info']['viewdns']['requests_domain'][request])
+            try:
+                url = data['API info']['viewdns']['requests_domain'][request].format(query, api)
+                print(url)
+                response = requests.get(url)
+                print(response.json())
+            except json.decoder.JSONDecodeError:
+                continue
         pass
+
     else:
         # all the other cases view dns won't be used
         pass
