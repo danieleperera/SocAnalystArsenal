@@ -1340,7 +1340,7 @@ def create_tmp_to_clipboard(
         pass
 
 
-domain = "wb0rur.com"
+domain = "gov.lk"
 view_query(domain, "domain", False)
 """
 wapperlazer_query("http://195.35.99.78", True)
