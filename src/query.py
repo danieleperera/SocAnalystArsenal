@@ -130,7 +130,10 @@ def virustotal_query(
                 val,
                 None)
         else:
-            for i in json_parser.parse_virustotal(response.json(), query):
+            for i in json_parser.parse_virustotal(
+                    response.json(),
+                    query,
+                    query_type):
                 if type(i) is dict:
                     create_tmp_to_clipboard(
                         i,
@@ -181,6 +184,33 @@ def iphub_query(
                 header_spoofed_IPhub,
                 val,
                 'normal')
+
+
+def view_query(
+        query: str,
+        query_type: str,
+        val: bool,
+        sha_sum: list = None) -> dict:
+    if query_type == 'domain':
+        header_viewdns = (
+            'VPN/Proxy/Tor Information GetIPintel '
+            + query)
+        data = get_api()
+        api = data['API info']['viewdns']['api']
+        colorQuery = (Fore.RED + query)
+        colorString = (Fore.GREEN + 'GetIPintel')
+        print(iconNone + ' ' + colorString, end='')
+        print(' checking Proxy VPN Tor ' + colorQuery)
+        print(header_viewdns)
+
+        # request
+        count_domain = len(data['API info']['viewdns']['requests_domain'])
+        for request in range(count_domain):
+            print(data['API info']['viewdns']['requests_domain'][request])
+        pass
+    else:
+        # all the other cases view dns won't be used
+        pass
 
 
 def getipintel_query(
@@ -1304,7 +1334,7 @@ def create_tmp_to_clipboard(
 
 
 domain = "wb0rur.com"
-virustotal_query(domain, "domain", True)
+view_query(domain, "domain", False)
 """
 wapperlazer_query("http://195.35.99.78", True)
 

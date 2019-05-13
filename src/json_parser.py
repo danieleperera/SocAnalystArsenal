@@ -70,6 +70,7 @@ def parse_virustotal(jdata: dict, query: str, type_query: str) -> dict:
 
     """    
     if type_query == "domain":
+        #print('im here')
         #counters hash
         count_sample_sha = len(jdata['undetected_referrer_samples'])
         count_detected_downloaded_samples = len(jdata['detected_downloaded_samples'])
@@ -110,30 +111,20 @@ def parse_virustotal(jdata: dict, query: str, type_query: str) -> dict:
             files for files, _ in itertools.groupby(
                 files))
         files_downloaded.insert(0, header_files)
+        #whois
+        whois_dict = {}
+        whois_dict['whois'] = jdata.get('whois', 'Not found')
 
         #category
-        category_malwarebytes = jdata['Malwarebytes hpHosts info']
-        category_forcepoint = jdata['Forcepoint ThreatSeeker category']
-        category_bitDefender = jdata['BitDefender domain info']
-        category_dr_web = jdata['Dr.Web category']
-        category_opera = jdata['Opera domain info']
-
-        category_list = []
-        category_header = [
-            'Malwarebytes',
-            'Forcepoint',
-            'BitDefender',
-            'Dr.Web',
-            'Opera']
-        category_list.extend((
-            [category_malwarebytes],
-            [category_forcepoint],
-            [category_bitDefender],
-            [category_dr_web],
-            [category_opera]))
-        category_list.insert(0, category_header)
-        print(category_list)
-        return files_downloaded, category_list
+        category_dict = {}
+        category_dict['Malwarebytes clasification'] = jdata.get('Malwarebytes hpHosts info', 'Not found')
+        category_dict['Forcepoint clasification'] = jdata.get('Forcepoint ThreatSeeker category', 'Not found')
+        category_dict['BitDefender clasification'] = jdata.get('BitDefender domain info', 'Not found')
+        category_dict['Dr clasification'] = jdata.get('Dr.Web category', 'Not found')
+        category_dict['Opera clasification'] = jdata.get('Opera domain info', 'Not found')
+        #print(category_dict)
+        #print(whois_dict)
+        return whois_dict, category_dict, files_downloaded
     elif type_query == 'ip':
         whois_dict = {}
         communication = []
