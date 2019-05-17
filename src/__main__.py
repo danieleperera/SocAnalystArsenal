@@ -196,12 +196,13 @@ def collector(info: dict, verbosity_check: bool, sha_sum_list: list = None):
             type_query,
             verbosity_check)
     # Start scrapping victim
+    """
     data_victim = info['victim']
     for query_string, type_query in query.check_query_type(data_victim):
         query.socket_connection_query(
             query_string,
             type_query,
-            verbosity_check)
+            verbosity_check)"""
 
     toaster.show_toast("""Ticket copied to clipboard""", duration=5)
 
