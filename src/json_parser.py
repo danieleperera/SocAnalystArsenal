@@ -474,7 +474,7 @@ def parse_urlhause(jdata: dict, query: str) -> list:
     """
     content_list = []
     try:
-        c = int(jdata["url_count"])
+        #c = int(jdata["url_count"])
         #print(c)
         header_list = [
             'status',
@@ -484,7 +484,7 @@ def parse_urlhause(jdata: dict, query: str) -> list:
             'reporter',
             'url']
         body_list = []
-        for i in range(0, c):
+        for i in jdata["url_count"]:
             body_list.extend([
                 jdata["urls"][i]['url_status'],
                 jdata["urls"][i]['date_added'][0:10],
